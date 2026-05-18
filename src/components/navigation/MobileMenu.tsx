@@ -4,6 +4,7 @@ import { X, Home, ShoppingBag, Grid, ShieldAlert, Settings, LogOut, Check, LogIn
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../providers/ThemeProvider';
 import { useAuthStore } from '../../modules/auth/store/authStore';
+import { useAppStore } from '../../store/appStore';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -13,8 +14,8 @@ interface MobileMenuProps {
 export const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const { theme, setTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { lang, setLang } = useAppStore();
   const navigate = useNavigate();
-  const [lang, setLang] = useState<'EN' | 'BN'>('EN');
 
   const themes = [
     { id: 'deepDark', name: 'ডিপ ডার্ক', color: 'bg-slate-900 border-slate-700' },

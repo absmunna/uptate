@@ -43,7 +43,7 @@ export const CartDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               {items.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center gap-4 text-center opacity-70">
                   <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-2xl">🛒</div>
-                  <p className="text-xs text-[var(--pm-text-muted)]">Your cart is empty.<br />Start shopping from PK Store!</p>
+                  <p className="text-xs text-[var(--pm-text-muted)]">Your cart is empty.<br />Start shopping from PK Shop!</p>
                 </div>
               ) : (
                 items.map((item) => (

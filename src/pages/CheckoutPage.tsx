@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowLeft, MapPin, CreditCard, Banknote, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../modules/cart/cartStore';
 import { useWalletStore } from '../modules/wallet/store/walletStore';
+import { useNotificationStore } from '../store/notificationStore';
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
   const { items, getTotalPrice, clearCart, getTotalCoins } = useCartStore();
   const { bdtBalance, sendMoney, addTransaction, addCoins } = useWalletStore();
+  const { addNotification } = useNotificationStore();
 
   const [shippingAddress, setShippingAddress] = useState('');
   const [phone, setPhone] = useState('');
@@ -22,7 +24,7 @@ export const CheckoutPage = () => {
 
   // Auto redirect if cart is empty
   if (items.length === 0 && !isSuccess) {
-    navigate('/pk-store');
+    navigate('/pk-shop');
     return null;
   }
 
@@ -30,7 +32,7 @@ export const CheckoutPage = () => {
     if (!shippingAddress || !phone) return;
 
     if (paymentMethod === 'wallet' && bdtBalance < total) {
-      alert('Insufficient Wallet Balance. Please top up or select Cash on Delivery.');
+      addNotification('Insufficient Wallet Balance. Please top up or select Cash on Delivery.', 'error');
       return;
     }
 

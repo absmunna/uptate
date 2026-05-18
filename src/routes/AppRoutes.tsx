@@ -10,20 +10,20 @@ import { B2BHome } from '../portals/b2b/pages/B2BHome';
 import { Dashboard as B2BDashboard } from '../portals/b2b/pages/Dashboard';
 import { Products as B2BProducts } from '../portals/b2b/pages/Products';
 import { Orders as B2BOrders } from '../portals/b2b/pages/Orders';
-import { WalletDashboard } from '../modules/wallet/pages/WalletDashboard';
-import { B2CLayout } from '../portals/b2c/layouts/B2CLayout';
-import { B2CHome } from '../portals/b2c/pages/B2CHome';
-import { PKStoreHome } from '../portals/pk-store/pages/PKStoreHome';
 import { NotFound } from '../pages/NotFound';
 import Login from '../modules/auth/pages/Login';
-import Register from '../modules/auth/pages/Register';
+import { Register } from '../modules/auth/pages/Register';
+import ForgotPassword from '../modules/auth/pages/ForgotPassword';
 import { CheckoutPage } from '../pages/CheckoutPage';
+
+import { PKShopHome } from '../portals/pk-shop';
 
 export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/*" element={
         <RootLayout>
@@ -42,29 +42,14 @@ export const AppRoutes = () => {
                 </B2BLayout>
               } 
             />
+            {/* The following portals are "coming soon" */}
+            <Route path="/wallet/*" element={<NotFound />} />
+            <Route path="/b2c/*" element={<NotFound />} />
             <Route 
-              path="/wallet/*" 
+              path="/pk-shop/*" 
               element={
                   <Routes>
-                    <Route path="/" element={<WalletDashboard />} />
-                  </Routes>
-              } 
-            />
-            <Route 
-              path="/b2c/*" 
-              element={
-                <B2CLayout>
-                  <Routes>
-                    <Route path="/" element={<B2CHome />} />
-                  </Routes>
-                </B2CLayout>
-              } 
-            />
-            <Route 
-              path="/pk-store/*" 
-              element={
-                  <Routes>
-                    <Route path="/" element={<PKStoreHome />} />
+                    <Route path="/" element={<PKShopHome />} />
                   </Routes>
               } 
             />

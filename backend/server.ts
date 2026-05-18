@@ -12,6 +12,7 @@ import { sanitizeMiddleware } from './middleware/sanitize';
 import { db } from './config/database';
 import { authRoutes } from './modules/auth/auth.routes';
 import { productRoutes } from './modules/product/product.routes';
+import { orderRoutes } from './modules/order/order.routes';
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = parseInt(process.env.PORT || '3000', 10);
 
   // Initialize Database
   // Don't await this if it fails or there is no DB, so it doesn't block startup
@@ -37,6 +38,7 @@ async function startServer() {
   // API routes
   app.use('/api/v1/auth', authRoutes);
   app.use('/api/v1/products', productRoutes);
+  app.use('/api/v1/orders', orderRoutes);
 
   app.get("/api/v1/health", (req, res) => {
     res.json({ status: "ok", message: "Paikar Mart API running" });

@@ -6,17 +6,17 @@
 
 ### Super Admin (System Owner)
 - **Authority**: Absolute control over the PaikarMart ecosystem, database, and all portals.
-- **PK Store**: 100% ownership. Only the Super Admin can view global financial revenue, withdraw funds, and permanently delete accounts.
+- **PK Shop**: 100% ownership. Only the Super Admin can view global financial revenue, withdraw funds, and permanently delete accounts.
 - **Access**: `/dashboard/admin`
 
 ### Moderator (Delegated Staff)
 - **Authority**: Limited control delegated by the Super Admin to manage daily operations.
-- **PK Store**: Can add/edit/delete products, manage inventory, and process orders. They **cannot** access wallet configurations, view total system revenue, or assign other moderators.
+- **PK Shop**: Can add/edit/delete products, manage inventory, and process orders. They **cannot** access wallet configurations, view total system revenue, or assign other moderators.
 - **Access**: `/dashboard/moderator`
 
 ### Pro Seller
 - **Authority**: Independent vendors selling on the PaikarMart platform.
-- **Access**: Restricted strictly to their own B2B/B2C store dashboard. They have absolutely no access to PK Store (PaikarMart's official store) operations.
+- **Access**: Restricted strictly to their own B2B/B2C store dashboard. They have absolutely no access to PK Shop (PaikarMart's official store) operations.
 - **Access**: `/dashboard`
 
 ---
@@ -33,7 +33,7 @@
 ## 3. How to Delegate Access (For Super Admin)
 
 1. Navigate to your **Super Admin Panel**.
-2. Click on the **PK Store Delegation** tab.
+2. Click on the **PK Shop Delegation** tab.
 3. Click the **+ Add Moderator** button.
 4. Enter the staff member's email address and assign them a specific role (e.g., "Inventory Moderator" or "Order Fulfillment").
 5. The system will automatically update their `UserRole` in the database, granting them access to `/dashboard/moderator`.

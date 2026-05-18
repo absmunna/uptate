@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Palette, Globe, Check } from 'lucide-react';
 import { useTheme } from '../../providers/ThemeProvider';
+import { useAppStore } from '../../store/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const ThemeLangSwitcher = () => {
   const { theme, setTheme } = useTheme();
+  const { lang, setLang } = useAppStore();
   const [isOpen, setIsOpen] = useState(false);
-  const [lang, setLang] = useState<'BN' | 'EN'>('BN');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const themes = [

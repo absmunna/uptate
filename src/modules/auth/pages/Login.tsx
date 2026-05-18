@@ -12,7 +12,7 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   
   const navigate = useNavigate();
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,30 +21,12 @@ const Login: React.FC = () => {
     
     try {
       const response = await authService.login({ email, password });
-      setAuth(response.user as any, response.accessToken, response.refreshToken);
+      setUser(response.user as any);
       navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.error || 'লগইন ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।');
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Dev Quick Logins
-  const handleDevLogin = (role: string) => {
-    setAuth({
-      id: `dev-${role}-1`,
-      email: `${role}@paikarmart.com`,
-      name: `Mr. ${role.charAt(0).toUpperCase() + role.slice(1)}`,
-      role: role
-    } as any, 'fake-access-token', 'fake-refresh-token');
-    
-    if (role === 'admin' || role === 'super_admin') {
-      navigate('/dashboard/admin');
-    } else if (role === 'seller') {
-      navigate('/dashboard');
-    } else {
-      navigate('/');
     }
   };
 
@@ -86,7 +68,12 @@ const Login: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--pm-text-secondary)] block ml-1">পাসওয়ার্ড</label>
+            <div className="flex items-center justify-between ml-1">
+              <label className="text-sm font-medium text-[var(--pm-text-secondary)] block">পাসওয়ার্ড</label>
+              <Link to="/forgot-password" className="text-[12px] font-bold text-[var(--pm-accent)] hover:underline">
+                পাসওয়ার্ড ভুলে গেছেন?
+              </Link>
+            </div>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--pm-text-secondary)]" />
               <input 
@@ -115,19 +102,6 @@ const Login: React.FC = () => {
             )}
           </button>
         </form>
-
-        {/* Dev Options - Temporary for testing */}
-        <div className="mt-8 pt-6 border-t border-[var(--pm-border)]">
-          <div className="flex items-center gap-2 mb-4 justify-center">
-            <ShieldAlert className="w-4 h-4 text-orange-500" />
-            <span className="text-xs font-bold text-orange-500 uppercase tracking-widest">Test Login Options</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button onClick={() => handleDevLogin('admin')} className="text-xs py-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500/20 font-medium">Admin</button>
-            <button onClick={() => handleDevLogin('seller')} className="text-xs py-2 bg-green-500/10 text-green-500 rounded-lg hover:bg-green-500/20 font-medium">Seller</button>
-            <button onClick={() => handleDevLogin('buyer')} className="text-xs py-2 bg-[var(--pm-border)] text-[var(--pm-text)] rounded-lg hover:bg-[var(--pm-border)]/80 font-medium col-span-2">Buyer</button>
-          </div>
-        </div>
 
         <div className="mt-8 text-center">
           <p className="text-[var(--pm-text-secondary)]">

@@ -14,10 +14,10 @@ export interface Product {
   images?: string[];
   coinCashback?: number;
   tag?: string;
-  portal: 'pk-store' | 'b2c' | 'b2b';
+  portal: 'pk-shop' | 'b2c' | 'b2b';
   description?: string;
   stock?: number;
-  isPKStore?: boolean;
+  isPKShop?: boolean;
 }
 
 interface ProductState {
@@ -41,7 +41,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
       // Map backend fields to frontend store format if necessary
       const mappedProducts = response.data.map((p: any) => ({
         ...p,
-        portal: p.isPKStore ? 'pk-store' : 'b2c', // Example mapping
+        portal: p.isPKShop ? 'pk-shop' : 'b2c', // Example mapping
         image: p.images?.[0] || 'https://via.placeholder.com/300',
         price: Number(p.price),
         originalPrice: Number(p.originalPrice)
@@ -58,14 +58,14 @@ export const useProductStore = create<ProductState>((set, get) => ({
       // In a real app, you might need an auth token here
       const response = await axios.post(`${API_BASE_URL}/products`, {
         ...productData,
-        isPKStore: productData.portal === 'pk-store',
+        isPKShop: productData.portal === 'pk-shop',
         images: [productData.image],
         description: productData.description || productData.name,
       });
       
       const newProduct = {
         ...response.data,
-        portal: response.data.isPKStore ? 'pk-store' : 'b2c',
+        portal: response.data.isPKShop ? 'pk-shop' : 'b2c',
         image: response.data.images?.[0]
       };
 

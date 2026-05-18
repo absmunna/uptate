@@ -2,7 +2,7 @@ import { Route } from 'react-router-dom';
 import Home from '../pages/Home';
 import Feed from '../pages/Feed';
 import { ProductDetails } from '../pages/ProductDetails';
-import { Login } from '../modules/auth/pages/Login';
+import Login from '../modules/auth/pages/Login';
 import { Register } from '../modules/auth/pages/Register';
 
 export const publicRoutes = (

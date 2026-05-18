@@ -16,16 +16,24 @@ PaikarMart is a modern, high-performance social commerce and premium e-commerce 
 ## 🛠️ Technology Stack
 
 - **Frontend**: React 18, TypeScript, Vite
-- **Styling**: Tailwind CSS v4, Framer Motion (for micro-interactions)
+- **Styling**: Tailwind CSS v4, Framer Motion
 - **State Management**: Zustand (Persisted Storage)
-- **Icons**: Lucide React
+- **Backend API**: Node.js, Express
+- **Database**: PostgreSQL (hosted on Supabase), paired with Prisma ORM
 - **Routing**: React Router DOM v7
+
+## 🚀 Deployment Strategy
+
+- **Frontend**: Vercel (Deployed via GitHub Push)
+- **Backend**: Railway (Node.js/Express)
+- **Database**: Supabase
+- **Local Dev File Sync**: Create an `.env` matching `.env.example` using your respective Vercel, Railway, and Supabase credentials.
 
 ## 📦 Getting Started
 
 ### Prerequisites
 - Node.js (v18+)
-- npm or yarn
+- Postgres (Local or Supabase account)
 
 ### Installation
 
@@ -34,10 +42,18 @@ PaikarMart is a modern, high-performance social commerce and premium e-commerce 
    ```bash
    npm install
    ```
-3. Start the development server:
+3. Generate Prisma client (run if schema changes):
+   ```bash
+   npx prisma generate
+   ```
+4. Start the development server (Frontend + Backend concurrently):
    ```bash
    npm run dev
    ```
+
+## 🏗️ Pending Features & Agent Notes
+- Check `IN_BUILD_FEATURES.md` for the roadmap of features currently under development (e.g., Live Wallet, Live Chat, Real Payment Gateways).
+- Check `AGENTS.md` for AI Assistant guidelines and security notes regarding the stack.
 
 ### Building for Production
 

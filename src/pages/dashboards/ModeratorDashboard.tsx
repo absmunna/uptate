@@ -14,7 +14,7 @@ export const ModeratorDashboard = () => {
           </div>
           <div>
             <h1 className="text-xl font-black text-[var(--pm-text)] tracking-tight">Staff Panel</h1>
-            <p className="text-xs text-[var(--pm-text-muted)] font-medium">PK Store Moderation & Oversight</p>
+            <p className="text-xs text-[var(--pm-text-muted)] font-medium">PK Shop Moderation & Oversight</p>
           </div>
         </div>
       </header>
@@ -70,7 +70,7 @@ export const ModeratorDashboard = () => {
                   <div className="min-w-0">
                     <h4 className="text-sm font-bold text-[var(--pm-text)] truncate">#PM-ORDER-{1000 + i}</h4>
                     <p className="text-[10px] text-[var(--pm-text-muted)] mt-1 flex items-center gap-1">
-                      <ShoppingBag className="w-3 h-3" /> PK Store Item • 2 units
+                      <ShoppingBag className="w-3 h-3" /> PK Shop Item • 2 units
                     </p>
                   </div>
                 </div>
@@ -93,7 +93,7 @@ export const ModeratorDashboard = () => {
             <h4 className="text-[11px] font-black text-indigo-200 uppercase">Delegated Authority</h4>
           </div>
           <p className="text-[10px] text-indigo-200/60 leading-snug">
-            As a Moderator, your actions are logged and audited daily by the Super Admin. Please ensure all PK Store order processing follows the standardized quality check protocols.
+            As a Moderator, your actions are logged and audited daily by the Super Admin. Please ensure all PK Shop order processing follows the standardized quality check protocols.
           </p>
         </div>
       </div>

@@ -13,7 +13,7 @@ export const AdminDashboard = () => {
     fetchProducts();
   }, []);
 
-  const pkStoreProducts = products.filter(p => p.portal === 'pk-store');
+  const pkShopProducts = products.filter(p => p.portal === 'pk-shop');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -37,7 +37,7 @@ export const AdminDashboard = () => {
           </div>
           <div>
             <h1 className="text-xl font-black text-[var(--pm-text)] tracking-tight">Super Admin Panel</h1>
-            <p className="text-xs text-[var(--pm-text-muted)] font-medium">Complete Access & PK Store Ownership</p>
+            <p className="text-xs text-[var(--pm-text-muted)] font-medium">Complete Access & PK Shop Ownership</p>
           </div>
         </div>
       </header>
@@ -78,7 +78,7 @@ export const AdminDashboard = () => {
                 {[
                   { label: 'Total Revenue', value: '৳ 2.4M', trend: '+14%' },
                   { label: 'Active Sellers', value: '1,204', trend: '+5%' },
-                  { label: 'PK Store Sales', value: '840', trend: '+22%' },
+                  { label: 'PK Shop Sales', value: '840', trend: '+22%' },
                   { label: 'Security Threats', value: '0', trend: 'Safe', color: 'text-emerald-500' }
                 ].map((stat, i) => (
                   <div key={i} className="glass p-4 rounded-2xl border border-[var(--pm-border)]/50">
@@ -114,9 +114,9 @@ export const AdminDashboard = () => {
                 <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
                   <KeyRound className="w-24 h-24" />
                 </div>
-                <h2 className="font-black text-lg text-[var(--pm-text)] mb-2">PK Store Ownership</h2>
+                <h2 className="font-black text-lg text-[var(--pm-text)] mb-2">PK Shop Ownership</h2>
                 <p className="text-sm text-[var(--pm-text-muted)] max-w-[80%]">
-                  PaikarMart Super Admin has full ownership of the PK Store. You can safely delegate "Moderator" access to staff to manage inventory without exposing core financials.
+                  PaikarMart Super Admin has full ownership of PK Shop. You can safely delegate "Moderator" access to staff to manage inventory without exposing core financials.
                 </p>
               </div>
 
@@ -158,7 +158,7 @@ export const AdminDashboard = () => {
               {/* Add Product Form */}
               <div className="glass p-5 rounded-3xl border border-[var(--pm-border)]/50">
                 <h3 className="font-bold text-[var(--pm-text)] mb-4 flex items-center gap-2">
-                  <Plus className="w-4 h-4 text-[var(--pm-accent)]" /> Add New PK Store Product
+                  <Plus className="w-4 h-4 text-[var(--pm-accent)]" /> Add New PK Shop Product
                 </h3>
                 <form 
                   onSubmit={async (e) => {
@@ -172,7 +172,7 @@ export const AdminDashboard = () => {
                         coinCashback: Number(formData.get('cashback')),
                         tag: formData.get('tag') as string,
                         image: imagePreview || (formData.get('image') as string),
-                        portal: 'pk-store'
+                        portal: 'pk-shop'
                       });
                       (e.target as HTMLFormElement).reset();
                       setImagePreview(null);
@@ -245,9 +245,9 @@ export const AdminDashboard = () => {
               {/* Product List */}
               <div className="space-y-3">
                 <h3 className="font-bold text-[var(--pm-text)] flex items-center gap-2">
-                  <Package className="w-4 h-4 text-[var(--pm-accent)]" /> Current Inventory ({pkStoreProducts.length})
+                  <Package className="w-4 h-4 text-[var(--pm-accent)]" /> Current Inventory ({pkShopProducts.length})
                 </h3>
-                {pkStoreProducts.map(product => (
+                {pkShopProducts.map(product => (
                   <div key={product.id} className="flex gap-3 p-3 glass rounded-2xl border border-[var(--pm-border)]/50 relative group">
                     <div className="w-16 h-16 rounded-xl overflow-hidden bg-black/10 shrink-0">
                       <img src={product.image} alt={product.name} className="w-full h-full object-cover" />

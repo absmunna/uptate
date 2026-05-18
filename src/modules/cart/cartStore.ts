@@ -7,7 +7,7 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
-  portal: 'pk-store' | 'b2c' | 'b2b';
+  portal: 'pk-shop' | 'b2c' | 'b2b';
   coinCashback?: number;
 }
 

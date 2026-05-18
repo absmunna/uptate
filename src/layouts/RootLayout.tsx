@@ -29,7 +29,7 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
             {[
               { label: 'Home', icon: '🏠', path: '/' },
               { label: 'Marketplace', icon: '🛍️', path: '/b2c' },
-              { label: 'PK Store', icon: '💎', path: '/pk-store' },
+              { label: 'PK Shop', icon: '💎', path: '/pk-shop' },
               { label: 'Feed', icon: '📰', path: '/feed' },
               { label: 'Messages', icon: '💬', path: '/messages' },
               { label: 'Wallet', icon: '💰', path: '/wallet' },

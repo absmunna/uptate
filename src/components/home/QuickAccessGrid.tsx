@@ -16,7 +16,7 @@ interface Tile {
 }
 
 const tiles: Tile[] = [
-  { label: 'PK Store', icon: Star, color: 'from-indigo-600 to-purple-700', route: '/pk-store' },
+  { label: 'PK Shop', icon: Star, color: 'from-indigo-600 to-purple-700', route: '/pk-shop' },
   { label: 'Market', icon: ShoppingBag, color: 'from-orange-400 to-pink-500', route: '/b2c' },
   { label: 'B2B', icon: Building2, color: 'from-blue-400 to-indigo-600', route: '/b2b' },
   { label: 'Nearby', icon: MapPin, color: 'from-rose-400 to-red-600', route: '/portal/nearby' },

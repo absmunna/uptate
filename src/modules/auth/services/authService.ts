@@ -11,6 +11,10 @@ export const authService = {
     const { data: response } = await apiClient.post(ENDPOINTS.AUTH.REGISTER, data);
     return response;
   },
+  forgotPassword: async (email: string) => {
+    const { data } = await apiClient.post(`${ENDPOINTS.AUTH.LOGIN.replace('/login', '/forgot-password')}`, { email });
+    return data;
+  },
   logout: () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
