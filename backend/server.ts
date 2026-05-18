@@ -1,0 +1,68 @@
+import express from "express";
+import path from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from 'url';
+import { createServer as createViteServer } from "vite";
+import morgan from 'morgan';
+import { helmetMiddleware } from './middleware/helmet';
+import { rateLimitMiddleware } from './middleware/rateLimit';
+import { corsMiddleware } from './middleware/cors';
+import { auditMiddleware } from './middleware/audit';
+import { sanitizeMiddleware } from './middleware/sanitize';
+import { db } from './config/database';
+import { authRoutes } from './modules/auth/auth.routes';
+import { productRoutes } from './modules/product/product.routes';
+
+dotenv.config();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+async function startServer() {
+  const app = express();
+  const PORT = 3000;
+
+  // Initialize Database
+  // Don't await this if it fails or there is no DB, so it doesn't block startup
+  db.connect().catch(e => console.warn('Database not available yet:', e));
+
+  // Security & Logging
+  app.use(helmetMiddleware);
+  app.use(corsMiddleware);
+  app.use(rateLimitMiddleware);
+  app.use(morgan('combined'));
+  app.use(sanitizeMiddleware);
+  app.use(auditMiddleware);
+  app.use(express.json());
+
+  // API routes
+  app.use('/api/v1/auth', authRoutes);
+  app.use('/api/v1/products', productRoutes);
+
+  app.get("/api/v1/health", (req, res) => {
+    res.json({ status: "ok", message: "Paikar Mart API running" });
+  });
+
+  // Vite middleware for development
+  if (process.env.NODE_ENV !== "production") {
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: "spa",
+      root: process.cwd(),
+    });
+    app.use(vite.middlewares);
+  } else {
+    // Production: Serve frontend from dist
+    const distPath = path.join(process.cwd(), 'dist');
+    app.use(express.static(distPath));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server is listening on port ${PORT}`);
+  });
+}
+
+
+startServer();
