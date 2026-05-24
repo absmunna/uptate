@@ -63,10 +63,10 @@ export default function VendorDetail() {
         <Tabs defaultValue="products" className="w-full mt-4">
           <TabsList className="bg-white/5 border border-white/10 p-1 w-full justify-start h-auto rounded-xl">
             <TabsTrigger value="products" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white text-white/70 py-2.5 px-6">
-              Products ({vendor.products.length})
+              Products ({(vendor.products ?? []).length})
             </TabsTrigger>
             <TabsTrigger value="posts" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white text-white/70 py-2.5 px-6">
-              Posts ({vendor.recentPosts.length})
+              Posts ({(vendor.recentPosts ?? []).length})
             </TabsTrigger>
           </TabsList>
           
@@ -76,8 +76,8 @@ export default function VendorDetail() {
           
           <TabsContent value="posts" className="mt-6 outline-none">
             <div className="max-w-2xl flex flex-col gap-4">
-              {vendor.recentPosts.length > 0 ? (
-                vendor.recentPosts.map(post => (
+              {(vendor.recentPosts ?? []).length > 0 ? (
+                (vendor.recentPosts ?? []).map(post => (
                   <PostCard key={post.id} post={post} />
                 ))
               ) : (

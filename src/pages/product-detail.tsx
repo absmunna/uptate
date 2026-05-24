@@ -59,7 +59,7 @@ export default function ProductDetail() {
         <div className="flex flex-col gap-4">
           <div className="aspect-square bg-black/20 rounded-2xl overflow-hidden border border-white/10 relative">
             <img 
-              src={product.images[activeImage]} 
+              src={(product.images ?? [])[activeImage] ?? ''} 
               alt={product.title} 
               className="w-full h-full object-cover"
             />
@@ -72,9 +72,9 @@ export default function ProductDetail() {
               </Button>
             </div>
           </div>
-          {product.images.length > 1 && (
+          {(product.images ?? []).length > 1 && (
             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-              {product.images.map((img, idx) => (
+              {(product.images ?? []).map((img, idx) => (
                 <button 
                   key={idx} 
                   onClick={() => setActiveImage(idx)}

@@ -92,12 +92,12 @@ export default function DemandDetail() {
 
       <div className="mt-4 flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">Matched Vendors ({demand.matches.length})</h2>
+          <h2 className="text-xl font-bold text-white">Matched Vendors ({(demand.matches ?? []).length})</h2>
         </div>
         
-        {demand.matches.length > 0 ? (
+        {(demand.matches ?? []).length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {demand.matches.map(vendor => (
+            {(demand.matches ?? []).map(vendor => (
               <div key={vendor.id} className="w-full">
                 <VendorCard vendor={vendor} />
               </div>

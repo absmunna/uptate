@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { BottomNav } from "./BottomNav";
 import { DesktopSidebar } from "./Sidebar";
 import { DesktopRightPanel } from "./DesktopRightPanel";
+import { ComplianceFooter } from "./ComplianceFooter";
 
 interface AppShellProps { children: React.ReactNode; }
 
@@ -79,6 +80,7 @@ export function AppShell({ children }: AppShellProps) {
           {!noRight && <DesktopRightPanel />}
         </div>
       </div>
+      <ComplianceFooter />
       <BottomNav />
     </div>
   );
