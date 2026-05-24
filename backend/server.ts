@@ -23,7 +23,6 @@ async function startServer() {
   const PORT = parseInt(process.env.PORT || '5000', 10);
 
   // Initialize Database
-  // Don't await this if it fails or there is no DB, so it doesn't block startup
   db.connect().catch(e => console.warn('Database not available yet:', e));
 
   // Security & Logging
@@ -35,14 +34,17 @@ async function startServer() {
   app.use(auditMiddleware);
   app.use(express.json());
 
-  // API routes
+  // Legacy versioned API routes (for production compatibility)
   app.use('/api/v1/auth', authRoutes);
   app.use('/api/v1/products', productRoutes);
   app.use('/api/v1/orders', orderRoutes);
-
   app.get("/api/v1/health", (req, res) => {
     res.json({ status: "ok", message: "Paikar Mart API running" });
   });
+
+  // Frontend-compatible API routes (used by the new UI)
+  const { default: apiRouter } = await import('./api/routes/index.js');
+  app.use('/api', apiRouter);
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
@@ -53,7 +55,6 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    // Production: Serve frontend from dist
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
@@ -65,6 +66,5 @@ async function startServer() {
     console.log(`Server is listening on port ${PORT}`);
   });
 }
-
 
 startServer();
