@@ -35,7 +35,7 @@ export default function AdminSettingsPage() {
 
   const saveProfit = () => {
     setProfitShare(profit);
-    logChange({ scope: "profit-share", actor: "admin", summary: "Updated profit-share config", details: profit });
+    logChange({ scope: "profit-share", actor: "admin", summary: "Updated profit-share config", details: profit as unknown as Record<string, unknown> });
     toast.success("Profit-share config saved");
   };
 

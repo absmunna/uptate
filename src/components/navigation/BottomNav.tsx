@@ -1,12 +1,12 @@
 import React from 'react';
 import { Home, ShoppingBag, Newspaper, Wallet, MoreHorizontal } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const BottomNav = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [pathname] = useLocation() as unknown as [string, unknown];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => pathname === path;
 
   const navItems = [
     { label: 'হোম', icon: Home, path: '/' },

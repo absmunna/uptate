@@ -339,8 +339,8 @@ export default function Portals() {
                       ? <img src={p.images[0]} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                       : <div className="w-full h-full skeleton-shimmer" />
                     }
-                    {(p.discount ?? 0) > 0 && (
-                      <span className="absolute top-2 left-2 text-[9px] font-bold px-1.5 py-0.5 rounded-lg bg-rose-500 text-white">-{p.discount}%</span>
+                    {((p as any).discount ?? 0) > 0 && (
+                      <span className="absolute top-2 left-2 text-[9px] font-bold px-1.5 py-0.5 rounded-lg bg-rose-500 text-white">-{(p as any).discount}%</span>
                     )}
                   </div>
                   <div className="mt-2 px-0.5">

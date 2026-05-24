@@ -14,19 +14,21 @@ export interface AppUser {
   email?: string;
   avatarUrl?: string;
   role: AppRole;
-  /** Only present when role === "seller" */
   seller?: {
     shopName: string;
     type: "retail" | "wholesale" | "service";
     subType?: string;
     category?: string;
     location?: string;
+    address?: string;
+    nidOrTradeLicense?: string;
     payoutMethod?: { kind: "bank" | "mobile"; details?: Record<string, string> };
   };
-  /** Only present when role === "factory" — PUBLIC fields only */
   factory?: {
     companyName: string;
     district: string;
+    address: string;
+    tradeLicenseNo?: string;
     productCategories: string[];
     exportCountries: string[];
     certifications: string[];
@@ -50,10 +52,6 @@ interface AuthCtx {
   registerSeller: (input: Omit<AppUser, "id" | "role" | "createdAt"> & { password: string; seller: NonNullable<AppUser["seller"]> }) => Promise<AppUser>;
   registerFactory: (input: { fullName: string; phone: string; email: string; password: string; factory: Record<string, any> }) => Promise<AppUser>;
   logout: () => void;
-  /** Demo-only — promote any logged-in user to admin (UI gating). Calls API. */
-  promoteToAdmin: () => Promise<void>;
-  /** Demo-only — set moderator role for content review. */
-  promoteToModerator: () => void;
 }
 
 const STORAGE_KEY = "pm.auth.v1";
@@ -93,7 +91,10 @@ async function callApi<T = any>(path: string, body: any): Promise<T> {
     body: JSON.stringify(body ?? {}),
     credentials: "include",
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as any).message ?? `HTTP ${res.status}`);
+  }
   return (await res.json()) as T;
 }
 
@@ -103,45 +104,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => persist(user), [user]);
 
   const loginWithPhone = useCallback(async (phone: string, password: string) => {
-    let serverData: any = null;
-    try {
-      serverData = await callApi("/api/auth/login", { phone, password });
-      if (serverData?.token) persistToken(serverData.token);
-    } catch {
-      // fall back to local-only session if API is unavailable
-    }
-    const existing = readStored();
-    // Normalise legacy "user" role → "buyer"
-    const rawRole = (serverData?.user?.role ?? existing?.role ?? "buyer") as string;
+    const serverData = await callApi("/api/auth/login", { phone, password });
+    if (serverData?.token) persistToken(serverData.token);
+    const rawRole = (serverData?.user?.role ?? "buyer") as string;
     const role = (rawRole === "user" ? "buyer" : rawRole) as AppRole;
     const next: AppUser = {
-      id: serverData?.user?.id ?? existing?.id ?? uid("u"),
-      fullName: serverData?.user?.name ?? existing?.fullName ?? phone,
+      id: serverData?.user?.id ?? uid("u"),
+      fullName: serverData?.user?.name ?? serverData?.user?.handle ?? phone,
       phone,
-      email: existing?.email,
-      avatarUrl: serverData?.user?.avatarUrl ?? existing?.avatarUrl,
+      email: serverData?.user?.email,
+      avatarUrl: serverData?.user?.avatarUrl,
       role,
-      seller: existing?.seller,
-      createdAt: existing?.createdAt ?? new Date().toISOString(),
+      createdAt: serverData?.user?.createdAt ?? new Date().toISOString(),
     };
     setUser(next);
     return next;
   }, []);
 
   const registerUser = useCallback(async (input: Omit<AppUser, "id" | "role" | "createdAt"> & { password: string }) => {
-    let serverData: any = null;
-    try {
-      serverData = await callApi("/api/auth/register", {
-        name: input.fullName,
-        email: input.email,
-        phone: input.phone,
-      });
-      if (serverData?.token) persistToken(serverData.token);
-    } catch {}
+    const serverData = await callApi("/api/auth/register", {
+      name: input.fullName,
+      email: input.email,
+      phone: input.phone,
+      password: (input as any).password,
+    });
+    if (serverData?.token) persistToken(serverData.token);
     const next: AppUser = {
       ...input,
       id: serverData?.user?.id ?? uid("u"),
-      role: "buyer",           // canonical buyer role
+      role: "buyer",
       createdAt: new Date().toISOString(),
     };
     delete (next as any).password;
@@ -150,17 +141,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const registerSeller = useCallback(async (input: Omit<AppUser, "id" | "role" | "createdAt"> & { password: string; seller: NonNullable<AppUser["seller"]> }) => {
-    let serverData: any = null;
-    try {
-      serverData = await callApi("/api/auth/seller-register", {
-        name: input.fullName,
-        email: input.email,
-        phone: input.phone,
-        shopName: input.seller.shopName,
-        type: input.seller.type,
-      });
-      if (serverData?.token) persistToken(serverData.token);
-    } catch {}
+    const serverData = await callApi("/api/auth/seller-register", {
+      name: input.fullName,
+      email: input.email,
+      phone: input.phone,
+      password: (input as any).password,
+      shopName: input.seller.shopName,
+      type: input.seller.type,
+      address: input.seller.address,
+      nidOrTradeLicense: input.seller.nidOrTradeLicense,
+    });
+    if (serverData?.token) persistToken(serverData.token);
     const next: AppUser = {
       ...input,
       id: serverData?.user?.id ?? uid("s"),
@@ -173,17 +164,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const registerFactory = useCallback(async (input: { fullName: string; phone: string; email: string; password: string; factory: Record<string, any> }) => {
-    let serverData: any = null;
-    try {
-      serverData = await callApi("/api/auth/seller-register", {
-        name: input.fullName,
-        email: input.email,
-        phone: input.phone,
-        shopName: input.factory.companyName,
-        type: "factory",
-      });
-      if (serverData?.token) persistToken(serverData.token);
-    } catch {}
+    const serverData = await callApi("/api/auth/seller-register", {
+      name: input.fullName,
+      email: input.email,
+      phone: input.phone,
+      password: input.password,
+      shopName: input.factory.companyName,
+      type: "factory",
+      address: input.factory.address,
+      tradeLicenseNo: input.factory.tradeLicenseNo,
+    });
+    if (serverData?.token) persistToken(serverData.token);
     const next: AppUser = {
       id: serverData?.user?.id ?? uid("f"),
       fullName: input.fullName,
@@ -193,6 +184,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       factory: {
         companyName: input.factory.companyName,
         district: input.factory.district,
+        address: input.factory.address ?? "",
+        tradeLicenseNo: input.factory.tradeLicenseNo ?? "",
         productCategories: input.factory.productCategories ?? [],
         exportCountries: input.factory.exportCountries ?? [],
         certifications: input.factory.certifications ?? [],
@@ -216,17 +209,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
-  const promoteToAdmin = useCallback(async () => {
-    try {
-      await callApi("/api/auth/promote-admin", {});
-    } catch {}
-    setUser((prev) => (prev ? { ...prev, role: "admin" } : prev));
-  }, []);
-
-  const promoteToModerator = useCallback(() => {
-    setUser((prev) => (prev ? { ...prev, role: "moderator" } : prev));
-  }, []);
-
   const value = useMemo<AuthCtx>(() => ({
     user,
     isAuthenticated: !!user,
@@ -236,9 +218,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     registerSeller,
     registerFactory,
     logout,
-    promoteToAdmin,
-    promoteToModerator,
-  }), [user, loginWithPhone, registerUser, registerSeller, registerFactory, logout, promoteToAdmin, promoteToModerator]);
+  }), [user, loginWithPhone, registerUser, registerSeller, registerFactory, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

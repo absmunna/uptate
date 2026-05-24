@@ -16,7 +16,7 @@ export const PKStoreHome = () => {
   }, []);
   
   const products = useMemo(() => 
-    storeProductsRaw.filter(p => p.portal === 'pk-store'), 
+    storeProductsRaw.filter(p => (p as any).portal === 'pk-store'), 
   [storeProductsRaw]);
 
   const handleAddToCart = (product: any) => {
@@ -25,7 +25,7 @@ export const PKStoreHome = () => {
       name: product.name,
       price: Number(product.price),
       image: product.image || 'https://via.placeholder.com/300',
-      portal: 'pk-store',
+      portal: 'pk-store' as any,
       coinCashback: product.coinCashback || Math.floor(Number(product.price) * 0.05)
     });
     openCart();

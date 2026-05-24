@@ -87,7 +87,7 @@ export default function Cart() {
                 
                 <div className="mt-auto flex items-center justify-between">
                   <div className="text-sm text-white/70">Qty: <span className="font-semibold text-white">{item.quantity}</span></div>
-                  <div className="font-bold text-primary">৳{Math.round((item.product.price * item.quantity).toFixed(2)).toLocaleString("en-IN")}</div>
+                  <div className="font-bold text-primary">৳{Math.round(item.product.price * item.quantity).toLocaleString("en-IN")}</div>
                 </div>
               </div>
             </GlassCard>

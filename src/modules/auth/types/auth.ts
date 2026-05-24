@@ -1,4 +1,4 @@
-import { UserRole } from '../../../permissions/roles';
+import type { AppRole as UserRole } from '../../../permissions/roles';
 
 export interface User {
   id: string;

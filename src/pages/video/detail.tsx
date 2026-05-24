@@ -11,8 +11,8 @@ import { useVideoUnlock } from "@/features/digital-content/VideoUnlockContext";
 import { usePKCoin } from "@/features/wallet/PKCoinContext";
 
 export default function VideoDetailPage() {
-  const [, params] = useRoute("/video/:id");
-  const id = params?.id;
+  const [, params] = useRoute<{ id: string }>("/video/:id");
+  const id = params?.id ?? null;
   const v = id ? getVideoById(id) : undefined;
   const { hasVideoUnlocked, unlockVideo } = useVideoUnlock();
   const wallet = usePKCoin();

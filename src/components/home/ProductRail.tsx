@@ -38,9 +38,9 @@ export function ProductRail({ sort = "trending" as const }: { sort?: "trending" 
               ) : (
                 <div className="w-full h-full skeleton-shimmer" />
               )}
-              {p.discount && p.discount > 0 ? (
+              {(p as any).discount && (p as any).discount > 0 ? (
                 <span className="absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 rounded bg-rose-500 text-white">
-                  -{p.discount}%
+                  -{(p as any).discount}%
                 </span>
               ) : null}
             </div>
