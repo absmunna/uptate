@@ -159,6 +159,34 @@ router.get("/stats/seller", (_req, res) => {
   });
 });
 
+// ── GET /api/admin/sellers/pending ──────────────────────────────────────────
+// Returns vendors whose verified === false — these are sellers awaiting admin
+// approval. In the production Prisma/PostgreSQL path this would query the DB
+// with status = 'pending_verification'; the in-memory layer uses the same flag.
+router.get("/admin/sellers/pending", (_req, res) => {
+  const TYPE_MAP: Record<string, string> = {
+    retail:    "Retail Seller",
+    wholesale: "Wholesale",
+    grocery:   "Grocery",
+    dropship:  "Dropship",
+    hotel:     "Hospitality",
+    service:   "Service Provider",
+    factory:   "Factory",
+    digital:   "Digital Seller",
+  };
+  const pending = db.vendors
+    .filter((v) => !v.verified)
+    .map((v) => ({
+      id:        v.id,
+      name:      v.name,
+      type:      TYPE_MAP[v.type] ?? v.type,
+      district:  v.location,
+      avatarUrl: v.avatarUrl,
+      submitted: "Pending review",
+    }));
+  res.json(pending);
+});
+
 // Simple auth (in-memory, demo). Returns a session token + user.
 function makeToken() {
   return `sess_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
