@@ -78,13 +78,70 @@ type Story = {
 
 type CartItem = { id: string; productId: string; quantity: number };
 
-type Order = {
+export type OrderStatus =
+  | "pending"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled";
+
+export type OrderItem = {
   id: string;
-  items: CartItem[];
+  productId: string;
+  productTitle: string;
+  productImage: string;
+  vendorId: string;
+  vendorName: string;
+  unitPrice: number;
+  quantity: number;
+  lineTotal: number;
+};
+
+export type PriceBreakdown = {
+  subtotal: number;
+  vatRate: string;         // e.g. "5%"
+  vatAmount: number;
+  shippingFee: number;
+  shippingLabel: string;   // human-readable
+  discountAmount: number;
   total: number;
-  currency: string;
-  status: string;
+};
+
+export type StatusHistoryEntry = {
+  status: OrderStatus;
+  at: string;
+  note?: string;
+};
+
+export type Order = {
+  id: string;
+  orderNo: string;
+  buyerId: string;
+  buyerName: string;
+  items: OrderItem[];
+  // BD compliance price breakdown
+  breakdown: PriceBreakdown;
+  // legacy flat fields (kept for backwards compat)
+  subtotal: number;
+  vatAmount: number;
+  shippingFee: number;
+  total: number;
+  currency: "BDT";
+  status: OrderStatus;
+  statusHistory: StatusHistoryEntry[];
+  // delivery
+  deliveryAddress: string;
+  deliveryDistrict: string;
+  isInsideDhaka: boolean;
+  maxDeliveryDays: number;
+  expectedDelivery: string;
+  deliveryPolicy: string;
+  // payment
+  paymentMethod: string;
+  notes: string;
+  termsAcceptedAt: string;
   createdAt: string;
+  updatedAt: string;
 };
 
 type Demand = {
@@ -136,7 +193,7 @@ const avatar = (seed: string) =>
 export const db = {
   currentUser: {
     id: "u-me",
-    name: "Demo User",
+    name: "Demo Buyer",
     handle: "demo",
     avatarUrl: avatar("me"),
     bio: "Welcome to PaikarMart",
@@ -218,8 +275,130 @@ function seed() {
     { id: "d2", title: "Looking for office cleaning service", description: "Weekly cleaning for 3000 sqft office", budget: 5000, currency: "BDT", categoryId: "c5", location: "Dhaka", urgency: "low", status: "open", matchCount: 1, createdAt: ago(360), authorId: "u-me" },
   ];
 
+  // Seed demo orders so the seller dashboard is not empty
+  const mkBreakdown = (sub: number, inside: boolean): PriceBreakdown => {
+    const vatAmount = Math.round(sub * 0.05);
+    const shippingFee = sub >= 1000 ? 0 : inside ? 60 : 120;
+    return {
+      subtotal: sub,
+      vatRate: "5%",
+      vatAmount,
+      shippingFee,
+      shippingLabel: shippingFee === 0 ? "Free (above ৳1,000)" : `৳${shippingFee} (${inside ? "Dhaka" : "Outside Dhaka"})`,
+      discountAmount: 0,
+      total: sub + vatAmount + shippingFee,
+    };
+  };
+  const mkHistory = (status: OrderStatus): StatusHistoryEntry[] => {
+    const map: StatusHistoryEntry[] = [
+      { status: "pending", at: ago(300), note: "Order placed by buyer" },
+    ];
+    if (["processing","shipped","delivered"].includes(status))
+      map.push({ status: "processing", at: ago(200), note: "Seller accepted order" });
+    if (["shipped","delivered"].includes(status))
+      map.push({ status: "shipped", at: ago(100), note: "Dispatched via Pathao" });
+    if (status === "delivered")
+      map.push({ status: "delivered", at: ago(20), note: "Delivered successfully" });
+    return map;
+  };
+
+  db.orders = [
+    {
+      id: "ord_seed_1",
+      orderNo: "PKM-SEED001",
+      buyerId: "u-me",
+      buyerName: "Nadia Rahman",
+      items: [{ id: "oi1", productId: "p1", productTitle: "Wireless Earbuds Pro", productImage: img("p1"), vendorId: "v1", vendorName: "Dhaka Electronics", unitPrice: 2499, quantity: 2, lineTotal: 4998 }],
+      breakdown: mkBreakdown(4998, true),
+      subtotal: 4998, vatAmount: Math.round(4998*0.05), shippingFee: 0, total: 4998 + Math.round(4998*0.05),
+      currency: "BDT",
+      status: "shipped",
+      statusHistory: mkHistory("shipped"),
+      deliveryAddress: "House 5, Road 12, Banani, Dhaka",
+      deliveryDistrict: "Dhaka",
+      isInsideDhaka: true,
+      maxDeliveryDays: 3,
+      expectedDelivery: new Date(Date.now() + 2 * 86400000).toISOString(),
+      deliveryPolicy: "Delivery within 3 working days inside Dhaka",
+      paymentMethod: "bkash",
+      notes: "",
+      termsAcceptedAt: ago(300),
+      createdAt: ago(300),
+      updatedAt: ago(100),
+    },
+    {
+      id: "ord_seed_2",
+      orderNo: "PKM-SEED002",
+      buyerId: "u-buyer2",
+      buyerName: "Imran Karim",
+      items: [{ id: "oi2", productId: "p7", productTitle: "Smartphone Mid-Range X", productImage: img("p7"), vendorId: "v1", vendorName: "Dhaka Electronics", unitPrice: 22999, quantity: 1, lineTotal: 22999 }],
+      breakdown: mkBreakdown(22999, true),
+      subtotal: 22999, vatAmount: Math.round(22999*0.05), shippingFee: 0, total: 22999 + Math.round(22999*0.05),
+      currency: "BDT",
+      status: "processing",
+      statusHistory: mkHistory("processing"),
+      deliveryAddress: "Flat 3B, Gulshan-2, Dhaka",
+      deliveryDistrict: "Dhaka",
+      isInsideDhaka: true,
+      maxDeliveryDays: 3,
+      expectedDelivery: new Date(Date.now() + 3 * 86400000).toISOString(),
+      deliveryPolicy: "Delivery within 3 working days inside Dhaka",
+      paymentMethod: "cod",
+      notes: "Call before delivery",
+      termsAcceptedAt: ago(500),
+      createdAt: ago(500),
+      updatedAt: ago(200),
+    },
+    {
+      id: "ord_seed_3",
+      orderNo: "PKM-SEED003",
+      buyerId: "u-buyer3",
+      buyerName: "Sara Parveen",
+      items: [{ id: "oi3", productId: "p2", productTitle: "Cotton Panjabi (Bulk x10)", productImage: img("p2"), vendorId: "v2", vendorName: "Chittagong Wholesale", unitPrice: 8500, quantity: 1, lineTotal: 8500 }],
+      breakdown: mkBreakdown(8500, false),
+      subtotal: 8500, vatAmount: Math.round(8500*0.05), shippingFee: 0, total: 8500 + Math.round(8500*0.05),
+      currency: "BDT",
+      status: "pending",
+      statusHistory: mkHistory("pending"),
+      deliveryAddress: "Village: Karimpur, Dist: Rajshahi",
+      deliveryDistrict: "Rajshahi",
+      isInsideDhaka: false,
+      maxDeliveryDays: 7,
+      expectedDelivery: new Date(Date.now() + 7 * 86400000).toISOString(),
+      deliveryPolicy: "Delivery within 7 working days outside Dhaka",
+      paymentMethod: "nagad",
+      notes: "",
+      termsAcceptedAt: ago(60),
+      createdAt: ago(60),
+      updatedAt: ago(60),
+    },
+    {
+      id: "ord_seed_4",
+      orderNo: "PKM-SEED004",
+      buyerId: "u-me",
+      buyerName: "Demo Buyer",
+      items: [{ id: "oi4", productId: "p3", productTitle: "Fresh Hilsa Fish 1kg", productImage: img("p3"), vendorId: "v3", vendorName: "Sylhet Fresh Mart", unitPrice: 1450, quantity: 2, lineTotal: 2900 }],
+      breakdown: mkBreakdown(2900, false),
+      subtotal: 2900, vatAmount: Math.round(2900*0.05), shippingFee: 0, total: 2900 + Math.round(2900*0.05),
+      currency: "BDT",
+      status: "delivered",
+      statusHistory: mkHistory("delivered"),
+      deliveryAddress: "Mirpur-10, Dhaka",
+      deliveryDistrict: "Dhaka",
+      isInsideDhaka: true,
+      maxDeliveryDays: 3,
+      expectedDelivery: new Date(Date.now() - 2 * 86400000).toISOString(),
+      deliveryPolicy: "Delivery within 3 working days inside Dhaka",
+      paymentMethod: "bkash",
+      notes: "",
+      termsAcceptedAt: ago(2000),
+      createdAt: ago(2000),
+      updatedAt: ago(20),
+    },
+  ];
+
   db.notifications = [
-    { id: "n1", type: "order", title: "Order shipped", body: "Your order #1023 is on the way.", actorAvatarUrl: avatar("v1"), read: false, createdAt: ago(30) },
+    { id: "n1", type: "order", title: "Order shipped", body: "Your order PKM-SEED001 is on the way.", actorAvatarUrl: avatar("v1"), read: false, createdAt: ago(30) },
     { id: "n2", type: "demand_match", title: "New match", body: "Chittagong Wholesale matched your demand.", actorAvatarUrl: avatar("v2"), read: false, createdAt: ago(120) },
     { id: "n3", type: "review", title: "New review", body: "5-star review on Wireless Earbuds Pro.", read: true, createdAt: ago(720) },
   ];
@@ -289,5 +468,22 @@ export function cartTotals() {
     subtotal,
     currency: "BDT",
     itemCount: items.reduce((s, i) => s + (i.quantity ?? 0), 0),
+  };
+}
+
+/** Compute full BD compliance price breakdown from a subtotal + district */
+export function computeBreakdown(subtotal: number, isInsideDhaka: boolean): import("./db").PriceBreakdown {
+  const vatAmount = Math.round(subtotal * 0.05);
+  const shippingFee = subtotal >= 1000 ? 0 : isInsideDhaka ? 60 : 120;
+  return {
+    subtotal,
+    vatRate: "5%",
+    vatAmount,
+    shippingFee,
+    shippingLabel: shippingFee === 0
+      ? "Free (order above ৳1,000)"
+      : `৳${shippingFee} (${isInsideDhaka ? "Inside Dhaka" : "Outside Dhaka"})`,
+    discountAmount: 0,
+    total: subtotal + vatAmount + shippingFee,
   };
 }
