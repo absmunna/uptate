@@ -1,0 +1,37 @@
+You are acting as the Core Full-Stack Developer Agent. Your objective is to perform a comprehensive production-readiness overhaul of this B2B e-commerce platform. You must ensure all pages, user roles, UI/UX states, and real database workflows are 100% functional, highly scalable, and completely ready for production deployment without breaking any existing architectural patterns.
+
+Follow these strict structural and global compliance directives:
+
+---
+
+### 1. Unified Authentication, RBAC & Session Security
+* **Production Auth Synchronization:** Connect all authentication UI layouts (Login, Multi-Role Registration for Buyer/Seller/Factory, and Password Recovery) to the active backend API. Fully remove any remaining hardcoded mock authentications or bypasses.
+* **Role-Based Guards & Persistence:** Ensure the route guards and portal layouts strictly enforce access control based on user roles (Admin, Seller, Buyer). User sessions, JWT tokens, or authentication states must persist correctly without breaking or resetting during browser hard refreshes.
+* **Input Validation:** Enforce secure real-time form validation, including specific local formatting rules (e.g., standard 11-digit mobile numbers) and strict password complexity rules.
+
+---
+
+### 2. State Management, Localization & Theme Engine
+* **Context-Driven Localization (EN/BN):** Scan the localization mechanism and ensure that switching languages dynamically and flawlessly updates all layout elements, navigation headers, B2B price metrics, and dashboard screens.
+* **Theme Engine & Local Storage:** Validate the multi-theme injection architecture. The selected theme must write correctly to persistent client-side storage to eliminate any UI flickering or style resets upon page reloads.
+
+---
+
+### 3. Production Database & API Data-Mapping
+* **Prisma to MySQL/Production Schema:** Review the database schema definition files. All models, relations, indices, and field types must be fully optimized for a live, production-grade relational database environment.
+* **Eliminate Mock Dependencies:** Track down all frontend data-fetching hooks. Ensure no core components are consuming local static mock arrays. Every data stream must flow from actual unified backend API endpoints.
+* **Defensive API Responses:** To prevent runtime client crashes (e.g., `.map is not a function`), ensure all controllers return empty data structures (like `[]` or empty objects) instead of null or undefined when records are not found.
+
+---
+
+### 4. National Digital Commerce Law & Compliance Integration
+The platform must strictly align with the Digital Commerce Management Guidelines of Bangladesh (e-CAB standard compliance):
+* **Price & Tax Transparency:** Update all checkout summaries and product detail structures to explicitly break down prices in BDT (Base B2B Price + Applicable VAT/Tax + Shipping/Logistics fees). No hidden costs are allowed.
+* **Delivery Timeline Commitments:** The order processing screens and product cards must display explicit delivery timeline policies (e.g., maximum delivery duration inside and outside major zones).
+* **Legal Checkboxes & Policies:** Integrate mandatory consent checkboxes on the onboarding and final checkout screens, linked directly to the platform's Refund, Return, and Terms of Service layouts.
+* **Merchant Accountability:** Ensure vendor and factory registration/profile interfaces collect and validate verifiable physical addresses and business identity states to maintain marketplace transparency.
+
+---
+
+### 5. Final Compilation & Verification
+* Execute a rigorous local production build sequence to ensure zero compilation errors, TypeScript mismatches, or linter warnings. Ensure that all dependencies and shared modules are properly bundled and optimized for an external cloud deployment structure.

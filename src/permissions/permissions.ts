@@ -34,6 +34,14 @@ export type Permission =
 export const ROLE_PERMISSIONS: Record<AppRole, Permission[]> = {
   guest: ["product.view", "b2b.view", "logistics.view", "export.view"],
 
+  // "user" is an alias for "buyer" — kept for backward-compat
+  user: [
+    "product.view", "order.place", "order.cancel",
+    "wallet.view", "wallet.topup",
+    "content.post", "b2b.view",
+    "logistics.view", "export.view",
+  ],
+
   buyer: [
     "product.view", "order.place", "order.cancel",
     "wallet.view", "wallet.topup",

@@ -92,7 +92,7 @@ function MenuLinks({ onNavigate }: { onNavigate?: () => void }) {
           </div>
           <div className="flex flex-col gap-0.5">
             {section.items.map((item) => {
-              const Icon = item.icon ?? item.Icon;
+              const Icon = (item as any).Icon ?? (item as any).icon;
               const active =
                 location === item.href ||
                 (item.href !== "/" && location.startsWith(item.href.split("?")[0] ?? item.href));

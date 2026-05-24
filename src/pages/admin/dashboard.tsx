@@ -6,10 +6,10 @@ import { useAuth } from "@/features/auth/AuthContext";
 import { useGetPlatformStats } from "@workspace/api-client-react";
 
 export default function AdminDashboardPage() {
-  const { user, role, promoteToAdmin } = useAuth();
+  const { user, role } = useAuth();
   const { data: stats } = useGetPlatformStats();
 
-  if (role !== "admin") {
+  if (role !== "admin" && role !== "super_admin") {
     return (
       <div className="max-w-2xl mx-auto px-4 py-10">
         <GlassCard className="p-6 text-center">
@@ -17,14 +17,10 @@ export default function AdminDashboardPage() {
           <h1 className="text-xl font-bold mb-2">Admin Panel</h1>
           <p className="text-sm text-muted-foreground mb-4">
             {user
-              ? "You're not an admin yet. Promote this account for the demo."
-              : "Log in first, then promote yourself to admin to explore the panel."}
+              ? "এই পেজে প্রবেশের অনুমতি নেই। Admin অ্যাকাউন্ট দিয়ে লগইন করুন।"
+              : "প্রথমে Admin অ্যাকাউন্ট দিয়ে লগইন করুন।"}
           </p>
-          {user ? (
-            <Button onClick={promoteToAdmin}>Promote me to admin (demo)</Button>
-          ) : (
-            <Link href="/auth/login"><Button>Log in</Button></Link>
-          )}
+          <Link href="/auth/login"><Button>লগইন করুন</Button></Link>
         </GlassCard>
       </div>
     );

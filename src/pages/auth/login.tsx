@@ -7,10 +7,24 @@ import { useAuth } from "@/features/auth/AuthContext";
 import { useLanguage } from "@/features/language/LanguageContext";
 import { toast } from "sonner";
 import {
-  Phone, Lock, Eye, EyeOff, Loader2, Store, ShieldCheck,
-  ArrowRight, Sparkles, User,
+  Phone, Lock, Eye, EyeOff, Loader2,
+  ArrowRight, Sparkles, AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const BD_PHONE_RE = /^01[3-9]\d{8}$/;
+
+function validatePhone(phone: string): string | null {
+  const cleaned = phone.replace(/\s|-/g, "");
+  if (!cleaned) return "মোবাইল নম্বর দিন";
+  if (!BD_PHONE_RE.test(cleaned)) return "সঠিক ১১ সংখ্যার বাংলাদেশি মোবাইল নম্বর দিন (যেমন: 01XXXXXXXXX)";
+  return null;
+}
+
+function validatePassword(pw: string): string | null {
+  if (pw.length < 8) return "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে";
+  return null;
+}
 
 export default function LoginPage() {
   const [, navigate] = useLocation();
@@ -20,16 +34,29 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [phoneErr, setPhoneErr] = useState<string | null>(null);
+  const [passErr, setPassErr] = useState<string | null>(null);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const pe = validatePhone(phone);
+    const pw = validatePassword(password);
+    setPhoneErr(pe);
+    setPassErr(pw);
+    if (pe || pw) return;
+
     setBusy(true);
     try {
-      await auth.loginWithPhone(phone, password);
+      await auth.loginWithPhone(phone.trim(), password);
       toast.success(isBn ? "সফলভাবে লগইন হয়েছে!" : "Logged in successfully!");
       navigate("/");
-    } catch {
-      toast.error(isBn ? "লগইন ব্যর্থ হয়েছে" : "Login failed. Please check your credentials.");
+    } catch (err: any) {
+      const msg = err?.message ?? "";
+      if (msg.includes("401") || msg.includes("Invalid")) {
+        toast.error(isBn ? "মোবাইল নম্বর বা পাসওয়ার্ড ভুল" : "Incorrect phone number or password.");
+      } else {
+        toast.error(isBn ? "লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।" : "Login failed. Please try again.");
+      }
     } finally {
       setBusy(false);
     }
@@ -37,7 +64,6 @@ export default function LoginPage() {
 
   return (
     <div className="w-full max-w-[420px] mx-auto px-4 py-6">
-      {/* Logo */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-gradient-to-br from-primary/30 to-blue-600/20 border border-primary/30 mb-4 shadow-[0_0_24px_rgba(var(--neon-cyan),0.15)]">
           <Sparkles className="h-7 w-7 text-primary" />
@@ -50,10 +76,8 @@ export default function LoginPage() {
         </p>
       </div>
 
-      {/* Card */}
       <div className="rounded-2xl border border-border bg-card shadow-xl p-6">
-        <form onSubmit={submit} className="space-y-4">
-          {/* Phone */}
+        <form onSubmit={submit} className="space-y-4" noValidate>
           <div className="space-y-1.5">
             <Label className="text-sm font-semibold text-foreground/80">
               {isBn ? "মোবাইল নম্বর" : "Phone Number"}
@@ -63,33 +87,38 @@ export default function LoginPage() {
               <Input
                 type="tel"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => { setPhone(e.target.value); setPhoneErr(null); }}
+                onBlur={() => setPhoneErr(validatePhone(phone))}
                 placeholder={isBn ? "০১XXXXXXXXX" : "01XXXXXXXXX"}
-                required
-                className="pl-10 h-11 bg-background border-border focus:border-primary"
+                maxLength={11}
+                className={cn("pl-10 h-11 bg-background border-border focus:border-primary", phoneErr && "border-destructive")}
               />
             </div>
+            {phoneErr && (
+              <p className="flex items-center gap-1 text-[11px] text-destructive">
+                <AlertCircle className="h-3 w-3 shrink-0" />{phoneErr}
+              </p>
+            )}
           </div>
 
-          {/* Password */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-semibold text-foreground/80">
                 {isBn ? "পাসওয়ার্ড" : "Password"}
               </Label>
-              <button type="button" className="text-[12px] text-primary hover:text-primary/80 transition-colors font-medium">
+              <Link href="/auth/forgot-password" className="text-[12px] text-primary hover:text-primary/80 transition-colors font-medium">
                 {isBn ? "পাসওয়ার্ড ভুলে গেছেন?" : "Forgot password?"}
-              </button>
+              </Link>
             </div>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
               <Input
                 type={showPass ? "text" : "password"}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setPassErr(null); }}
+                onBlur={() => setPassErr(validatePassword(password))}
                 placeholder="••••••••"
-                required
-                className="pl-10 pr-10 h-11 bg-background border-border focus:border-primary"
+                className={cn("pl-10 pr-10 h-11 bg-background border-border focus:border-primary", passErr && "border-destructive")}
               />
               <button
                 type="button"
@@ -99,9 +128,13 @@ export default function LoginPage() {
                 {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
+            {passErr && (
+              <p className="flex items-center gap-1 text-[11px] text-destructive">
+                <AlertCircle className="h-3 w-3 shrink-0" />{passErr}
+              </p>
+            )}
           </div>
 
-          {/* Submit */}
           <Button
             type="submit"
             disabled={busy}
@@ -113,44 +146,8 @@ export default function LoginPage() {
             }
           </Button>
         </form>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3 my-5">
-          <div className="flex-1 h-px bg-border" />
-          <span className="text-[11px] text-muted-foreground font-medium">
-            {isBn ? "অথবা" : "OR"}
-          </span>
-          <div className="flex-1 h-px bg-border" />
-        </div>
-
-        {/* Quick demo login */}
-        <p className="text-[10px] text-muted-foreground text-center mb-1.5">{isBn ? "ডেমো অ্যাকাউন্ট দিয়ে চেষ্টা করুন:" : "Try with demo accounts:"}</p>
-        <div className="grid grid-cols-3 gap-2">
-          <button
-            onClick={() => { setPhone("01700000001"); setPassword("demo123"); }}
-            className="flex flex-col items-center gap-1 py-2.5 rounded-xl border border-purple-500/25 bg-purple-500/8 hover:bg-purple-500/15 text-foreground/70 hover:text-foreground transition-all"
-          >
-            <ShieldCheck className="h-4 w-4 text-purple-400" />
-            <span className="text-[11px] font-semibold text-purple-300">{isBn ? "অ্যাডমিন" : "Admin"}</span>
-          </button>
-          <button
-            onClick={() => { setPhone("01700000002"); setPassword("demo123"); }}
-            className="flex flex-col items-center gap-1 py-2.5 rounded-xl border border-emerald-500/25 bg-emerald-500/8 hover:bg-emerald-500/15 text-foreground/70 hover:text-foreground transition-all"
-          >
-            <Store className="h-4 w-4 text-emerald-400" />
-            <span className="text-[11px] font-semibold text-emerald-300">{isBn ? "সেলার" : "Seller"}</span>
-          </button>
-          <button
-            onClick={() => { setPhone("01700000004"); setPassword("demo123"); }}
-            className="flex flex-col items-center gap-1 py-2.5 rounded-xl border border-cyan-500/20 bg-cyan-500/8 hover:bg-cyan-500/15 text-foreground/70 hover:text-foreground transition-all"
-          >
-            <User className="h-4 w-4 text-cyan-400" />
-            <span className="text-[11px] font-semibold text-cyan-300">{isBn ? "বায়ার" : "Buyer"}</span>
-          </button>
-        </div>
       </div>
 
-      {/* Footer links */}
       <div className="mt-5 space-y-2 text-center">
         <p className="text-sm text-muted-foreground">
           {isBn ? "নতুন ব্যবহারকারী? " : "New here? "}
@@ -165,7 +162,7 @@ export default function LoginPage() {
           </Link>
         </p>
         <p className="text-sm text-muted-foreground">
-          {isBn ? "কারখানা মা��িক? " : "Factory owner? "}
+          {isBn ? "কারখানা মালিক? " : "Factory owner? "}
           <Link href="/auth/factory-register" className="text-primary hover:text-primary/80 font-semibold transition-colors">
             {isBn ? "ফ্যাক্টরি রেজিস্ট্রেশন" : "Register factory"}
           </Link>

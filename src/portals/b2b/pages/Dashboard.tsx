@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '../../../components/ui/Card'; // Assuming component exists
+import { Card } from '../../../components/ui/card'; // Assuming component exists
 
 export const Dashboard = () => {
   return (

@@ -3,21 +3,46 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/features/auth/AuthContext";
 import { useLanguage } from "@/features/language/LanguageContext";
 import { toast } from "sonner";
 import {
   User, Phone, Mail, Lock, Eye, EyeOff, Loader2,
-  ArrowRight, CheckCircle2, UserPlus,
+  ArrowRight, CheckCircle2, UserPlus, AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const BENEFITS = [
-  { en: "Track orders in real time",     bn: "রিয়েল টাইমে অর্ডার ট্র্যাক করুন" },
-  { en: "Earn PK Coin on every purchase",bn: "প্রতিটি কেনাকাটায় PK কয়েন জিতুন" },
+  { en: "Track orders in real time",      bn: "রিয়েল টাইমে অর্ডার ট্র্যাক করুন" },
+  { en: "Earn PK Coin on every purchase", bn: "প্রতিটি কেনাকাটায় PK কয়েন জিতুন" },
   { en: "Post demands & get quotes",      bn: "ডিমান্ড পোস্ট করুন ও কোটেশন পান" },
   { en: "Access wholesale prices",        bn: "পাইকারি দামে পণ্য কিনুন" },
 ];
+
+const BD_PHONE_RE = /^01[3-9]\d{8}$/;
+const PW_RE = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+function validatePhone(v: string) {
+  if (!v) return "মোবাইল নম্বর দিন";
+  if (!BD_PHONE_RE.test(v.replace(/\s|-/g, ""))) return "সঠিক ১১ সংখ্যার বাংলাদেশি নম্বর দিন (01XXXXXXXXX)";
+  return null;
+}
+
+function validatePassword(v: string) {
+  if (v.length < 8) return "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে";
+  if (!PW_RE.test(v)) return "পাসওয়ার্ডে অক্ষর ও সংখ্যা উভয়ই থাকতে হবে";
+  return null;
+}
+
+function strengthLevel(v: string): number {
+  let s = 0;
+  if (v.length >= 8) s++;
+  if (/[A-Z]/.test(v)) s++;
+  if (/\d/.test(v)) s++;
+  if (/[^A-Za-z\d]/.test(v)) s++;
+  return s;
+}
 
 export default function RegisterPage() {
   const [, navigate] = useLocation();
@@ -26,13 +51,27 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ fullName: "", phone: "", email: "", password: "" });
   const [showPass, setShowPass] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
+
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((s) => ({ ...s, [k]: e.target.value }));
 
+  const validate = () => {
+    const e: Record<string, string | null> = {
+      phone: validatePhone(form.phone),
+      password: validatePassword(form.password),
+      fullName: form.fullName.trim().length < 2 ? "পুরো নাম দিন" : null,
+    };
+    setErrors(e);
+    return !Object.values(e).some(Boolean);
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.password.length < 6) {
-      toast.error(isBn ? "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে" : "Password must be at least 6 characters");
+    if (!validate()) return;
+    if (!termsChecked) {
+      toast.error(isBn ? "শর্তাবলী ও গোপনীয়তা নীতিতে সম্মত হতে হবে" : "Please accept the Terms & Privacy Policy");
       return;
     }
     setBusy(true);
@@ -40,29 +79,30 @@ export default function RegisterPage() {
       await auth.registerUser(form);
       toast.success(isBn ? "অ্যাকাউন্ট তৈরি হয়েছে!" : "Account created successfully!");
       navigate("/");
-    } catch {
-      toast.error(isBn ? "রেজিস্ট্রেশন ব্যর্থ হয়েছে" : "Registration failed. Try again.");
+    } catch (err: any) {
+      toast.error(isBn ? "রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।" : "Registration failed. Please try again.");
     } finally {
       setBusy(false);
     }
   };
 
+  const strength = strengthLevel(form.password);
+  const strengthColor = ["bg-border", "bg-red-500", "bg-amber-500", "bg-emerald-400", "bg-emerald-500"];
+
   return (
     <div className="w-full max-w-[440px] mx-auto px-4 py-6">
-      {/* Header */}
       <div className="text-center mb-6">
         <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-600/20 border border-emerald-500/30 mb-4">
           <UserPlus className="h-7 w-7 text-emerald-400" />
         </div>
         <h1 className="text-2xl font-black text-foreground">
-          {isBn ? "নতুন অ্যাকা���ন্ট খুলুন" : "Create your account"}
+          {isBn ? "নতুন অ্যাকাউন্ট খুলুন" : "Create your account"}
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           {isBn ? "PaikarMart-এ যোগ দিন বিনামূল্যে" : "Join PaikarMart for free"}
         </p>
       </div>
 
-      {/* Benefits */}
       <div className="grid grid-cols-2 gap-2 mb-5">
         {BENEFITS.map((b, i) => (
           <div key={i} className="flex items-start gap-1.5 p-2 rounded-xl bg-muted/60 border border-border">
@@ -72,10 +112,8 @@ export default function RegisterPage() {
         ))}
       </div>
 
-      {/* Form card */}
       <div className="rounded-2xl border border-border bg-card shadow-xl p-6">
-        <form onSubmit={submit} className="space-y-4">
-          {/* Full name */}
+        <form onSubmit={submit} className="space-y-4" noValidate>
           <div className="space-y-1.5">
             <Label className="text-sm font-semibold text-foreground/80">
               {isBn ? "পুরো নাম" : "Full Name"}
@@ -86,13 +124,12 @@ export default function RegisterPage() {
                 value={form.fullName}
                 onChange={set("fullName")}
                 placeholder={isBn ? "আপনার পুরো নাম" : "Your full name"}
-                required
-                className="pl-10 h-11 bg-background border-border focus:border-primary"
+                className={cn("pl-10 h-11 bg-background border-border focus:border-primary", errors.fullName && "border-destructive")}
               />
             </div>
+            {errors.fullName && <p className="flex items-center gap-1 text-[11px] text-destructive"><AlertCircle className="h-3 w-3" />{errors.fullName}</p>}
           </div>
 
-          {/* Phone */}
           <div className="space-y-1.5">
             <Label className="text-sm font-semibold text-foreground/80">
               {isBn ? "মোবাইল নম্বর" : "Phone Number"}
@@ -103,14 +140,14 @@ export default function RegisterPage() {
                 type="tel"
                 value={form.phone}
                 onChange={set("phone")}
+                maxLength={11}
                 placeholder={isBn ? "০১XXXXXXXXX" : "01XXXXXXXXX"}
-                required
-                className="pl-10 h-11 bg-background border-border focus:border-primary"
+                className={cn("pl-10 h-11 bg-background border-border focus:border-primary", errors.phone && "border-destructive")}
               />
             </div>
+            {errors.phone && <p className="flex items-center gap-1 text-[11px] text-destructive"><AlertCircle className="h-3 w-3" />{errors.phone}</p>}
           </div>
 
-          {/* Email */}
           <div className="space-y-1.5">
             <Label className="text-sm font-semibold text-foreground/80">
               {isBn ? "ইমেইল (ঐচ্ছিক)" : "Email (optional)"}
@@ -127,7 +164,6 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {/* Password */}
           <div className="space-y-1.5">
             <Label className="text-sm font-semibold text-foreground/80">
               {isBn ? "পাসওয়ার্ড" : "Password"}
@@ -138,43 +174,38 @@ export default function RegisterPage() {
                 type={showPass ? "text" : "password"}
                 value={form.password}
                 onChange={set("password")}
-                placeholder={isBn ? "কমপক্ষে ৬ অক্ষর" : "At least 6 characters"}
-                required
-                className="pl-10 pr-10 h-11 bg-background border-border focus:border-primary"
+                placeholder={isBn ? "কমপক্ষে ৮ অক্ষর, অক্ষর+সংখ্যা" : "Min 8 chars, letters + numbers"}
+                className={cn("pl-10 pr-10 h-11 bg-background border-border focus:border-primary", errors.password && "border-destructive")}
               />
-              <button
-                type="button"
-                onClick={() => setShowPass((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
+              <button type="button" onClick={() => setShowPass((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
-            {/* Strength hint */}
             {form.password.length > 0 && (
               <div className="flex gap-1 mt-1">
                 {[1,2,3,4].map((n) => (
-                  <div key={n} className={cn(
-                    "h-1 flex-1 rounded-full transition-colors",
-                    form.password.length >= n * 3 ? (form.password.length >= 10 ? "bg-emerald-500" : "bg-amber-500") : "bg-border",
-                  )} />
+                  <div key={n} className={cn("h-1 flex-1 rounded-full transition-colors", strength >= n ? strengthColor[strength] : "bg-border")} />
                 ))}
               </div>
             )}
+            {errors.password && <p className="flex items-center gap-1 text-[11px] text-destructive"><AlertCircle className="h-3 w-3" />{errors.password}</p>}
           </div>
 
-          {/* TOS */}
-          <p className="text-[11px] text-muted-foreground">
-            {isBn
-              ? "অ্যাকাউন্ট তৈরি করে আপনি আমাদের "
-              : "By creating an account you agree to our "}
-            <span className="text-primary cursor-pointer">{isBn ? "শর্তাবলী" : "Terms"}</span>
-            {isBn ? " ও " : " & "}
-            <span className="text-primary cursor-pointer">{isBn ? "গোপনীয়তা নীতিতে" : "Privacy Policy"}</span>
-            {isBn ? " সম্মত হচ্ছেন" : ""}.
-          </p>
+          <div className="flex items-start gap-2.5 pt-1">
+            <Checkbox
+              id="terms"
+              checked={termsChecked}
+              onCheckedChange={(v) => setTermsChecked(!!v)}
+              className="mt-0.5 border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            />
+            <label htmlFor="terms" className="text-[11px] text-muted-foreground leading-snug cursor-pointer">
+              {isBn
+                ? <>আমি PaikarMart-এর <Link href="/terms" className="text-primary">শর্তাবলী</Link>, <Link href="/refund-policy" className="text-primary">রিফান্ড নীতি</Link> ও <Link href="/privacy" className="text-primary">গোপনীয়তা নীতি</Link> পড়েছি এবং সম্মত আছি।</>
+                : <>I have read and agree to PaikarMart's <Link href="/terms" className="text-primary">Terms of Service</Link>, <Link href="/refund-policy" className="text-primary">Refund Policy</Link> & <Link href="/privacy" className="text-primary">Privacy Policy</Link>.</>
+              }
+            </label>
+          </div>
 
-          {/* Submit */}
           <Button
             type="submit"
             disabled={busy}
@@ -188,7 +219,6 @@ export default function RegisterPage() {
         </form>
       </div>
 
-      {/* Footer */}
       <div className="mt-5 text-center space-y-2">
         <p className="text-sm text-muted-foreground">
           {isBn ? "আগেই অ্যাকাউন্ট আছে? " : "Already have an account? "}

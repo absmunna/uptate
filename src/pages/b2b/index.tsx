@@ -49,7 +49,7 @@ const CHAIN_STEPS = [
 const FOUR_MODELS = [
   {
     Icon: Package, title: "সেলার রেজিস্ট্রেশন ও পণ্য লিস্টিং",
-    color: "text-cyan-400", bg: "bg-cyan-500/8 border-cyan-500/20",
+    color: "text-cyan-400", bg: "bg-cyan-500/8", border: "border-cyan-500/20",
     points: [
       "কারখানা / পাইকারি / গ্রামীণ — তিনটি আলাদা রেজিস্ট্রেশন ফর্ম",
       "পণ্য আপলোড, দাম ও স্টক আপডেট",
@@ -59,7 +59,7 @@ const FOUR_MODELS = [
   },
   {
     Icon: Truck, title: "ডাইনামিক লজিস্টিক ক্যালকুলেশন",
-    color: "text-emerald-400", bg: "bg-emerald-500/8 border-emerald-500/20",
+    color: "text-emerald-400", bg: "bg-emerald-500/8", border: "border-emerald-500/20",
     points: [
       "দূরত্ব ও ওজন ভিত্তিক ডেলিভারি চার্জ",
       "Google Maps Distance Matrix API",
@@ -69,7 +69,7 @@ const FOUR_MODELS = [
   },
   {
     Icon: Zap, title: "ফিল্টারিং ও রাইডার ম্যাচিং",
-    color: "text-amber-400", bg: "bg-amber-500/8 border-amber-500/20",
+    color: "text-amber-400", bg: "bg-amber-500/8", border: "border-amber-500/20",
     points: [
       "রাইডার নিজের গন্তব্য অনুযায়ী পিকআপ খুঁজে",
       "লোকেশন রেডিয়াস ফিল্টার",
@@ -79,7 +79,7 @@ const FOUR_MODELS = [
   },
   {
     Icon: BadgePercent, title: "কমিশন ও পেমেন্ট মডেল",
-    color: "text-purple-400", bg: "bg-purple-500/8 border-purple-500/20",
+    color: "text-purple-400", bg: "bg-purple-500/8", border: "border-purple-500/20",
     points: [
       "Factory→Wholesale: ৩% প্ল্যাটফর্ম ফি",
       "Wholesale→Rural: ৫% কমিশন",
