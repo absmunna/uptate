@@ -14,6 +14,7 @@ export default defineConfig(({mode}) => {
       alias: {
         '@': path.resolve(__dirname, './src'),
         'shared': path.resolve(__dirname, './shared'),
+        '@workspace/api-client-react': path.resolve(__dirname, './lib/api-client-react/src/index.ts'),
       },
     },
     server: {
