@@ -85,7 +85,7 @@ export default function SellerProducts() {
               className="p-4 flex flex-col sm:flex-row sm:items-center gap-4"
             >
               <img
-                src={p.images[0]}
+                src={p.images?.[0] ?? ''}
                 alt={p.title}
                 className="w-full sm:w-24 h-24 object-cover rounded-lg border border-white/10"
               />

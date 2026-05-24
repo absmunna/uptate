@@ -102,7 +102,7 @@ export default function Cart() {
               <GlassCard key={item.id} className="p-4 flex gap-4">
                 <Link href={`/marketplace/product/${item.product.id}`} className="shrink-0">
                   <img
-                    src={item.product.images[0]}
+                    src={item.product.images?.[0] ?? ''}
                     alt={item.product.title}
                     className="w-24 h-24 object-cover rounded-xl border border-white/10"
                   />

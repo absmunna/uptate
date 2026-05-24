@@ -167,7 +167,7 @@ export default function BuyerOrdersPage() {
                 {/* Items */}
                 <div>
                   <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-3">পণ্য</p>
-                  {order.items.map((item) => (
+                  {(order.items ?? []).map((item) => (
                     <div key={item.id} className="flex items-center gap-3 py-2 border-b border-white/5 last:border-0">
                       <img
                         src={item.productImage}
@@ -222,7 +222,7 @@ export default function BuyerOrdersPage() {
                 <div>
                   <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-3">স্ট্যাটাস ইতিহাস</p>
                   <div className="flex flex-col gap-3">
-                    {[...order.statusHistory].reverse().map((h, i) => {
+                    {[...(order.statusHistory ?? [])].reverse().map((h, i) => {
                       const hc = STATUS_CONFIG[h.status];
                       const HIcon = hc.icon;
                       return (
