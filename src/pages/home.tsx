@@ -12,13 +12,45 @@ import { PortalIconBar } from "@/components/home/PortalIconBar";
 import { SectionHeader } from "@/components/home/SectionHeader";
 import { ProductRail } from "@/components/home/ProductRail";
 import { DemandRail } from "@/components/home/DemandRail";
+import { MerchantHomeView } from "@/components/home/MerchantHomeView";
+import { AdminHomeView } from "@/components/home/AdminHomeView";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { useAuth } from "@/features/auth/AuthContext";
 import {
   Users, Store, ShoppingBag, TrendingUp,
   Flame, Sparkles, FileText, Newspaper,
 } from "lucide-react";
 
+/** Roles that get the merchant/seller dashboard on the homepage */
+const MERCHANT_ROLES = new Set([
+  "seller", "wholesale", "factory",
+  "digital_seller", "service_provider", "rider", "nearby_shop",
+]);
+
+/** Roles that get the admin control panel on the homepage */
+const ADMIN_ROLES = new Set(["admin", "super_admin", "moderator"]);
+
 export default function Home() {
+  const { role } = useAuth();
+
+  /* ── Seller / Factory / Merchant → Merchant Dashboard ── */
+  if (MERCHANT_ROLES.has(role)) {
+    return <MerchantHomeView />;
+  }
+
+  /* ── Admin / Super Admin / Moderator → Admin Control Panel ── */
+  if (ADMIN_ROLES.has(role)) {
+    return <AdminHomeView />;
+  }
+
+  /* ── Guest / Buyer / User → Standard B2B Feed ── */
+  return <BuyerHomeView />;
+}
+
+/* ─────────────────────────────────────────────
+   Buyer / Guest View — the original B2B feed
+───────────────────────────────────────────── */
+function BuyerHomeView() {
   const { data: posts } = useListPosts({}, { query: { queryKey: getListPostsQueryKey() } });
   const { data: stats } = useGetPlatformStats({ query: { queryKey: getGetPlatformStatsQueryKey() } });
 
@@ -27,22 +59,18 @@ export default function Home() {
 
       {/* ━━━ HERO ZONE: Stories + Banner ━━━ */}
       <section className="pt-3">
-        {/* Facebook-style tall story cards */}
         <StoryBar />
-
-        {/* Hero spotlight banner */}
         <div className="mt-3 px-3 md:px-0">
           <HeroSpotlight />
         </div>
       </section>
 
-      {/* ━━━ STICKY PORTAL ICON BAR ━━━
-          Sticks just below the fixed 92px header */}
+      {/* ━━━ STICKY PORTAL ICON BAR ━━━ */}
       <div className="sticky top-[92px] z-40 bg-background/90 backdrop-blur-lg border-b border-border/50 mt-3 -mx-3 px-0 md:mx-0">
         <PortalIconBar />
       </div>
 
-      {/* ━━━ STATS STRIP ━━━ */}
+      {/* ━━━ PLATFORM STATS STRIP ━━━ */}
       {stats && (
         <section className="px-3 md:px-0 pt-5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
@@ -105,7 +133,6 @@ export default function Home() {
           className="px-3 md:px-0"
         />
         <div className="flex flex-col lg:flex-row gap-5 mt-3">
-          {/* Feed column */}
           <div className="flex-1 min-w-0 max-w-2xl w-full flex flex-col gap-3">
             <div className="px-3 md:px-0">
               <CreatePostComposer />
@@ -125,7 +152,7 @@ export default function Home() {
                       <div className="h-3 w-2/3 rounded-full skeleton-shimmer" />
                     </div>
                   ))
-                : posts.slice(0, 8).map((post) => (
+                : (posts ?? []).slice(0, 8).map((post) => (
                     <div key={post.id} className="mx-3 md:mx-0">
                       <PostCard post={post} />
                     </div>
@@ -133,7 +160,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Desktop right sidebar */}
           <aside className="hidden lg:flex w-72 flex-col gap-5 shrink-0">
             <TrendingRail />
             <SuggestedVendors />
