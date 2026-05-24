@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "d8xYiDDSjBgTA2Qq5Bctz"
+uri = "file://final_clean_project.tar.gz"
+type = "unspecified"
+title = "PaikarMart — Final Clean Project Bundle"
