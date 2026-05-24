@@ -1,8 +1,29 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '../modules/auth/store/authStore';
+import { useEffect } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/features/auth/AuthContext";
+import type { ReactNode } from "react";
 
-export const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
-};
+interface AuthGuardProps {
+  children: ReactNode;
+  fallback?: string;
+}
+
+/**
+ * Redirects unauthenticated users to /auth/login.
+ * Preserves the intended path via ?from= query param.
+ * Uses useEffect to avoid calling setLocation during render.
+ */
+export function AuthGuard({ children, fallback = "/auth/login" }: AuthGuardProps) {
+  const [location, setLocation] = useLocation();
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation(`${fallback}?from=${encodeURIComponent(location)}`);
+    }
+  }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!isAuthenticated) return null;
+
+  return <>{children}</>;
+}

@@ -1,33 +1,455 @@
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
-@import "./themes/variables.css";
 @import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-border: var(--primary-border);
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-border: var(--secondary-border);
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-border: var(--muted-border);
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-border: var(--accent-border);
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive-border: var(--destructive-border);
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-primary-border: var(--sidebar-primary-border);
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-accent-border: var(--sidebar-accent-border);
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden;
+/* LIGHT MODE */
+:root {
+  --button-outline: rgba(0,0,0, .10);
+  --badge-outline: rgba(0,0,0, .05);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(0,0,0, .03);
+  --elevate-2: rgba(0,0,0, .08);
+
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --border: 214.3 31.8% 91.4%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --card-border: 214.3 31.8% 91.4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --popover-border: 214.3 31.8% 91.4%;
+  --primary: 199 89% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222 47% 11%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 199 89% 48%;
+  
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 222 47% 11%;
+  --sidebar-border: 214.3 31.8% 91.4%;
+  --sidebar-primary: 199 89% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 210 40% 96.1%;
+  --sidebar-accent-foreground: 222 47% 11%;
+  --sidebar-ring: 199 89% 48%;
+
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+
+  --app-font-sans: 'Inter', sans-serif;
+  --app-font-serif: Georgia, serif;
+  --app-font-mono: Menlo, monospace;
+  --radius: .625rem;
+
+  /* Neon tokens (light — subdued) */
+  --neon-cyan:   #0891b2;
+  --neon-blue:   #2563eb;
+  --neon-purple: #7c3aed;
+  --neon-glow-sm: 0 0 8px rgba(8, 145, 178, 0.25);
+  --neon-glow-md: 0 0 16px rgba(8, 145, 178, 0.35);
 }
 
-body {
-  background-color: var(--pm-bg);
-  color: var(--pm-text);
-  font-family: var(--font-sans);
-  min-height: 100dvh;
+/* ──────────────────────────────────────────────────────
+   DARK THEME — Cyberpunk deep-space navy
+   ────────────────────────────────────────────────────── */
+.dark {
+  --button-outline: rgba(255,255,255, .08);
+  --badge-outline: rgba(255,255,255, .04);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(255,255,255, .03);
+  --elevate-2: rgba(255,255,255, .07);
+
+  /* Near-black deep navy — richer than before */
+  --background: 225 50% 5%;
+  --foreground: 210 40% 96%;
+  --border: 220 30% 14%;
+
+  /* Glassmorphism cards */
+  --card: 222 47% 8%;
+  --card-foreground: 210 40% 96%;
+  --card-border: 220 30% 16%;
+
+  --popover: 224 50% 7%;
+  --popover-foreground: 210 40% 96%;
+  --popover-border: 220 30% 16%;
+
+  /* Cyan-tinted primary */
+  --primary: 199 89% 48%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 220 30% 14%;
+  --secondary-foreground: 210 40% 96%;
+
+  --muted: 220 30% 12%;
+  --muted-foreground: 215 20% 55%;
+
+  --accent: 220 30% 14%;
+  --accent-foreground: 210 40% 96%;
+
+  --destructive: 0 62.8% 40%;
+  --destructive-foreground: 0 0% 100%;
+
+  --input: 220 30% 14%;
+  --ring: 199 89% 48%;
+
+  --sidebar: 225 50% 5%;
+  --sidebar-foreground: 210 40% 96%;
+  --sidebar-border: 220 30% 14%;
+  --sidebar-primary: 199 89% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 220 30% 14%;
+  --sidebar-accent-foreground: 210 40% 96%;
+  --sidebar-ring: 199 89% 48%;
+
+  --chart-1: 199 80% 55%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+
+  /* Neon glow tokens */
+  --neon-cyan:   #22d3ee;
+  --neon-blue:   #60a5fa;
+  --neon-purple: #a78bfa;
+  --neon-glow-sm: 0 0 10px rgba(34, 211, 238, 0.20), 0 0 2px rgba(34, 211, 238, 0.40);
+  --neon-glow-md: 0 0 20px rgba(34, 211, 238, 0.25), 0 0 4px rgba(34, 211, 238, 0.50);
+  --neon-glow-btn: 0 0 24px rgba(34, 211, 238, 0.35), 0 2px 8px rgba(0,0,0,0.6);
 }
 
-.glass {
-  background: var(--pm-glass);
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* ──────────────────────────────────────────────────────
+   GLASSMORPHISM UTILITIES
+   ────────────────────────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(16px);
-  border: 1px solid var(--pm-border);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
-.bottom-nav {
-  padding-bottom: env(safe-area-inset-bottom);
+.glass-panel {
+  background: rgba(6, 10, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(255, 255, 255, 0.07);
 }
+
+/* Cyberpunk card with subtle cyan border glow */
+.cyber-card {
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(34, 211, 238, 0.12);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.cyber-card-active {
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.15), 0 4px 32px rgba(0,0,0,0.5);
+}
+
+/* Neon glow utilities */
+.neon-glow-sm  { box-shadow: var(--neon-glow-sm); }
+.neon-glow-md  { box-shadow: var(--neon-glow-md); }
+.neon-glow-btn { box-shadow: var(--neon-glow-btn); }
+
+/* Thin glowing border */
+.neon-border {
+  border: 1px solid rgba(34, 211, 238, 0.30);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.15), inset 0 0 6px rgba(34, 211, 238, 0.05);
+}
+
+/* ──────────────────────────────────────────────────────
+   SCROLLBAR UTILITIES
+   ───────────────────────────────────���────────────────── */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ──────────────────────────────────────────────────────
+   SAFE AREA
+   ────────────────────────────────────────────────────── */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+
+/* ──────────────────────────────────────────────────────
+   SKELETON SHIMMER
+   ────────────────────────────────────────────────────── */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(34, 211, 238, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ──────────────────────────────────────────────────────
+   LAYOUT
+   ────────────────────────────────────────────────────── */
+html, body { overflow-x: hidden; }
+
+/* ──────────────────────────────────────────────────────
+   THEME: Midnight — deep purple + violet neon
+   ────────────────────────────────────────────────────── */
+.midnight {
+  --background: 270 60% 4%;
+  --foreground: 270 30% 96%;
+  --border: 270 35% 14%;
+  --card: 270 50% 7%;
+  --card-foreground: 270 30% 96%;
+  --card-border: 270 35% 16%;
+  --popover: 270 55% 6%;
+  --popover-foreground: 270 30% 96%;
+  --popover-border: 270 35% 16%;
+  --primary: 270 80% 70%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 270 35% 14%;
+  --secondary-foreground: 270 30% 96%;
+  --muted: 270 30% 11%;
+  --muted-foreground: 270 20% 55%;
+  --accent: 320 70% 60%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62% 40%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 270 35% 14%;
+  --ring: 270 80% 70%;
+  --sidebar: 270 60% 4%;
+  --sidebar-foreground: 270 30% 96%;
+  --sidebar-border: 270 35% 14%;
+  --sidebar-primary: 270 80% 70%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 270 35% 14%;
+  --sidebar-accent-foreground: 270 30% 96%;
+  --sidebar-ring: 270 80% 70%;
+  --chart-1: 270 80% 65%;
+  --chart-2: 320 70% 60%;
+  --chart-3: 200 70% 55%;
+  --chart-4: 45 80% 60%;
+  --chart-5: 0 70% 60%;
+  --neon-cyan:   #a78bfa;
+  --neon-blue:   #c084fc;
+  --neon-purple: #ec4899;
+  --neon-glow-sm: 0 0 10px rgba(167,139,250,0.22), 0 0 2px rgba(167,139,250,0.45);
+  --neon-glow-md: 0 0 22px rgba(167,139,250,0.28), 0 0 5px rgba(167,139,250,0.55);
+  --neon-glow-btn: 0 0 26px rgba(167,139,250,0.38), 0 2px 8px rgba(0,0,0,0.65);
+}
+.midnight .glass-panel  { background: rgba(13,5,32,0.88); }
+.midnight .cyber-card   {
+  background: rgba(167,139,250,0.04);
+  border-color: rgba(167,139,250,0.13);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(167,139,250,0.06);
+}
+.midnight .skeleton-shimmer {
+  background: linear-gradient(90deg,rgba(167,139,250,0.03) 0%,rgba(167,139,250,0.09) 50%,rgba(167,139,250,0.03) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+/* ──────────────────────────────────────────────────────
+   THEME: Forest — dark teal + emerald neon
+   ────────────────────────────────────────────────────── */
+.forest {
+  --background: 160 55% 4%;
+  --foreground: 160 25% 95%;
+  --border: 160 35% 13%;
+  --card: 160 45% 6%;
+  --card-foreground: 160 25% 95%;
+  --card-border: 160 35% 15%;
+  --popover: 160 50% 5%;
+  --popover-foreground: 160 25% 95%;
+  --popover-border: 160 35% 15%;
+  --primary: 152 70% 50%;
+  --primary-foreground: 160 60% 8%;
+  --secondary: 160 35% 13%;
+  --secondary-foreground: 160 25% 95%;
+  --muted: 160 30% 10%;
+  --muted-foreground: 160 18% 53%;
+  --accent: 170 60% 45%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 60% 40%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 160 35% 13%;
+  --ring: 152 70% 50%;
+  --sidebar: 160 55% 4%;
+  --sidebar-foreground: 160 25% 95%;
+  --sidebar-border: 160 35% 13%;
+  --sidebar-primary: 152 70% 50%;
+  --sidebar-primary-foreground: 160 60% 8%;
+  --sidebar-accent: 160 35% 13%;
+  --sidebar-accent-foreground: 160 25% 95%;
+  --sidebar-ring: 152 70% 50%;
+  --chart-1: 152 70% 50%;
+  --chart-2: 170 60% 45%;
+  --chart-3: 200 65% 55%;
+  --chart-4: 45 80% 55%;
+  --chart-5: 0 65% 55%;
+  --neon-cyan:   #34d399;
+  --neon-blue:   #6ee7b7;
+  --neon-purple: #a7f3d0;
+  --neon-glow-sm: 0 0 10px rgba(52,211,153,0.22), 0 0 2px rgba(52,211,153,0.45);
+  --neon-glow-md: 0 0 22px rgba(52,211,153,0.28), 0 0 5px rgba(52,211,153,0.55);
+  --neon-glow-btn: 0 0 26px rgba(52,211,153,0.38), 0 2px 8px rgba(0,0,0,0.65);
+}
+.forest .glass-panel  { background: rgba(4,18,10,0.88); }
+.forest .cyber-card   {
+  background: rgba(52,211,153,0.04);
+  border-color: rgba(52,211,153,0.13);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.55), inset 0 1px 0 rgba(52,211,153,0.05);
+}
+.forest .skeleton-shimmer {
+  background: linear-gradient(90deg,rgba(52,211,153,0.03) 0%,rgba(52,211,153,0.09) 50%,rgba(52,211,153,0.03) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+/* ──────────────────────────────────────────────────────
+   THEME: Sunset — warm dark + amber/orange neon
+   ────────────────────────────────────────────────────── */
+.sunset {
+  --background: 20 55% 4%;
+  --foreground: 30 30% 95%;
+  --border: 25 35% 13%;
+  --card: 22 45% 7%;
+  --card-foreground: 30 30% 95%;
+  --card-border: 25 35% 15%;
+  --popover: 22 50% 6%;
+  --popover-foreground: 30 30% 95%;
+  --popover-border: 25 35% 15%;
+  --primary: 38 95% 58%;
+  --primary-foreground: 20 60% 8%;
+  --secondary: 25 35% 13%;
+  --secondary-foreground: 30 30% 95%;
+  --muted: 22 30% 10%;
+  --muted-foreground: 25 18% 52%;
+  --accent: 18 85% 55%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62% 40%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 25 35% 13%;
+  --ring: 38 95% 58%;
+  --sidebar: 20 55% 4%;
+  --sidebar-foreground: 30 30% 95%;
+  --sidebar-border: 25 35% 13%;
+  --sidebar-primary: 38 95% 58%;
+  --sidebar-primary-foreground: 20 60% 8%;
+  --sidebar-accent: 25 35% 13%;
+  --sidebar-accent-foreground: 30 30% 95%;
+  --sidebar-ring: 38 95% 58%;
+  --chart-1: 38 95% 58%;
+  --chart-2: 18 85% 55%;
+  --chart-3: 340 70% 55%;
+  --chart-4: 60 80% 50%;
+  --chart-5: 200 65% 55%;
+  --neon-cyan:   #fbbf24;
+  --neon-blue:   #fb923c;
+  --neon-purple: #f472b6;
+  --neon-glow-sm: 0 0 10px rgba(251,191,36,0.22), 0 0 2px rgba(251,191,36,0.45);
+  --neon-glow-md: 0 0 22px rgba(251,191,36,0.28), 0 0 5px rgba(251,191,36,0.55);
+  --neon-glow-btn: 0 0 26px rgba(251,191,36,0.38), 0 2px 8px rgba(0,0,0,0.65);
+}
+.sunset .glass-panel  { background: rgba(15,7,2,0.88); }
+.sunset .cyber-card   {
+  background: rgba(251,191,36,0.04);
+  border-color: rgba(251,191,36,0.13);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.55), inset 0 1px 0 rgba(251,191,36,0.05);
+}
+.sunset .skeleton-shimmer {
+  background: linear-gradient(90deg,rgba(251,191,36,0.03) 0%,rgba(251,191,36,0.09) 50%,rgba(251,191,36,0.03) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+/* light theme — explicit class for parity */
+.light { color-scheme: light; }
