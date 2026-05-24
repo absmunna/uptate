@@ -1,7 +1,7 @@
 import cors from 'cors';
 
 export const corsMiddleware = cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 });
