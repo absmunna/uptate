@@ -6,7 +6,7 @@ import { useAuth } from "@/features/auth/AuthContext";
 import {
   ShieldCheck, Users, Store, ShoppingBag, TrendingUp,
   AlertTriangle, CheckCircle2, Clock, Settings,
-  BarChart3, FileText, ArrowRight, Eye,
+  BarChart3, FileText, ArrowRight,
 } from "lucide-react";
 import { formatBDT } from "@/lib/format";
 
@@ -15,20 +15,28 @@ interface PlatformStats {
   totalVendors: number;
   totalProducts: number;
   dailyGmv: number;
-  pendingVerifications?: number;
+}
+
+interface PendingSeller {
+  id: string;
+  name: string;
+  type: string;
+  district: string;
+  avatarUrl?: string;
+  submitted: string;
 }
 
 async function fetchPlatformStats(): Promise<PlatformStats> {
   const res = await fetch("/api/stats/overview");
-  if (!res.ok) return { totalUsers: 0, totalVendors: 0, totalProducts: 0, dailyGmv: 0 };
+  if (!res.ok) throw new Error(`stats/overview: ${res.status}`);
   return res.json();
 }
 
-const PENDING_SELLERS = [
-  { id: "s1", name: "Rahim Traders", type: "Wholesale", district: "Dhaka", submitted: "2 hours ago" },
-  { id: "s2", name: "Green Agro Ltd", type: "Factory", district: "Rajshahi", submitted: "5 hours ago" },
-  { id: "s3", name: "Tech Solutions BD", type: "Digital Seller", district: "Chittagong", submitted: "1 day ago" },
-];
+async function fetchPendingSellers(): Promise<PendingSeller[]> {
+  const res = await fetch("/api/admin/sellers/pending");
+  if (!res.ok) throw new Error(`admin/sellers/pending: ${res.status}`);
+  return res.json();
+}
 
 export function AdminHomeView() {
   const { user } = useAuth();
@@ -36,12 +44,19 @@ export function AdminHomeView() {
   const { data: stats } = useQuery({
     queryKey: ["platform-stats"],
     queryFn: fetchPlatformStats,
-    refetchInterval: 30000,
-    staleTime: 10000,
+    refetchInterval: 30_000,
+    staleTime: 10_000,
+  });
+
+  const { data: pendingSellers = [], isLoading: pendingLoading } = useQuery({
+    queryKey: ["admin-pending-sellers"],
+    queryFn: fetchPendingSellers,
+    refetchInterval: 60_000,
+    staleTime: 15_000,
   });
 
   const isSuperAdmin = user?.role === "super_admin";
-  const firstName = user?.fullName?.split(" ")[0] ?? "Admin";
+  const firstName    = user?.fullName?.split(" ")[0] ?? "Admin";
 
   return (
     <div className="flex flex-col gap-6 pb-8">
@@ -53,7 +68,7 @@ export function AdminHomeView() {
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                {isSuperAdmin ? "Super Admin" : "Admin"}
+                {isSuperAdmin ? "Super Admin" : user?.role === "moderator" ? "Moderator" : "Admin"}
               </span>
             </div>
             <h1 className="text-2xl font-black text-white leading-tight">
@@ -66,12 +81,12 @@ export function AdminHomeView() {
           </div>
         </div>
 
-        {/* Pending verifications alert */}
-        {PENDING_SELLERS.length > 0 && (
+        {/* Live pending verification alert */}
+        {!pendingLoading && pendingSellers.length > 0 && (
           <div className="relative mt-4 flex items-center gap-2.5 bg-orange-500/10 border border-orange-500/30 rounded-xl px-3 py-2.5">
             <AlertTriangle className="w-4 h-4 text-orange-400 shrink-0" />
             <span className="text-orange-300 text-xs font-semibold flex-1">
-              {PENDING_SELLERS.length} sellers pending verification
+              {pendingSellers.length} seller{pendingSellers.length > 1 ? "s" : ""} pending verification
             </span>
             <Link href="/admin/dashboard">
               <span className="text-orange-400 text-xs font-bold cursor-pointer hover:underline">Review →</span>
@@ -80,21 +95,21 @@ export function AdminHomeView() {
         )}
       </div>
 
-      {/* ── Platform stats grid ── */}
+      {/* ── Live platform stats ── */}
       <div className="grid grid-cols-2 gap-3">
-        <StatTile icon={Users}       iconColor="text-blue-400"    bg="rgba(96,165,250,0.12)"   label="Total Users"    value={(stats?.totalUsers ?? 0).toLocaleString("en-IN")} />
-        <StatTile icon={Store}       iconColor="text-purple-400"  bg="rgba(167,139,250,0.12)"  label="Active Sellers" value={(stats?.totalVendors ?? 0).toLocaleString("en-IN")} />
+        <StatTile icon={Users}       iconColor="text-blue-400"    bg="rgba(96,165,250,0.12)"   label="Total Users"    value={(stats?.totalUsers    ?? 0).toLocaleString("en-IN")} />
+        <StatTile icon={Store}       iconColor="text-purple-400"  bg="rgba(167,139,250,0.12)"  label="Active Sellers" value={(stats?.totalVendors  ?? 0).toLocaleString("en-IN")} />
         <StatTile icon={ShoppingBag} iconColor="text-cyan-400"    bg="rgba(34,211,238,0.12)"   label="Products"       value={(stats?.totalProducts ?? 0).toLocaleString("en-IN")} />
         <StatTile icon={TrendingUp}  iconColor="text-emerald-400" bg="rgba(52,211,153,0.12)"   label="Daily GMV"      value={formatBDT(stats?.dailyGmv ?? 0)} />
       </div>
 
-      {/* ── Quick actions ── */}
+      {/* ── Quick action tiles ── */}
       <div className="grid grid-cols-2 gap-2.5">
         {[
-          { href: "/admin/dashboard",  icon: BarChart3,  label: "Platform Dashboard", color: "text-indigo-400" },
-          { href: "/admin/users",      icon: Users,      label: "User Management",    color: "text-blue-400" },
-          { href: "/admin/settings",   icon: Settings,   label: "System Settings",    color: "text-white/50" },
-          { href: "/admin/registry",   icon: FileText,   label: "Component Registry", color: "text-purple-400" },
+          { href: "/admin/dashboard",  icon: BarChart3, label: "Platform Dashboard", color: "text-indigo-400" },
+          { href: "/admin/users",      icon: Users,     label: "User Management",    color: "text-blue-400" },
+          { href: "/admin/settings",   icon: Settings,  label: "System Settings",    color: "text-white/50" },
+          { href: "/admin/registry",   icon: FileText,  label: "Component Registry", color: "text-purple-400" },
         ].map(({ href, icon: Icon, label, color }) => (
           <Link key={href} href={href}>
             <GlassCard className="p-4 flex items-center gap-3 cursor-pointer hover:border-indigo-500/30 transition-colors">
@@ -105,38 +120,65 @@ export function AdminHomeView() {
         ))}
       </div>
 
-      {/* ── Pending seller verification queue ── */}
+      {/* ── Live pending seller verification queue ── */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-white">Pending Seller Verification</h2>
+          <h2 className="text-base font-bold text-white">
+            Pending Seller Verification
+            {pendingSellers.length > 0 && (
+              <span className="ml-2 text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-orange-500/20 text-orange-400">
+                {pendingSellers.length}
+              </span>
+            )}
+          </h2>
           <Link href="/admin/dashboard">
             <span className="text-xs text-indigo-400 hover:underline cursor-pointer">View all →</span>
           </Link>
         </div>
-        <div className="flex flex-col gap-2.5">
-          {PENDING_SELLERS.map(seller => (
-            <GlassCard key={seller.id} className="p-3.5 flex items-center gap-3 border-orange-500/10">
-              <div className="w-9 h-9 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0">
-                <Clock className="w-4 h-4 text-orange-400" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-white text-xs font-semibold truncate">{seller.name}</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-white/40">{seller.type}</span>
+
+        {pendingLoading ? (
+          <div className="flex flex-col gap-2.5">
+            {[0, 1, 2].map(i => (
+              <div key={i} className="h-14 rounded-2xl skeleton-shimmer" />
+            ))}
+          </div>
+        ) : pendingSellers.length === 0 ? (
+          <GlassCard className="p-5 flex items-center gap-3 text-center justify-center">
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+            <span className="text-white/50 text-sm">All sellers verified — queue is clear</span>
+          </GlassCard>
+        ) : (
+          <div className="flex flex-col gap-2.5">
+            {pendingSellers.map(seller => (
+              <GlassCard key={seller.id} className="p-3.5 flex items-center gap-3 border-orange-500/10">
+                {seller.avatarUrl ? (
+                  <img
+                    src={seller.avatarUrl}
+                    alt={seller.name}
+                    className="w-9 h-9 rounded-xl object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0">
+                    <Clock className="w-4 h-4 text-orange-400" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-white text-xs font-semibold truncate">{seller.name}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-white/40 shrink-0">{seller.type}</span>
+                  </div>
+                  <p className="text-white/40 text-[11px] mt-0.5">{seller.district} · {seller.submitted}</p>
                 </div>
-                <p className="text-white/40 text-[11px] mt-0.5">{seller.district} · {seller.submitted}</p>
-              </div>
-              <div className="flex gap-1.5 shrink-0">
-                <button className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/25 transition-colors">
+                <button
+                  className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center hover:bg-emerald-500/25 transition-colors shrink-0"
+                  aria-label="Approve"
+                >
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                 </button>
-                <button className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
-                  <Eye className="w-3.5 h-3.5 text-white/40" />
-                </button>
-              </div>
-            </GlassCard>
-          ))}
-        </div>
+              </GlassCard>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Super admin full panel CTA ── */}
@@ -164,7 +206,10 @@ function StatTile({
   icon: Icon, iconColor, bg, label, value,
 }: {
   icon: React.ComponentType<{ className?: string }>;
-  iconColor: string; bg: string; label: string; value: string;
+  iconColor: string;
+  bg: string;
+  label: string;
+  value: string;
 }) {
   return (
     <GlassCard className="p-4 flex items-center gap-3">
