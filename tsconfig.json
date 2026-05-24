@@ -22,30 +22,12 @@
       ],
       "@workspace/api-client-react": [
         "./lib/api-client-react/src/index.ts"
-      ],
-      "react-router-dom": [
-        "./src/shims/react-router-dom.ts"
       ]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
   "exclude": [
-    "node_modules",
-    "src/routes/AppRoutes.tsx",
-    "src/routes/public.routes.tsx",
-    "src/layouts/RootLayout.tsx",
-    "src/layouts/PortalLayout.tsx",
-    "src/layouts/DashboardLayout.tsx",
-    "src/components/navigation/BottomNav.tsx",
-    "src/components/navigation/FloatingNavButton.tsx",
-    "src/components/navigation/MobileMenu.tsx",
-    "src/components/navigation/Sidebar.tsx",
-    "src/components/ui/Card.tsx",
-    "src/modules/auth/pages/Login.tsx",
-    "src/modules/auth/pages/Register.tsx",
-    "src/modules/auth/pages/ForgotPassword.tsx",
-    "src/modules/wallet/pages/WalletDashboard.tsx",
-    "src/providers/RouterProvider.tsx"
+    "node_modules"
   ]
 }
