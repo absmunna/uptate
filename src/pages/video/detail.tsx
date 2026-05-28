@@ -1,4 +1,4 @@
-import { useRoute, Link } from "wouter";
+import { useParams, Link } from "react-router-dom";
 import { formatBDT } from "@/lib/format";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,7 @@ import { useVideoUnlock } from "@/features/digital-content/VideoUnlockContext";
 import { usePKCoin } from "@/features/wallet/PKCoinContext";
 
 export default function VideoDetailPage() {
-  const [, params] = useRoute<{ id: string }>("/video/:id");
-  const id = params?.id ?? null;
+  const { id } = useParams<{ id: string }>();
   const v = id ? getVideoById(id) : undefined;
   const { hasVideoUnlocked, unlockVideo } = useVideoUnlock();
   const wallet = usePKCoin();
@@ -21,7 +20,7 @@ export default function VideoDetailPage() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-10 text-center">
         <h1 className="text-xl font-bold mb-2">Video not found</h1>
-        <Link href="/video"><Button variant="outline">Back to library</Button></Link>
+        <Link to="/video"><Button variant="outline">Back to library</Button></Link>
       </div>
     );
   }
@@ -37,7 +36,7 @@ export default function VideoDetailPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
-      <Link href="/video" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+      <Link to="/video" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to library
       </Link>
 
@@ -84,7 +83,7 @@ export default function VideoDetailPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {bundles.map((p) => (
-              <Link key={p.id} href={`/video/package/${p.id}`} className="rounded-lg border border-white/10 p-4 hover:bg-white/5">
+              <Link key={p.id} to={`/video/package/${p.id}`} className="rounded-lg border border-white/10 p-4 hover:bg-white/5">
                 <div className="font-medium">{p.title}</div>
                 <div className="text-xs text-muted-foreground line-clamp-2">{p.description}</div>
                 <div className="text-primary font-semibold mt-2">{formatBDT(p.price)} · {p.videoIds.length} videos</div>

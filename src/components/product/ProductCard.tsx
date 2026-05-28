@@ -1,5 +1,5 @@
 import { Product } from "@workspace/api-client-react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Star, MapPin } from "lucide-react";
 import { formatBDT, discountPercent } from "@/lib/format";
@@ -15,7 +15,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const discount = discountPercent(product.price ?? 0, product.compareAtPrice);
 
   return (
-    <Link href={`/marketplace/product/${product.id}`}>
+    <Link to={`/marketplace/product/${product.id}`}>
       <GlassCard className="h-full flex flex-col group overflow-hidden cursor-pointer" hoverEffect>
         <div className="relative aspect-square overflow-hidden bg-black/20">
           {img ? (

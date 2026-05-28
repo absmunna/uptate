@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { formatBDT } from "@/lib/format";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import {
   Heart, MessageCircle, Share2, MoreHorizontal,
   Bookmark, ShoppingCart, Zap, Store, BadgeCheck,
@@ -27,7 +27,7 @@ const VENDOR_TYPE_COLORS: Record<string, string> = {
   dropship:    "text-indigo-300 bg-indigo-500/10 border-indigo-400/20",
 };
 
-export function PostCard({ post }: { post: Post }) {
+export const PostCard = memo(({ post }: { post: Post }) => {
   const qc = useQueryClient();
   const toggleLike = useTogglePostLike();
   const [isLiking, setIsLiking] = useState(false);
@@ -79,7 +79,7 @@ export function PostCard({ post }: { post: Post }) {
     <article className="cyber-card rounded-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-400">
       {/* ── Header ── */}
       <div className="flex items-center justify-between px-4 pt-4 pb-3">
-        <Link href={author?.id ? `/vendors/${author.id}` : "#"} className="flex items-center gap-3 min-w-0">
+        <Link to={author?.id ? `/vendors/${author.id}` : "#"} className="flex items-center gap-3 min-w-0">
           <div className="relative shrink-0">
             <Avatar className="border-2 border-cyan-400/30 h-10 w-10 shadow-[0_0_8px_rgba(34,211,238,0.2)]">
               <AvatarImage src={author?.avatarUrl} />
@@ -124,11 +124,11 @@ export function PostCard({ post }: { post: Post }) {
         </div>
       )}
 
-      {/* ── Media ── */}
+          {/* ── Media ── */}
       {images.length > 0 && (
-        <div className={cn("overflow-hidden", images.length > 1 ? "grid grid-cols-2 gap-px" : "")}>
+        <div className={cn("overflow-hidden aspect-square", images.length > 1 ? "grid grid-cols-2 gap-px" : "")}>
           {images.slice(0, 4).map((url, i) => (
-            <div key={i} className={cn("overflow-hidden", images.length === 1 ? "aspect-[4/3]" : "aspect-square")}>
+            <div key={i} className="overflow-hidden aspect-square">
               <img
                 src={url}
                 alt="Post content"
@@ -143,10 +143,10 @@ export function PostCard({ post }: { post: Post }) {
       {/* ── Product card ── */}
       {product && (
         <div className="mx-3 mt-3 rounded-xl border border-white/[0.08] bg-white/[0.03] overflow-hidden">
-          <Link href={`/marketplace/product/${product.id}`}>
+          <Link to={`/marketplace/product/${product.id}`}>
             <div className="flex items-center gap-3 p-3 hover:bg-white/5 transition-colors">
               {product.images?.[0] && (
-                <img src={product.images[0]} alt={product.title} className="h-16 w-16 object-cover rounded-lg shrink-0 border border-white/10" />
+                <img src={product.images[0]} alt={product.title} className="h-16 w-16 aspect-square object-cover rounded-lg shrink-0 border border-white/10" />
               )}
               <div className="flex-1 min-w-0">
                 <h4 className="font-semibold text-sm text-white truncate">{product.title}</h4>
@@ -161,19 +161,7 @@ export function PostCard({ post }: { post: Post }) {
           </Link>
 
           {/* Action buttons */}
-          <div className="grid grid-cols-3 border-t border-white/[0.06]">
-            {isEnabled("wishlist.enabled") && (
-              <button
-                onClick={handleWishlist}
-                className={cn(
-                  "flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-all border-r border-white/[0.06]",
-                  wishlisted ? "text-rose-400 bg-rose-500/8" : "text-white/50 hover:text-white/80 hover:bg-white/5",
-                )}
-              >
-                <Bookmark className={cn("h-3.5 w-3.5", wishlisted && "fill-rose-400")} />
-                {wishlisted ? "Saved" : "Save"}
-              </button>
-            )}
+          <div className="grid grid-cols-2 border-t border-white/[0.06]">
             {isEnabled("cart.enabled") && (
               <button
                 onClick={handleAddToCart}
@@ -183,7 +171,7 @@ export function PostCard({ post }: { post: Post }) {
                 )}
               >
                 <ShoppingCart className="h-3.5 w-3.5" />
-                {inCart ? "In Cart" : "Add Cart"}
+                {inCart ? "Cart" : "Cart"}
               </button>
             )}
             {isEnabled("buyNow.enabled") && (
@@ -192,7 +180,7 @@ export function PostCard({ post }: { post: Post }) {
                 className="flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold text-black bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all"
               >
                 <Zap className="h-3.5 w-3.5" />
-                Buy Now
+                Buy
               </button>
             )}
           </div>
@@ -254,4 +242,4 @@ export function PostCard({ post }: { post: Post }) {
       )}
     </article>
   );
-}
+});

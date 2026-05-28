@@ -155,9 +155,34 @@ export default function SellerProfilePage() {
                 value={form.location}
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
                 className="bg-white/5 border-white/10 text-white"
+                placeholder="District or Area"
               />
             ) : (
               <span className="text-white">{profile.location}</span>
+            )}
+          </Row>
+          <Row label="Physical Address" icon={<MapPin className="w-4 h-4" />}>
+            {editing ? (
+              <Textarea
+                value={form.physicalAddress || ''}
+                onChange={(e) => setForm({ ...form, physicalAddress: e.target.value })}
+                className="bg-white/5 border-white/10 text-white"
+                placeholder="Full shop or home address"
+              />
+            ) : (
+              <span className="text-white">{profile.physicalAddress || "Not provided"}</span>
+            )}
+          </Row>
+          <Row label="Trade License" icon={<ShieldCheck className="w-4 h-4" />}>
+            {editing ? (
+              <Input
+                value={form.tradeLicense || ''}
+                onChange={(e) => setForm({ ...form, tradeLicense: e.target.value })}
+                className="bg-white/5 border-white/10 text-white"
+                placeholder="Trade License or e-TIN"
+              />
+            ) : (
+              <span className="text-white">{profile.tradeLicense || "Not provided"}</span>
             )}
           </Row>
         </GlassCard>

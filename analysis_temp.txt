@@ -1,0 +1,405 @@
+=================================================
+PROJECT: C:\Users\MD MUNNA\PaikarMart-web
+
+--- GIT REMOTE ---
+origin	https://github.com/absmunna/PaikarMart-web.git (fetch)
+origin	https://github.com/absmunna/PaikarMart-web.git (push)
+
+--- GIT STATUS ---
+M prisma/schema.prisma
+?? analysis_temp.txt
+?? git_report.json
+?? prisma/migrations/
+
+--- RECENT COMMITS ---
+c6611c2 fix: allow paikarmart.com in CORS
+f2b7297 fix: add vercel rewrites for React Router
+053d312 fix: add packages field to pnpm-workspace.yaml
+c9d7ef6 fix: use corepack in railway build command
+8f5e064 fix: use corepack to enable pnpm
+0cdbe03 fix: add nixpacks config for Railway build
+7fc6408 feat: real API integration for auth and B2C products
+
+--- PACKAGE OUTDATED ---
+Package                 Current    Wanted    Latest  Location                            Depended by
+@google/genai            1.52.0    1.52.0     2.4.0  node_modules/@google/genai          PaikarMart-web
+@prisma/client           5.22.0    5.22.0     7.8.0  node_modules/@prisma/client         PaikarMart-web
+@tanstack/react-query  5.100.10  5.100.11  5.100.11  node_modules/@tanstack/react-query  PaikarMart-web
+@types/express          4.17.25   4.17.25     5.0.6  node_modules/@types/express         PaikarMart-web
+@types/node            22.19.19  22.19.19    25.9.1  node_modules/@types/node            PaikarMart-web
+@types/react            18.3.28   18.3.29   19.2.15  node_modules/@types/react           PaikarMart-web
+@types/react-dom         18.3.7    18.3.7    19.2.3  node_modules/@types/react-dom       PaikarMart-web
+@vitejs/plugin-react      5.2.0     5.2.0     6.0.2  node_modules/@vitejs/plugin-react   PaikarMart-web
+esbuild                 0.25.12   0.25.12    0.28.0  node_modules/esbuild                PaikarMart-web
+
+
+=================================================
+PROJECT: C:\Users\MD MUNNA\paikarmart
+No .git folder
+
+--- PACKAGE OUTDATED ---
+Package                            Current    Wanted  Latest  Location                                       Depended by
+@types/express                     4.17.25   4.17.25   5.0.6  node_modules/@types/express                    paikarmart
+@types/node                       20.19.40  20.19.41  25.9.1  node_modules/@types/node                       paikarmart
+@typescript-eslint/eslint-plugin    6.21.0    6.21.0  8.59.4  node_modules/@typescript-eslint/eslint-plugin  paikarmart
+@typescript-eslint/parser           6.21.0    6.21.0  8.59.4  node_modules/@typescript-eslint/parser         paikarmart
+axios                               1.16.0    1.16.1  1.16.1  node_modules/axios                             paikarmart
+bcryptjs                             2.4.3     2.4.3   3.0.3  node_modules/bcryptjs                          paikarmart
+dotenv                              16.6.1    16.6.1  17.4.2  node_modules/dotenv                            paikarmart
+drizzle-orm                         0.29.5    0.29.5  0.45.2  node_modules/drizzle-orm                       paikarmart
+eslint                              8.57.1    8.57.1  10.4.0  node_modules/eslint                            paikarmart
+
+
+=================================================
+PROJECT: C:\Users\MD MUNNA\PKM-APP
+No .git folder
+
+
+=================================================
+PROJECT: C:\Users\MD MUNNA\PaikarMart-RIPILit
+
+--- GIT REMOTE ---
+origin	https://github.com/absmunna/PaikarMart-RIPILit.git (fetch)
+origin	https://github.com/absmunna/PaikarMart-RIPILit.git (push)
+
+--- GIT STATUS ---
+D artifacts/api-server/.env
+ D artifacts/api-server/.replit-artifact/artifact.toml
+ D artifacts/api-server/build.mjs
+ D artifacts/api-server/package.json
+ D artifacts/api-server/src/app.ts
+ D artifacts/api-server/src/index.ts
+ D artifacts/api-server/src/lib/.gitkeep
+ D artifacts/api-server/src/lib/logger.ts
+ D artifacts/api-server/src/middleware/auth.ts
+ D artifacts/api-server/src/middlewares/.gitkeep
+ D artifacts/api-server/src/routes/admin.ts
+ D artifacts/api-server/src/routes/affiliate.ts
+ D artifacts/api-server/src/routes/auth.ts
+ D artifacts/api-server/src/routes/commissions.ts
+ D artifacts/api-server/src/routes/disputes.ts
+ D artifacts/api-server/src/routes/health.ts
+ D artifacts/api-server/src/routes/index.ts
+ D artifacts/api-server/src/routes/kyc.ts
+ D artifacts/api-server/src/routes/milestones.ts
+ D artifacts/api-server/src/routes/notifications.ts
+ D artifacts/api-server/src/routes/orders.ts
+ D artifacts/api-server/src/routes/products.ts
+ D artifacts/api-server/src/routes/reviews.ts
+ D artifacts/api-server/src/routes/sellers.ts
+ D artifacts/api-server/src/routes/transactions.ts
+ D artifacts/api-server/src/routes/users.ts
+ D artifacts/api-server/tsconfig.json
+ D artifacts/mockup-sandbox/.replit-artifact/artifact.toml
+ D artifacts/mockup-sandbox/components.json
+ D artifacts/mockup-sandbox/index.html
+ D artifacts/mockup-sandbox/mockupPreviewPlugin.ts
+ D artifacts/mockup-sandbox/package.json
+ D artifacts/mockup-sandbox/src/.generated/mockup-components.ts
+ D artifacts/mockup-sandbox/src/App.tsx
+ D artifacts/mockup-sandbox/src/components/ui/accordion.tsx
+ D artifacts/mockup-sandbox/src/components/ui/alert-dialog.tsx
+ D artifacts/mockup-sandbox/src/components/ui/alert.tsx
+ D artifacts/mockup-sandbox/src/components/ui/aspect-ratio.tsx
+ D artifacts/mockup-sandbox/src/components/ui/avatar.tsx
+ D artifacts/mockup-sandbox/src/components/ui/badge.tsx
+ D artifacts/mockup-sandbox/src/components/ui/breadcrumb.tsx
+ D artifacts/mockup-sandbox/src/components/ui/button-group.tsx
+ D artifacts/mockup-sandbox/src/components/ui/button.tsx
+ D artifacts/mockup-sandbox/src/components/ui/calendar.tsx
+ D artifacts/mockup-sandbox/src/components/ui/card.tsx
+ D artifacts/mockup-sandbox/src/components/ui/carousel.tsx
+ D artifacts/mockup-sandbox/src/components/ui/chart.tsx
+ D artifacts/mockup-sandbox/src/components/ui/checkbox.tsx
+ D artifacts/mockup-sandbox/src/components/ui/collapsible.tsx
+ D artifacts/mockup-sandbox/src/components/ui/command.tsx
+ D artifacts/mockup-sandbox/src/components/ui/context-menu.tsx
+ D artifacts/mockup-sandbox/src/components/ui/dialog.tsx
+ D artifacts/mockup-sandbox/src/components/ui/drawer.tsx
+ D artifacts/mockup-sandbox/src/components/ui/dropdown-menu.tsx
+ D artifacts/mockup-sandbox/src/components/ui/empty.tsx
+ D artifacts/mockup-sandbox/src/components/ui/field.tsx
+ D artifacts/mockup-sandbox/src/components/ui/form.tsx
+ D artifacts/mockup-sandbox/src/components/ui/hover-card.tsx
+ D artifacts/mockup-sandbox/src/components/ui/input-group.tsx
+ D artifacts/mockup-sandbox/src/components/ui/input-otp.tsx
+ D artifacts/mockup-sandbox/src/components/ui/input.tsx
+ D artifacts/mockup-sandbox/src/components/ui/item.tsx
+ D artifacts/mockup-sandbox/src/components/ui/kbd.tsx
+ D artifacts/mockup-sandbox/src/components/ui/label.tsx
+ D artifacts/mockup-sandbox/src/components/ui/menubar.tsx
+ D artifacts/mockup-sandbox/src/components/ui/navigation-menu.tsx
+ D artifacts/mockup-sandbox/src/components/ui/pagination.tsx
+ D artifacts/mockup-sandbox/src/components/ui/popover.tsx
+ D artifacts/mockup-sandbox/src/components/ui/progress.tsx
+ D artifacts/mockup-sandbox/src/components/ui/radio-group.tsx
+ D artifacts/mockup-sandbox/src/components/ui/resizable.tsx
+ D artifacts/mockup-sandbox/src/components/ui/scroll-area.tsx
+ D artifacts/mockup-sandbox/src/components/ui/select.tsx
+ D artifacts/mockup-sandbox/src/components/ui/separator.tsx
+ D artifacts/mockup-sandbox/src/components/ui/sheet.tsx
+ D artifacts/mockup-sandbox/src/components/ui/sidebar.tsx
+ D artifacts/mockup-sandbox/src/components/ui/skeleton.tsx
+ D artifacts/mockup-sandbox/src/components/ui/slider.tsx
+ D artifacts/mockup-sandbox/src/components/ui/sonner.tsx
+ D artifacts/mockup-sandbox/src/components/ui/spinner.tsx
+ D artifacts/mockup-sandbox/src/components/ui/switch.tsx
+ D artifacts/mockup-sandbox/src/components/ui/table.tsx
+ D artifacts/mockup-sandbox/src/components/ui/tabs.tsx
+ D artifacts/mockup-sandbox/src/components/ui/textarea.tsx
+ D artifacts/mockup-sandbox/src/components/ui/toast.tsx
+ D artifacts/mockup-sandbox/src/components/ui/toaster.tsx
+ D artifacts/mockup-sandbox/src/components/ui/toggle-group.tsx
+ D artifacts/mockup-sandbox/src/components/ui/toggle.tsx
+ D artifacts/mockup-sandbox/src/components/ui/tooltip.tsx
+ D artifacts/mockup-sandbox/src/hooks/use-mobile.tsx
+ D artifacts/mockup-sandbox/src/hooks/use-toast.ts
+ D artifacts/mockup-sandbox/src/index.css
+ D artifacts/mockup-sandbox/src/lib/utils.ts
+ D artifacts/mockup-sandbox/src/main.tsx
+ D artifacts/mockup-sandbox/tsconfig.json
+ D artifacts/mockup-sandbox/vite.config.ts
+ D artifacts/paikarmart/.replit-artifact/artifact.toml
+ D artifacts/paikarmart/components.json
+ D artifacts/paikarmart/index.html
+ D artifacts/paikarmart/package.json
+ D artifacts/paikarmart/public/favicon.svg
+ D artifacts/paikarmart/public/opengraph.jpg
+ D artifacts/paikarmart/src/App.tsx
+ D artifacts/paikarmart/src/components/layout/BottomNav.tsx
+ D artifacts/paikarmart/src/components/layout/Footer.tsx
+ D artifacts/paikarmart/src/components/layout/Header.tsx
+ D artifacts/paikarmart/src/components/layout/Layout.tsx
+ D artifacts/paikarmart/src/components/ui/GlassCard.tsx
+ D artifacts/paikarmart/src/components/ui/accordion.tsx
+ D artifacts/paikarmart/src/components/ui/alert-dialog.tsx
+ D artifacts/paikarmart/src/components/ui/alert.tsx
+ D artifacts/paikarmart/src/components/ui/aspect-ratio.tsx
+ D artifacts/paikarmart/src/components/ui/avatar.tsx
+ D artifacts/paikarmart/src/components/ui/badge.tsx
+ D artifacts/paikarmart/src/components/ui/breadcrumb.tsx
+ D artifacts/paikarmart/src/components/ui/button-group.tsx
+ D artifacts/paikarmart/src/components/ui/button.tsx
+ D artifacts/paikarmart/src/components/ui/calendar.tsx
+ D artifacts/paikarmart/src/components/ui/card.tsx
+ D artifacts/paikarmart/src/components/ui/carousel.tsx
+ D artifacts/paikarmart/src/components/ui/chart.tsx
+ D artifacts/paikarmart/src/components/ui/checkbox.tsx
+ D artifacts/paikarmart/src/components/ui/collapsible.tsx
+ D artifacts/paikarmart/src/components/ui/command.tsx
+ D artifacts/paikarmart/src/components/ui/context-menu.tsx
+ D artifacts/paikarmart/src/components/ui/dialog.tsx
+ D artifacts/paikarmart/src/components/ui/drawer.tsx
+ D artifacts/paikarmart/src/components/ui/dropdown-menu.tsx
+ D artifacts/paikarmart/src/components/ui/empty.tsx
+ D artifacts/paikarmart/src/components/ui/field.tsx
+ D artifacts/paikarmart/src/components/ui/form.tsx
+ D artifacts/paikarmart/src/components/ui/hover-card.tsx
+ D artifacts/paikarmart/src/components/ui/input-group.tsx
+ D artifacts/paikarmart/src/components/ui/input-otp.tsx
+ D artifacts/paikarmart/src/components/ui/input.tsx
+ D artifacts/paikarmart/src/components/ui/item.tsx
+ D artifacts/paikarmart/src/components/ui/kbd.tsx
+ D artifacts/paikarmart/src/components/ui/label.tsx
+ D artifacts/paikarmart/src/components/ui/menubar.tsx
+ D artifacts/paikarmart/src/components/ui/navigation-menu.tsx
+ D artifacts/paikarmart/src/components/ui/pagination.tsx
+ D artifacts/paikarmart/src/components/ui/popover.tsx
+ D artifacts/paikarmart/src/components/ui/progress.tsx
+ D artifacts/paikarmart/src/components/ui/radio-group.tsx
+ D artifacts/paikarmart/src/components/ui/resizable.tsx
+ D artifacts/paikarmart/src/components/ui/scroll-area.tsx
+ D artifacts/paikarmart/src/components/ui/select.tsx
+ D artifacts/paikarmart/src/components/ui/separator.tsx
+ D artifacts/paikarmart/src/components/ui/sheet.tsx
+ D artifacts/paikarmart/src/components/ui/sidebar.tsx
+ D artifacts/paikarmart/src/components/ui/skeleton.tsx
+ D artifacts/paikarmart/src/components/ui/slider.tsx
+ D artifacts/paikarmart/src/components/ui/sonner.tsx
+ D artifacts/paikarmart/src/components/ui/spinner.tsx
+ D artifacts/paikarmart/src/components/ui/switch.tsx
+ D artifacts/paikarmart/src/components/ui/table.tsx
+ D artifacts/paikarmart/src/components/ui/tabs.tsx
+ D artifacts/paikarmart/src/components/ui/textarea.tsx
+ D artifacts/paikarmart/src/components/ui/toast.tsx
+ D artifacts/paikarmart/src/components/ui/toaster.tsx
+ D artifacts/paikarmart/src/components/ui/toggle-group.tsx
+ D artifacts/paikarmart/src/components/ui/toggle.tsx
+ D artifacts/paikarmart/src/components/ui/tooltip.tsx
+ D artifacts/paikarmart/src/config/delivery.config.ts
+ D artifacts/paikarmart/src/config/feature.flags.ts
+ D artifacts/paikarmart/src/config/payment.config.ts
+ D artifacts/paikarmart/src/config/profitShare.config.ts
+ D artifacts/paikarmart/src/context/LocationContext.tsx
+ D artifacts/paikarmart/src/context/PKCoinContext.tsx
+ D artifacts/paikarmart/src/context/VideoUnlockContext.tsx
+ D artifacts/paikarmart/src/context/WishlistContext.tsx
+ D artifacts/paikarmart/src/features/registry/aiLogger.ts
+ D artifacts/paikarmart/src/hooks/use-auth.tsx
+ D artifacts/paikarmart/src/hooks/use-cart.tsx
+ D artifacts/paikarmart/src/hooks/use-mobile.tsx
+ D artifacts/paikarmart/src/hooks/use-toast.ts
+ D artifacts/paikarmart/src/index.css
+ D artifacts/paikarmart/src/lib/format.ts
+ D artifacts/paikarmart/src/lib/utils.ts
+ D artifacts/paikarmart/src/main.tsx
+ D artifacts/paikarmart/src/pages/admin/changes.tsx
+ D artifacts/paikarmart/src/pages/admin/dashboard.tsx
+ D artifacts/paikarmart/src/pages/admin/registry.tsx
+ D artifacts/paikarmart/src/pages/admin/settings.tsx
+ D artifacts/paikarmart/src/pages/admin/users.tsx
+ D artifacts/paikarmart/src/pages/cart.tsx
+ D artifacts/paikarmart/src/pages/categories.tsx
+ D artifacts/paikarmart/src/pages/checkout.tsx
+ D artifacts/paikarmart/src/pages/faq.tsx
+ D artifacts/paikarmart/src/pages/feed.tsx
+ D artifacts/paikarmart/src/pages/index.tsx
+ D artifacts/paikarmart/src/pages/login.tsx
+ D artifacts/paikarmart/src/pages/not-found.tsx
+ D artifacts/paikarmart/src/pages/notifications.tsx
+ D artifacts/paikarmart/src/pages/orders/[id].tsx
+ D artifacts/paikarmart/src/pages/orders/index.tsx
+ D artifacts/paikarmart/src/pages/products/[id].tsx
+ D artifacts/paikarmart/src/pages/products/index.tsx
+ D artifacts/paikarmart/src/pages/profile.tsx
+ D artifacts/paikarmart/src/pages/register.tsx
+ D artifacts/paikarmart/src/pages/seller/analytics.tsx
+ D artifacts/paikarmart/src/pages/seller/dashboard.tsx
+ D artifacts/paikarmart/src/pages/seller/orders.tsx
+ D artifacts/paikarmart/src/pages/seller/product-form.tsx
+ D artifacts/paikarmart/src/pages/seller/products.tsx
+ D artifacts/paikarmart/src/pages/seller/profile.tsx
+ D artifacts/paikarmart/src/pages/seller/register.tsx
+ D artifacts/paikarmart/src/pages/seller/verification.tsx
+ D artifacts/paikarmart/src/pages/terms.tsx
+ D artifacts/paikarmart/src/pages/vendors/[id].tsx
+ D artifacts/paikarmart/src/pages/vendors/index.tsx
+ D artifacts/paikarmart/src/pages/wallet.tsx
+ D artifacts/paikarmart/src/routes/index.tsx
+ D artifacts/paikarmart/src/seller/SellerContext.tsx
+ D artifacts/paikarmart/src/seller/types.ts
+ D artifacts/paikarmart/tsconfig.json
+ D artifacts/paikarmart/vite.config.ts
+ D cleanup.bat
+ M frontend/package.json
+ M frontend/src/App.tsx
+ D frontend/src/config/delivery.config.ts
+ D frontend/src/config/feature.flags.ts
+ D frontend/src/config/payment.config.ts
+ D frontend/src/config/profitShare.config.ts
+ D frontend/src/context/LocationContext.tsx
+ D frontend/src/context/PKCoinContext.tsx
+ D frontend/src/context/VideoUnlockContext.tsx
+ D frontend/src/context/WishlistContext.tsx
+ D frontend/src/features/registry/aiLogger.ts
+ M frontend/src/main.tsx
+ D frontend/src/routes/index.tsx
+ D frontend/src/seller/SellerContext.tsx
+ D frontend/src/seller/types.ts
+ M frontend/tsconfig.json
+ M frontend/vite.config.ts
+ D lib/api-client-react/package.json
+ D lib/api-client-react/src/custom-fetch.ts
+ D lib/api-client-react/src/generated/api.schemas.ts
+ D lib/api-client-react/src/generated/api.ts
+ D lib/api-client-react/src/index.ts
+ D lib/api-client-react/tsconfig.json
+ D lib/api-spec/openapi.yaml
+ D lib/api-spec/orval.config.ts
+ D lib/api-spec/package.json
+ D lib/api-zod/package.json
+ D lib/api-zod/src/generated/api.ts
+ D lib/api-zod/src/generated/types/adminDashboard.ts
+ D lib/api-zod/src/generated/types/category.ts
+ D lib/api-zod/src/generated/types/categoryListResponse.ts
+ D lib/api-zod/src/generated/types/createOrderBody.ts
+ D lib/api-zod/src/generated/types/createOrderBodyItemsItem.ts
+ D lib/api-zod/src/generated/types/healthStatus.ts
+ D lib/api-zod/src/generated/types/index.ts
+ D lib/api-zod/src/generated/types/listNotificationsParams.ts
+ D lib/api-zod/src/generated/types/listOrdersParams.ts
+ D lib/api-zod/src/generated/types/listProductsParams.ts
+ D lib/api-zod/src/generated/types/listSellersParams.ts
+ D lib/api-zod/src/generated/types/marketStats.ts
+ D lib/api-zod/src/generated/types/marketStatsMonthlyItem.ts
+ D lib/api-zod/src/generated/types/marketStatsTrend.ts
+ D lib/api-zod/src/generated/types/notification.ts
+ D lib/api-zod/src/generated/types/notificationListResponse.ts
+ D lib/api-zod/src/generated/types/notificationType.ts
+ D lib/api-zod/src/generated/types/order.ts
+ D lib/api-zod/src/generated/types/orderDeliveryType.ts
+ D lib/api-zod/src/generated/types/orderItem.ts
+ D lib/api-zod/src/generated/types/orderListResponse.ts
+ D lib/api-zod/src/generated/types/orderStatus.ts
+ D lib/api-zod/src/generated/types/product.ts
+ D lib/api-zod/src/generated/types/productListResponse.ts
+ D lib/api-zod/src/generated/types/productType.ts
+ D lib/api-zod/src/generated/types/seller.ts
+ D lib/api-zod/src/generated/types/sellerBusinessType.ts
+ D lib/api-zod/src/generated/types/sellerDashboard.ts
+ D lib/api-zod/src/generated/types/sellerListResponse.ts
+ D lib/api-zod/src/generated/types/sellerRegistrationBody.ts
+ D lib/api-zod/src/generated/types/sellerStatus.ts
+ D lib/api-zod/src/generated/types/updateOrderStatusBody.ts
+ D lib/api-zod/src/generated/types/user.ts
+ D lib/api-zod/src/generated/types/userRole.ts
+ D lib/api-zod/src/generated/types/wallet.ts
+ D lib/api-zod/src/generated/types/walletTransaction.ts
+ D lib/api-zod/src/generated/types/walletTransactionType.ts
+ D lib/api-zod/src/index.ts
+ D lib/api-zod/tsconfig.json
+ D lib/db/drizzle.config.ts
+ D lib/db/migrations/phase1_down.sql
+ D lib/db/package.json
+ D lib/db/seed.ts
+ D lib/db/src/index.ts
+ D lib/db/src/schema/affiliate_links.ts
+ D lib/db/src/schema/commissions.ts
+ D lib/db/src/schema/disputes.ts
+ D lib/db/src/schema/index.ts
+ D lib/db/src/schema/kyc_documents.ts
+ D lib/db/src/schema/milestones.ts
+ D lib/db/src/schema/notifications.ts
+ D lib/db/src/schema/orders.ts
+ D lib/db/src/schema/products.ts
+ D lib/db/src/schema/reviews.ts
+ D lib/db/src/schema/sellers.ts
+ D lib/db/src/schema/transactions.ts
+ D lib/db/src/schema/users.ts
+ D lib/db/src/schema/wallets.ts
+ D lib/db/tsconfig.json
+ M pnpm-lock.yaml
+ M pnpm-workspace.yaml
+ D scripts/package.json
+ D scripts/post-merge.sh
+ D scripts/src/hello.ts
+ D scripts/src/seed.ts
+ D scripts/tsconfig.json
+?? $null
+?? backend/
+?? frontend/notepad
+?? frontend/nul(
+?? frontend/src/app/
+?? frontend/src/constants/
+?? frontend/src/features/auth/
+?? frontend/src/features/seller/
+?? frontend/src/lib/config/
+?? frontend/src/types/
+?? frontend/src/utils/
+?? packages/
+?? pnpm-workspace.yaml.old
+
+--- RECENT COMMITS ---
+77a4d7a backup: before structure refactor
+63864ec chore: regenerate pnpm lockfile
+ab1030c trigger: redeploy vercel
+01e034d Update vercel.json
+c717ab1 Update vercel.json
+1b3fcaa Update vite.config.ts
+caf52d8 Update vercel.json
+
+--- PACKAGE OUTDATED ---
+Package     Current  Wanted  Latest  Location                 Depended by
+typescript    5.9.3   5.9.3   6.0.3  node_modules/typescript  PaikarMart-RIPILit
+
+

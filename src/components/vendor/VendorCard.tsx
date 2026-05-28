@@ -1,11 +1,11 @@
 import { Vendor } from "@workspace/api-client-react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { MapPin, Star, Users } from "lucide-react";
 
 export function VendorCard({ vendor }: { vendor: Vendor }) {
   return (
-    <Link href={`/vendors/${vendor.id}`}>
+    <Link to={`/vendors/${vendor.id}`}>
       <GlassCard className="w-[280px] shrink-0 group cursor-pointer overflow-hidden flex flex-col h-full" hoverEffect>
         <div className="h-24 bg-white/10 relative">
           <img src={vendor.coverUrl} alt="Cover" className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity" />

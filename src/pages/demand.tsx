@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatBDT } from "@/lib/format";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useListDemands, getListDemandsQueryKey, useCreateDemand, useListCategories, getListCategoriesQueryKey, DemandUrgency, CreateDemandBodyUrgency } from "@workspace/api-client-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
@@ -137,7 +137,7 @@ export default function Demand() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(DemandUrgency).map(u => (
+                      {['low', 'medium', 'high', 'normal'].map(u => (
                         <SelectItem key={u} value={u} className="capitalize">{u}</SelectItem>
                       ))}
                     </SelectContent>
@@ -160,7 +160,7 @@ export default function Demand() {
         )}
         
         {demands?.map((demand) => (
-          <Link key={demand.id} href={`/demand/${demand.id}`}>
+          <Link key={demand.id} to={`/demand/${demand.id}`}>
             <GlassCard className="p-5 flex flex-col h-full cursor-pointer" hoverEffect>
               <div className="flex items-start justify-between gap-4 mb-3">
                 <h3 className="font-semibold text-white line-clamp-2">{demand.title}</h3>

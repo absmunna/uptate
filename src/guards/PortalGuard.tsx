@@ -4,7 +4,7 @@ import type { AppRole } from "@/permissions/roles";
 import { canAccessPortal } from "@/permissions/accessControl";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { ShieldOff, ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { ROLE_LABELS } from "@/permissions/roles";
 
 interface PortalGuardProps {
@@ -31,13 +31,13 @@ export function PortalGuard({ children, portal, upgradeHref, upgradeLabel }: Por
           তোমার বর্তমান role: <span className="text-white/55">{currentLabel}</span>
         </p>
         {upgradeHref ? (
-          <Link href={upgradeHref}>
+          <Link to={upgradeHref}>
             <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold shadow-[0_0_16px_rgba(34,211,238,0.2)] hover:from-cyan-400 transition-all">
               {upgradeLabel ?? "আপগ্রেড করুন"} <ArrowRight className="h-4 w-4" />
             </button>
           </Link>
         ) : (
-          <Link href="/auth/login">
+          <Link to="/auth/login">
             <button className="px-5 py-2.5 rounded-xl border border-cyan-500/25 text-cyan-300 text-sm hover:bg-cyan-500/8 transition-all">
               লগইন করুন
             </button>

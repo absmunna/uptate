@@ -5,7 +5,9 @@
  *
  * Server-side log lives in `/ai-logs/CHANGELOG.md`.
  */
-export type AIChange = {
+import { safeStorage } from "@/utils/storage";
+
+export interface AIChange {
   id: string;
   at: string;
   scope: "ui" | "config" | "registry" | "feature-flag" | "theme" | "profit-share";
@@ -26,14 +28,13 @@ export function logChange(change: Omit<AIChange, "id" | "at">) {
   };
   const list = readLog();
   list.unshift(entry);
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(0, MAX)));
+  safeStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(0, MAX)));
   window.dispatchEvent(new CustomEvent("pm:ai:logged", { detail: entry }));
 }
 
 export function readLog(): AIChange[] {
-  if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = safeStorage.getItem(STORAGE_KEY);
     return raw ? (JSON.parse(raw) as AIChange[]) : [];
   } catch {
     return [];
@@ -41,7 +42,6 @@ export function readLog(): AIChange[] {
 }
 
 export function clearLog() {
-  if (typeof window === "undefined") return;
-  window.localStorage.removeItem(STORAGE_KEY);
+  safeStorage.removeItem(STORAGE_KEY);
   window.dispatchEvent(new CustomEvent("pm:ai:logged"));
 }

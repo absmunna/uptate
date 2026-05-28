@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import {
   ShoppingBag, Warehouse, NavigationIcon, MonitorPlay, BadgePercent,
   Radio, PackageCheck, Wallet, Globe2, Truck, MessageSquarePlus, Zap,
   LayoutDashboard, ShieldCheck, Eye, EyeOff, ChevronRight, Loader2,
-  Navigation,
+  Navigation, Store, Wrench, Laptop,
 } from "lucide-react";
 import { useAuth } from "@/features/auth/AuthContext";
 import { useLanguage } from "@/features/language/LanguageContext";
@@ -43,14 +43,42 @@ const CORE_APPS: PortalApp[] = [
     gradient: "from-blue-600 to-indigo-700", glow: "rgba(99,102,241,0.4)",
   },
   {
+    id: "retail", label: "Retail (B2C)",  labelBn: "খুচরা (B2C)",
+    sublabel: "Everyday Needs", sublabelBn: "ব্যাবহারিক পণ্য",
+    href: "/b2c",
+    Icon: Store,
+    gradient: "from-orange-500 to-red-600", glow: "rgba(249,115,22,0.4)",
+  },
+  {
     id: "nearby", label: "Nearby",  labelBn: "কাছের দোকান",
-    sublabel: "Local Shops", sublabelBn: "আশেপাশের দোকান",
+    sublabel: "Verified Shops", sublabelBn: "আশেপাশের দোকান",
     href: "/local",
     Icon: NavigationIcon,
     gradient: "from-emerald-500 to-teal-600", glow: "rgba(16,185,129,0.4)",
   },
   {
-    id: "digital", label: "Digital",  labelBn: "ডিজিটাল",
+    id: "services", label: "Services",  labelBn: "সার্ভিসেস",
+    sublabel: "Best Local Services", sublabelBn: "প্রয়োজনীয় সার্ভিসেস",
+    href: "/services",
+    Icon: Wrench,
+    gradient: "from-rose-500 to-pink-600", glow: "rgba(244,63,94,0.4)",
+  },
+  {
+    id: "transport", label: "Transport",  labelBn: "ট্রান্সপোর্ট",
+    sublabel: "Rides & Delivery", sublabelBn: "রাইড ও ডেলিভারি",
+    href: "/transport",
+    Icon: Truck,
+    gradient: "from-blue-500 to-indigo-600", glow: "rgba(59,130,246,0.4)",
+  },
+  {
+    id: "digital_services", label: "Digital Services",  labelBn: "ডিজিটাল সার্ভিস",
+    sublabel: "Experts & Products", sublabelBn: "এক্সপার্ট ও পণ্য",
+    href: "/digital-services",
+    Icon: Laptop,
+    gradient: "from-purple-500 to-indigo-700", glow: "rgba(168,85,247,0.4)",
+  },
+  {
+    id: "digital", label: "Digital Content",  labelBn: "ডিজিটাল কন্টেন্ট",
     sublabel: "Video & Courses", sublabelBn: "কোর্স ও ভিডিও",
     href: "/video",
     Icon: MonitorPlay,
@@ -153,7 +181,7 @@ const CAT_GRADIENTS = [
 function AppTile({ app, isBn }: { app: PortalApp; isBn: boolean }) {
   const Icon = app.Icon;
   return (
-    <Link href={app.href}>
+    <Link to={app.href}>
       <div className="flex flex-col items-center gap-2 cursor-pointer group">
         <div
           className={cn(
@@ -218,7 +246,7 @@ export default function Portals() {
   const walletBalance = "12,458.75";
 
   return (
-    <div className="flex flex-col gap-0 pb-10 max-w-[520px] mx-auto w-full">
+    <div className="flex flex-col gap-0 pb-10 max-w-[520px] mx-auto w-full pt-2">
 
       {/* ━━ WELCOME CARD ━━ */}
       <section className="px-3 md:px-0 pt-3">
@@ -289,7 +317,7 @@ export default function Portals() {
             <h3 className="text-[15px] font-bold text-foreground">
               {isBn ? "ক্যাটাগরি" : "Categories"}
             </h3>
-            <Link href="/categories">
+            <Link to="/categories">
               <span className="text-[12px] text-primary font-medium flex items-center gap-0.5 hover:text-primary/80">
                 {isBn ? "সব দেখুন" : "View All"} <ChevronRight className="h-3.5 w-3.5" />
               </span>
@@ -299,7 +327,7 @@ export default function Portals() {
             {cats.map((cat, i) => {
               const img = CATEGORY_IMAGES[cat.name] ?? CAT_FALLBACK;
               return (
-                <Link key={cat.id} href="/categories">
+                <Link key={cat.id} to="/categories">
                   <div className="shrink-0 w-[105px] cursor-pointer group">
                     <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-border">
                       <img src={img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
@@ -324,7 +352,7 @@ export default function Portals() {
             <h3 className="text-[15px] font-bold text-foreground">
               {isBn ? "আপনার জন্য" : "Recommended"}
             </h3>
-            <Link href="/marketplace">
+            <Link to="/marketplace">
               <span className="text-[12px] text-primary font-medium flex items-center gap-0.5 hover:text-primary/80">
                 {isBn ? "সব দেখুন" : "View All"} <ChevronRight className="h-3.5 w-3.5" />
               </span>
@@ -332,7 +360,7 @@ export default function Portals() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             {recs.map((p) => (
-              <Link key={p.id} href={`/marketplace/product/${p.id}`}>
+              <Link key={p.id} to={`/marketplace/product/${p.id}`}>
                 <div className="group cursor-pointer">
                   <div className="relative aspect-square rounded-2xl overflow-hidden border border-border bg-muted">
                     {p.images?.[0]

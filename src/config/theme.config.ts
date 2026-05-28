@@ -1,4 +1,4 @@
-export type ThemeMode = "dark" | "midnight" | "forest" | "sunset" | "light";
+export type ThemeMode = "dark" | "midnight" | "forest" | "sunset" | "light" | "deepDark" | "colourful" | "nakshiLight" | "greenField";
 
 export interface ThemePreset {
   id: ThemeMode;
@@ -17,7 +17,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     labelBn: "সাইবার ডার্ক",
     description: "Deep navy with cyan neon",
     htmlClass: "dark",
-    swatch: ["#04070f", "#22d3ee", "#60a5fa"],
+    swatch: ["#0d0520", "#a78bfa", "#ec4899"],
   },
   {
     id: "midnight",
@@ -50,6 +50,38 @@ export const THEME_PRESETS: ThemePreset[] = [
     description: "Clean bright UI",
     htmlClass: "light",
     swatch: ["#f8fafc", "#0891b2", "#6366f1"],
+  },
+  {
+    id: "deepDark",
+    label: "Deep Dark",
+    labelBn: "ডিপ ডার্ক",
+    description: "Original deep dark theme",
+    htmlClass: "deepDark",
+    swatch: ["#0d0d1a", "#f97316", "#a855f7"],
+  },
+  {
+    id: "colourful",
+    label: "Colourful",
+    labelBn: "কালারফুল",
+    description: "Vivid and colorful theme",
+    htmlClass: "colourful",
+    swatch: ["#fff1f2", "#e11d48", "#be185d"],
+  },
+  {
+    id: "nakshiLight",
+    label: "Nakshi Light",
+    labelBn: "নকশী লাইট",
+    description: "Soft elegant light theme",
+    htmlClass: "nakshiLight",
+    swatch: ["#fefcf5", "#b45309", "#92400e"],
+  },
+  {
+    id: "greenField",
+    label: "Green Field",
+    labelBn: "সবুজ মাঠ",
+    description: "Lush green natural theme",
+    htmlClass: "greenField",
+    swatch: ["#064e3b", "#34d399", "#10b981"],
   },
 ];
 

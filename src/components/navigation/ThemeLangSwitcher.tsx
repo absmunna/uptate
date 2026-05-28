@@ -1,21 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Palette, Globe, Check } from 'lucide-react';
-import { useTheme } from '../../providers/ThemeProvider';
+import { useTheme } from '@/features/theme/ThemeContext';
 import { useAppStore } from '../../store/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const ThemeLangSwitcher = () => {
-  const { theme, setTheme } = useTheme();
+  const { mode: theme, setMode: setTheme, presets: themePresets } = useTheme();
   const { lang, setLang } = useAppStore();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const themes = [
-    { id: 'deepDark', name: 'Deep Dark', color: 'bg-slate-900 border-slate-700' },
-    { id: 'colourful', name: 'Colourful', color: 'bg-gradient-to-r from-pink-500 to-indigo-500 border-white/20' },
-    { id: 'nakshiLight', name: 'Nakshi Light', color: 'bg-amber-50/80 border-amber-200' },
-    { id: 'greenField', name: 'Green Field', color: 'bg-emerald-950 border-emerald-800' }
-  ];
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -50,12 +43,13 @@ export const ThemeLangSwitcher = () => {
             <div className="flex flex-col gap-1.5">
               <span className="text-[9px] font-bold text-[var(--pm-text-muted)] uppercase tracking-wider">Themes</span>
               <div className="grid grid-cols-4 gap-2">
-                {themes.map((t) => (
+                {themePresets.map((t) => (
                   <button
                     key={t.id}
-                    onClick={() => setTheme(t.id as any)}
-                    className={`w-7 h-7 rounded-full border-2 ${t.color} relative cursor-pointer transition-transform hover:scale-110 flex items-center justify-center`}
-                    title={t.name}
+                    onClick={() => setTheme(t.id)}
+                    className="w-7 h-7 rounded-full border-2 relative cursor-pointer transition-transform hover:scale-110 flex items-center justify-center overflow-hidden"
+                    style={{ background: `linear-gradient(135deg, ${t.swatch[0]} 0%, ${t.swatch[1]} 50%, ${t.swatch[2]} 100%)` }}
+                    title={t.label}
                   >
                     {theme === t.id && (
                       <Check className="w-3.5 h-3.5 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />

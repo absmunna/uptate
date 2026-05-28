@@ -1,4 +1,4 @@
-import { useLocation } from "wouter";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useListProducts, getListProductsQueryKey, ListProductsType, ListProductsSort } from "@workspace/api-client-react";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { CategoryChips } from "@/components/product/CategoryChips";
@@ -7,8 +7,9 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 export default function Marketplace() {
-  const [location, setLocation] = useLocation();
-  const searchParams = new URLSearchParams(window.location.search);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
   
   const q = searchParams.get("q") || undefined;
   const categoryId = searchParams.get("categoryId") || undefined;
@@ -22,13 +23,13 @@ export default function Marketplace() {
   );
 
   const updateParams = (key: string, value: string | null) => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     if (value === null) {
       params.delete(key);
     } else {
       params.set(key, value);
     }
-    setLocation(`/marketplace?${params.toString()}`);
+    navigate(`/marketplace?${params.toString()}`);
   };
 
   const types = ["retail", "wholesale", "dropship", "grocery", "service", "hotel"];

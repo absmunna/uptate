@@ -27,15 +27,16 @@ export const register = async (req: Request, res: Response) => {
     const user = await prisma.user.create({
       data: {
         email,
-        password: hashedPassword,
-        name,
+        phone: req.body.phone || `temp-${Date.now()}`, // phone is unique and required in schema
+        passwordHash: hashedPassword,
+        fullName: name,
         role: role || 'buyer'
       }
     });
     
     res.status(201).json({ 
       message: 'User registered successfully',
-      user: { id: user.id, email: user.email, name: user.name, role: user.role }
+      user: { id: user.id, email: user.email, name: user.fullName, role: user.role }
     });
   } catch (error) {
     console.error('Registration Error:', error);
@@ -62,7 +63,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -75,13 +76,38 @@ export const login = async (req: Request, res: Response) => {
       user: {
         id: user.id,
         email: user.email,
-        name: user.name,
+        name: user.fullName,
         role: user.role
       }
     });
   } catch (error) {
     console.error('Login Error:', error);
     res.status(500).json({ error: 'Login verification failed.' });
+  }
+};
+
+export const getMe = async (req: Request, res: Response) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ error: 'No token provided' });
+    
+    const token = authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'No token provided' });
+
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    
+    if (!process.env.DATABASE_URL) {
+      return res.json({
+        user: { id: decoded.id, email: decoded.email, fullName: decoded.name || 'Demo', role: decoded.role, isVerified: true }
+      });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    res.json({ user });
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid token' });
   }
 };
 

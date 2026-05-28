@@ -1,13 +1,18 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { THEME_PRESETS, THEME_STORAGE_KEY, type ThemeMode, type ThemePreset } from "@/config/theme.config";
+import { safeStorage } from "@/utils/storage";
 
 /* Ensure bg-background body class toggles per theme */
 const BG_OVERRIDES: Partial<Record<ThemeMode, string>> = {
-  dark:     "#04070f",
+  dark:     "#0d0520",
   midnight: "#0d0520",
   forest:   "#040f0b",
   sunset:   "#0f0702",
   light:    "#f8fafc",
+  deepDark: "#0d0d1a",
+  colourful: "#fff1f2",
+  nakshiLight: "#fefcf5",
+  greenField: "#064e3b",
 };
 
 interface ThemeCtx {
@@ -19,12 +24,11 @@ interface ThemeCtx {
 const ThemeContext = createContext<ThemeCtx | null>(null);
 
 function readStored(): ThemeMode {
-  if (typeof window === "undefined") return "dark";
   try {
-    const v = window.localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
+    const v = safeStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
     if (v && THEME_PRESETS.some((p) => p.id === v)) return v;
   } catch {}
-  return "dark";
+  return "midnight";
 }
 
 function applyTheme(mode: ThemeMode) {
@@ -49,7 +53,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     applyTheme(mode);
-    try { window.localStorage.setItem(THEME_STORAGE_KEY, mode); } catch {}
+    safeStorage.setItem(THEME_STORAGE_KEY, mode);
   }, [mode]);
 
   const value = useMemo<ThemeCtx>(() => ({

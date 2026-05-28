@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { safeStorage } from "@/utils/storage";
 
 export type AppRole =
   | "guest" | "buyer" | "user"
@@ -14,6 +15,8 @@ export interface AppUser {
   email?: string;
   avatarUrl?: string;
   role: AppRole;
+  roles?: AppRole[];
+  permissions?: string[];
   seller?: {
     shopName: string;
     type: "retail" | "wholesale" | "service";
@@ -59,9 +62,8 @@ const TOKEN_KEY = "pm.auth.token.v1";
 const AuthContext = createContext<AuthCtx | null>(null);
 
 function readStored(): AppUser | null {
-  if (typeof window === "undefined") return null;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = safeStorage.getItem(STORAGE_KEY);
     return raw ? (JSON.parse(raw) as AppUser) : null;
   } catch {
     return null;
@@ -69,19 +71,37 @@ function readStored(): AppUser | null {
 }
 
 function persist(u: AppUser | null) {
-  if (typeof window === "undefined") return;
-  if (u) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
-  else window.localStorage.removeItem(STORAGE_KEY);
+  if (u) safeStorage.setItem(STORAGE_KEY, JSON.stringify(u));
+  else safeStorage.removeItem(STORAGE_KEY);
 }
 
 function persistToken(t: string | null) {
-  if (typeof window === "undefined") return;
-  if (t) window.localStorage.setItem(TOKEN_KEY, t);
-  else window.localStorage.removeItem(TOKEN_KEY);
+  if (t) safeStorage.setItem(TOKEN_KEY, t);
+  else safeStorage.removeItem(TOKEN_KEY);
 }
 
 function uid(prefix: string) {
   return `${prefix}_${Math.random().toString(36).slice(2, 10)}${Date.now().toString(36)}`;
+}
+
+function getPermissionsForRole(role: AppRole): string[] {
+  const base = ["CAN_BUY", "CAN_VIEW_FEED"];
+  if (role === "seller" || role === "wholesale") {
+    return [...base, "CAN_SELL", "CAN_MANAGE_SHOP"];
+  }
+  if (role === "factory") {
+    return [...base, "CAN_SELL", "CAN_MANUFACTURE", "CAN_MANAGE_FACTORY"];
+  }
+  if (role === "rider") {
+    return ["CAN_DELIVER", "CAN_VIEW_FEED"];
+  }
+  if (role === "service_provider") {
+    return [...base, "CAN_CREATE_SERVICE", "CAN_MANAGE_SERVICES"];
+  }
+  if (role === "admin" || role === "super_admin") {
+    return [...base, "CAN_SELL", "CAN_MANUFACTURE", "CAN_MANAGE_FACTORY", "CAN_DELIVER", "CAN_CREATE_SERVICE", "CAN_MODERATE", "CAN_ADMIN"];
+  }
+  return base;
 }
 
 async function callApi<T = any>(path: string, body: any): Promise<T> {
@@ -104,10 +124,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => persist(user), [user]);
 
   const loginWithPhone = useCallback(async (phone: string, password: string) => {
-    const serverData = await callApi("/api/auth/login", { phone, password });
+    const serverData = await callApi("/api/v1/auth/login", { email: phone, password });
     if (serverData?.token) persistToken(serverData.token);
     const rawRole = (serverData?.user?.role ?? "buyer") as string;
     const role = (rawRole === "user" ? "buyer" : rawRole) as AppRole;
+    
+    // Core Constitution multi-role support: ensure user has fallback 'buyer' and context role
+    const roles: AppRole[] = Array.from(new Set(["buyer" as AppRole, role]));
+    const permissions = getPermissionsForRole(role);
+
     const next: AppUser = {
       id: serverData?.user?.id ?? uid("u"),
       fullName: serverData?.user?.name ?? serverData?.user?.handle ?? phone,
@@ -115,6 +140,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: serverData?.user?.email,
       avatarUrl: serverData?.user?.avatarUrl,
       role,
+      roles,
+      permissions,
       createdAt: serverData?.user?.createdAt ?? new Date().toISOString(),
     };
     setUser(next);
@@ -122,17 +149,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const registerUser = useCallback(async (input: Omit<AppUser, "id" | "role" | "createdAt"> & { password: string }) => {
-    const serverData = await callApi("/api/auth/register", {
+    const serverData = await callApi("/api/v1/auth/register", {
       name: input.fullName,
-      email: input.email,
+      email: input.email || input.phone + '@paikarmart.com',
       phone: input.phone,
       password: (input as any).password,
+      role: 'buyer'
     });
     if (serverData?.token) persistToken(serverData.token);
     const next: AppUser = {
       ...input,
       id: serverData?.user?.id ?? uid("u"),
       role: "buyer",
+      roles: ["buyer"],
+      permissions: getPermissionsForRole("buyer"),
       createdAt: new Date().toISOString(),
     };
     delete (next as any).password;
@@ -141,11 +171,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const registerSeller = useCallback(async (input: Omit<AppUser, "id" | "role" | "createdAt"> & { password: string; seller: NonNullable<AppUser["seller"]> }) => {
-    const serverData = await callApi("/api/auth/seller-register", {
+    const serverData = await callApi("/api/v1/auth/register", {
       name: input.fullName,
-      email: input.email,
+      email: input.email || input.phone + '@paikarmart.com',
       phone: input.phone,
       password: (input as any).password,
+      role: 'seller',
       shopName: input.seller.shopName,
       type: input.seller.type,
       address: input.seller.address,
@@ -156,6 +187,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       ...input,
       id: serverData?.user?.id ?? uid("s"),
       role: "seller",
+      roles: ["buyer", "seller"],
+      permissions: getPermissionsForRole("seller"),
       createdAt: new Date().toISOString(),
     };
     delete (next as any).password;
@@ -164,11 +197,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const registerFactory = useCallback(async (input: { fullName: string; phone: string; email: string; password: string; factory: Record<string, any> }) => {
-    const serverData = await callApi("/api/auth/seller-register", {
+    const serverData = await callApi("/api/v1/auth/register", {
       name: input.fullName,
-      email: input.email,
+      email: input.email || input.phone + '@paikarmart.com',
       phone: input.phone,
       password: input.password,
+      role: 'factory',
       shopName: input.factory.companyName,
       type: "factory",
       address: input.factory.address,
@@ -181,6 +215,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       phone: input.phone,
       email: input.email,
       role: "factory",
+      roles: ["buyer", "factory"],
+      permissions: getPermissionsForRole("factory"),
       factory: {
         companyName: input.factory.companyName,
         district: input.factory.district,

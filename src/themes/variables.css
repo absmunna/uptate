@@ -1,13 +1,136 @@
 /* Themes System - Modular Registry */
 
 :root {
-  /* Default: deepDark Theme */
+  /* Default: Midnight Theme (Global) */
+  --pm-bg: #0d0520;
+  --pm-surface: #160d33;
+  --pm-surface-hover: #22144d;
+  --pm-border: rgba(167, 139, 250, 0.15);
+  --pm-text: #ffffff;
+  --pm-text-muted: #c084fc;
+  --pm-text-secondary: #c084fc;
+  --pm-accent: #a78bfa;
+  --pm-accent-soft: rgba(167, 139, 250, 0.15);
+  --pm-gradient: linear-gradient(135deg, #a78bfa, #ec4899);
+  --pm-nav-bg: rgba(13, 5, 32, 0.85);
+  --pm-card-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  --pm-glass: rgba(255,255,255,0.07);
+  --pm-nakshi-opacity: 0;
+  --pm-blob-1: #a78bfa;
+  --pm-blob-2: #ec4899;
+}
+
+/* ──────────────────────────────────────────────────────
+   CYBER DARK THEME (.dark / default fallback)
+   ────────────────────────────────────────────────────── */
+.dark {
+  --pm-bg: #0d0520;
+  --pm-surface: #160d33;
+  --pm-surface-hover: #22144d;
+  --pm-border: rgba(167, 139, 250, 0.15);
+  --pm-text: #ffffff;
+  --pm-text-muted: #c084fc;
+  --pm-text-secondary: #c084fc;
+  --pm-accent: #a78bfa;
+  --pm-accent-soft: rgba(167, 139, 250, 0.15);
+  --pm-gradient: linear-gradient(135deg, #a78bfa, #ec4899);
+  --pm-nav-bg: rgba(13, 5, 32, 0.85);
+  --pm-blob-1: #a78bfa;
+  --pm-blob-2: #ec4899;
+  --pm-nakshi-opacity: 0;
+}
+
+/* ──────────────────────────────────────────────────────
+   MIDNIGHT THEME
+   ────────────────────────────────────────────────────── */
+.midnight {
+  --pm-bg: #0d0520;
+  --pm-surface: #160d33;
+  --pm-surface-hover: #22144d;
+  --pm-border: rgba(167, 139, 250, 0.15);
+  --pm-text: #ffffff;
+  --pm-text-muted: #c084fc;
+  --pm-text-secondary: #c084fc;
+  --pm-accent: #a78bfa;
+  --pm-accent-soft: rgba(167, 139, 250, 0.15);
+  --pm-gradient: linear-gradient(135deg, #a78bfa, #ec4899);
+  --pm-nav-bg: rgba(13, 5, 32, 0.85);
+  --pm-blob-1: #a78bfa;
+  --pm-blob-2: #ec4899;
+  --pm-nakshi-opacity: 0;
+}
+
+/* ──────────────────────────────────────────────────────
+   FOREST THEME
+   ────────────────────────────────────────────────────── */
+.forest {
+  --pm-bg: #040f0b;
+  --pm-surface: #061d15;
+  --pm-surface-hover: #0a2f22;
+  --pm-border: rgba(52, 211, 153, 0.15);
+  --pm-text: #ffffff;
+  --pm-text-muted: #6ee7b7;
+  --pm-text-secondary: #6ee7b7;
+  --pm-accent: #34d399;
+  --pm-accent-soft: rgba(52, 211, 153, 0.15);
+  --pm-gradient: linear-gradient(135deg, #34d399, #10b981);
+  --pm-nav-bg: rgba(4, 15, 11, 0.85);
+  --pm-blob-1: #34d399;
+  --pm-blob-2: #10b981;
+  --pm-nakshi-opacity: 0;
+}
+
+/* ──────────────────────────────────────────────────────
+   SUNSET THEME
+   ────────────────────────────────────────────────────── */
+.sunset {
+  --pm-bg: #0f0702;
+  --pm-surface: #1c0e04;
+  --pm-surface-hover: #2e1706;
+  --pm-border: rgba(251, 191, 36, 0.15);
+  --pm-text: #ffffff;
+  --pm-text-muted: #fb923c;
+  --pm-text-secondary: #fb923c;
+  --pm-accent: #fbbf24;
+  --pm-accent-soft: rgba(251, 191, 36, 0.15);
+  --pm-gradient: linear-gradient(135deg, #fbbf24, #fb923c);
+  --pm-nav-bg: rgba(15, 7, 2, 0.85);
+  --pm-blob-1: #fbbf24;
+  --pm-blob-2: #fb923c;
+  --pm-nakshi-opacity: 0;
+}
+
+/* ──────────────────────────────────────────────────────
+   LIGHT THEME
+   ────────────────────────────────────────────────────── */
+.light {
+  --pm-bg: #f8fafc;
+  --pm-surface: #ffffff;
+  --pm-surface-hover: #e2e8f0;
+  --pm-border: #cbd5e1;
+  --pm-text: #0f172a;
+  --pm-text-muted: #334155;
+  --pm-text-secondary: #1e293b;
+  --pm-accent: #0891b2;
+  --pm-accent-soft: rgba(8, 145, 178, 0.12);
+  --pm-gradient: linear-gradient(135deg, #0891b2, #4f46e5);
+  --pm-nav-bg: rgba(248, 250, 252, 0.9);
+  --pm-blob-1: #0891b2;
+  --pm-blob-2: #4f46e5;
+  --pm-nakshi-opacity: 0;
+}
+
+/* ──────────────────────────────────────────────────────
+   DEEP DARK THEME
+   ────────────────────────────────────────────────────── */
+.deepDark {
   --pm-bg: #0d0d1a;
   --pm-surface: #13131f;
   --pm-surface-hover: #1a1a2e;
   --pm-border: rgba(255,255,255,0.08);
   --pm-text: #ffffff;
   --pm-text-muted: #a1a1aa;
+  --pm-text-secondary: #a1a1aa;
   --pm-accent: #f97316;
   --pm-accent-soft: rgba(249, 115, 22, 0.15);
   --pm-gradient: linear-gradient(135deg, #f97316, #a855f7);
@@ -19,38 +142,49 @@
   --pm-blob-2: #a855f7;
 }
 
+/* ──────────────────────────────────────────────────────
+   COLOURFUL THEME (Blushing Red Light)
+   ────────────────────────────────────────────────────── */
 .colourful {
   --pm-bg: #fff1f2;
   --pm-surface: #ffffff;
-  --pm-surface-hover: #fecdd3;
+  --pm-surface-hover: #ffe4e6;
   --pm-border: #fecdd3;
-  --pm-text: #881337;
+  --pm-text: #67001a;
   --pm-text-muted: #9f1239;
+  --pm-text-secondary: #881337;
   --pm-accent: #e11d48;
   --pm-accent-soft: rgba(225, 29, 72, 0.1);
   --pm-gradient: linear-gradient(135deg, #e11d48, #be185d);
-  --pm-nav-bg: rgba(255, 255, 255, 0.8);
+  --pm-nav-bg: rgba(255, 255, 255, 0.9);
   --pm-nakshi-opacity: 0.05;
   --pm-blob-1: #e11d48;
   --pm-blob-2: #be185d;
 }
 
+/* ──────────────────────────────────────────────────────
+   NAKSHI LIGHT THEME (Warm Clay / Sand light)
+   ────────────────────────────────────────────────────── */
 .nakshiLight {
   --pm-bg: #fefcf5;
   --pm-surface: #fffefb;
-  --pm-surface-hover: #f1ebd8;
-  --pm-border: #d4c8a5;
-  --pm-text: #3d3b35;
-  --pm-text-muted: #7c776b;
+  --pm-surface-hover: #f3edd9;
+  --pm-border: #ced4da;
+  --pm-text: #2a2824;
+  --pm-text-muted: #534f46;
+  --pm-text-secondary: #3d3b35;
   --pm-accent: #b45309;
   --pm-accent-soft: rgba(180, 83, 9, 0.1);
   --pm-gradient: linear-gradient(135deg, #b45309, #92400e);
-  --pm-nav-bg: rgba(254, 252, 245, 0.8);
+  --pm-nav-bg: rgba(254, 252, 245, 0.9);
   --pm-nakshi-opacity: 0.08;
   --pm-blob-1: #b45309;
   --pm-blob-2: #d97706;
 }
 
+/* ──────────────────────────────────────────────────────
+   GREEN FIELD THEME
+   ────────────────────────────────────────────────────── */
 .greenField {
   --pm-bg: #064e3b;
   --pm-surface: #065f46;
@@ -58,6 +192,7 @@
   --pm-border: #059669;
   --pm-text: #ecfdf5;
   --pm-text-muted: #a7f3d0;
+  --pm-text-secondary: #34d399;
   --pm-accent: #34d399;
   --pm-accent-soft: rgba(52, 211, 153, 0.2);
   --pm-gradient: linear-gradient(135deg, #34d399, #10b981);

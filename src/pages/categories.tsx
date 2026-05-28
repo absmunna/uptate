@@ -1,5 +1,5 @@
 import { useListCategories, getListCategoriesQueryKey } from "@workspace/api-client-react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import * as Icons from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 
@@ -18,7 +18,7 @@ export default function Categories() {
           const IconComponent = (Icons as any)[cat.icon] || Icons.Tag;
           
           return (
-            <Link key={cat.id} href={`/marketplace?categoryId=${cat.id}`}>
+            <Link key={cat.id} to={`/marketplace?categoryId=${cat.id}`}>
               <GlassCard className="p-6 flex flex-col items-center justify-center text-center gap-3 cursor-pointer group" hoverEffect>
                 <div className="h-12 w-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                   <IconComponent className="h-6 w-6" />

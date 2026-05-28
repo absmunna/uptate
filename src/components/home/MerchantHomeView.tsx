@@ -3,7 +3,7 @@ import { useGetSellerStats, getGetSellerStatsQueryKey } from "@workspace/api-cli
 import { formatBDT } from "@/lib/format";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useSeller } from "@/seller/SellerContext";
 import { useAuth, type AppUser } from "@/features/auth/AuthContext";
 import {
@@ -96,7 +96,7 @@ export function MerchantHomeView() {
             </h1>
             <p className="text-white/50 text-sm mt-1">{shopName}</p>
           </div>
-          <Link href="/seller">
+          <Link to="/seller">
             <Button size="sm" variant="outline" className="shrink-0 bg-white/5 border-white/20 text-white/70 hover:text-white hover:bg-white/10 text-xs">
               <BarChart3 className="w-3.5 h-3.5 mr-1.5" />
               Full Dashboard
@@ -111,7 +111,7 @@ export function MerchantHomeView() {
             <span className="text-yellow-300 text-xs font-semibold flex-1">
               {pending.length}টি নতুন অর্ডার আপনার অনুমোদনের অপেক্ষায়
             </span>
-            <Link href="/seller/orders">
+            <Link to="/seller/orders">
               <span className="text-yellow-400 text-xs font-bold underline-offset-2 hover:underline cursor-pointer">
                 দেখুন →
               </span>
@@ -121,7 +121,7 @@ export function MerchantHomeView() {
       </div>
 
       {/* ── Primary CTA — Upload Product ── */}
-      <Link href="/seller/products/new">
+      <Link to="/seller/products/new">
         <div className="flex items-center justify-between rounded-2xl bg-primary hover:bg-primary/90 transition-colors px-5 py-4 cursor-pointer shadow-lg shadow-primary/25">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
@@ -163,7 +163,7 @@ export function MerchantHomeView() {
           { href: "/seller/products", icon: Package,     label: "পণ্য" },
           { href: "/seller/analytics",icon: TrendingUp,  label: "Analytics" },
         ].map(({ href, icon: Icon, label }) => (
-          <Link key={href} href={href}>
+          <Link key={href} to={href}>
             <GlassCard className="p-3.5 flex flex-col items-center gap-2 cursor-pointer hover:border-primary/40 transition-colors text-center">
               <Icon className="w-5 h-5 text-primary" />
               <span className="text-[11px] font-semibold text-white/70">{label}</span>
@@ -177,7 +177,7 @@ export function MerchantHomeView() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-bold text-white">সাম্প্রতিক অর্ডার</h2>
-            <Link href="/seller/orders">
+            <Link to="/seller/orders">
               <span className="text-xs text-primary hover:underline cursor-pointer">সব দেখুন →</span>
             </Link>
           </div>
@@ -216,7 +216,7 @@ export function MerchantHomeView() {
           <p className="text-white/60 text-xs font-medium">আপনার Seller Hub-এ যেতে</p>
           <p className="text-white text-sm font-semibold mt-0.5">Seller Portal</p>
         </div>
-        <Link href="/seller">
+        <Link to="/seller">
           <Button size="sm" className="bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30 text-xs">
             খুলুন
           </Button>

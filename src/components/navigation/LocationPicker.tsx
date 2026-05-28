@@ -1,23 +1,36 @@
 import React, { useState } from 'react';
-import { MapPin, ChevronDown, Check } from 'lucide-react';
-import { useLocationStore } from '../../modules/location/locationStore';
-import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, ChevronDown, Check, Compass, Navigation } from 'lucide-react';
+import { useLocation } from '@/features/location/LocationContext';
+import { motion, AnimatePresence } from 'motion/react';
+import { cn } from '@/lib/utils';
 
-const cities = ['Dhaka', 'Chittagong', 'Sylhet', 'Rajshahi', 'Khulna', 'Barisal', 'Rangpur', 'Gazipur'];
+const commonCities = ['Dhaka', 'Chittagong', 'Sylhet', 'Rajshahi', 'Khulna', 'Barisal', 'Rangpur', 'Gazipur'];
 
 export const LocationPicker = () => {
-  const { city, setLocation } = useLocationStore();
+  const { location, detect, setManual, isDetecting, displayName } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--pm-bg)]/40 border border-[var(--pm-border)]/50 hover:border-[var(--pm-accent)]/50 transition-all group"
+        className="flex items-center gap-2 px-4 h-10 rounded-2xl bg-zinc-900 border border-white/5 hover:border-cyan-400/30 transition-all group overflow-hidden"
       >
-        <MapPin className="w-3.5 h-3.5 text-[var(--pm-accent)]" />
-        <span className="text-[10px] font-bold text-[var(--pm-text)] truncate max-w-[80px]">{city}</span>
-        <ChevronDown className={`w-3 h-3 text-[var(--pm-text-muted)] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <MapPin className={cn(
+            "w-3.5 h-3.5 transition-colors",
+            location.source === 'auto' ? "text-cyan-400" : "text-zinc-500"
+        )} />
+        <span className="text-[10px] font-black text-white uppercase tracking-widest truncate max-w-[100px]">
+            {isDetecting ? 'Scanning...' : (location.city || location.area || 'Set Location')}
+        </span>
+        <ChevronDown className={cn(
+            "w-3 h-3 text-zinc-600 transition-transform duration-300",
+            isOpen && "rotate-180"
+        )} />
+        
+        {isDetecting && (
+            <div className="absolute inset-0 bg-cyan-400/10 animate-pulse pointer-events-none" />
+        )}
       </button>
 
       <AnimatePresence>
@@ -28,26 +41,47 @@ export const LocationPicker = () => {
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="absolute top-full left-0 mt-2 w-48 glass border border-[var(--pm-border)]/50 rounded-2xl shadow-2xl z-50 overflow-hidden"
+              className="absolute top-full left-0 mt-3 w-64 bg-zinc-950 border border-white/10 rounded-3xl shadow-2xl z-50 overflow-hidden backdrop-blur-2xl"
             >
-              <div className="p-2 flex flex-col gap-1">
-                {cities.map((c) => (
-                  <button
-                    key={c}
+              <div className="p-4 space-y-4">
+                {/* Auto Detection Trigger */}
+                <button
                     onClick={() => {
-                      setLocation(c);
-                      setIsOpen(false);
+                        detect();
+                        setIsOpen(false);
                     }}
-                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                      city === c 
-                      ? 'bg-[var(--pm-accent)] text-white shadow-lg shadow-[var(--pm-accent)]/20' 
-                      : 'text-[var(--pm-text-muted)] hover:text-[var(--pm-text)] hover:bg-white/5'
-                    }`}
-                  >
-                    {c}
-                    {city === c && <Check className="w-3.5 h-3.5" />}
-                  </button>
-                ))}
+                    className="w-full h-12 bg-cyan-400/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center gap-2 text-cyan-400 hover:bg-cyan-400/20 transition-all group"
+                >
+                    <Navigation className="w-4 h-4 group-hover:animate-bounce" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Auto-Detect Node</span>
+                </button>
+
+                <div className="h-px bg-white/5" />
+
+                {/* City Selection */}
+                <div className="space-y-1">
+                    <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest ml-1 mb-2">Major Clusters</p>
+                    <div className="grid grid-cols-1 gap-1">
+                        {commonCities.map((c) => (
+                            <button
+                                key={c}
+                                onClick={() => {
+                                    setManual(c, 'Bangladesh');
+                                    setIsOpen(false);
+                                }}
+                                className={cn(
+                                    "flex items-center justify-between px-4 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                                    location.city === c 
+                                    ? 'bg-white/10 text-white' 
+                                    : 'text-zinc-500 hover:text-white hover:bg-white/5'
+                                )}
+                            >
+                                {c}
+                                {location.city === c && <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.5)]" />}
+                            </button>
+                        ))}
+                    </div>
+                </div>
               </div>
             </motion.div>
           </>

@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @plugin "@tailwindcss/typography";
+@import "./themes/variables.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -64,6 +64,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  --animate-spin-slow: spin-slow 8s linear infinite;
 }
 
 /* LIGHT MODE */
@@ -125,7 +131,7 @@
 }
 
 /* ──────────────────────────────────────────────────────
-   DARK THEME — Cyberpunk deep-space navy
+   DARK THEME — Cyberpunk deep-space navy (Aliased to Midnight purple)
    ────────────────────────────────────────────────────── */
 .dark {
   --button-outline: rgba(255,255,255, .08);
@@ -134,61 +140,61 @@
   --elevate-1: rgba(255,255,255, .03);
   --elevate-2: rgba(255,255,255, .07);
 
-  /* Near-black deep navy — richer than before */
-  --background: 225 50% 5%;
-  --foreground: 210 40% 96%;
-  --border: 220 30% 14%;
+  /* Midnight Purple Fallback */
+  --background: 270 60% 4%;
+  --foreground: 270 30% 96%;
+  --border: 270 35% 14%;
 
   /* Glassmorphism cards */
-  --card: 222 47% 8%;
-  --card-foreground: 210 40% 96%;
-  --card-border: 220 30% 16%;
+  --card: 270 50% 7%;
+  --card-foreground: 270 30% 96%;
+  --card-border: 270 35% 16%;
 
-  --popover: 224 50% 7%;
-  --popover-foreground: 210 40% 96%;
-  --popover-border: 220 30% 16%;
+  --popover: 270 55% 6%;
+  --popover-foreground: 270 30% 96%;
+  --popover-border: 270 35% 16%;
 
-  /* Cyan-tinted primary */
-  --primary: 199 89% 48%;
+  /* Violet-tinted primary */
+  --primary: 270 80% 70%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 220 30% 14%;
-  --secondary-foreground: 210 40% 96%;
+  --secondary: 270 35% 14%;
+  --secondary-foreground: 270 30% 96%;
 
-  --muted: 220 30% 12%;
-  --muted-foreground: 215 20% 55%;
+  --muted: 270 30% 12%;
+  --muted-foreground: 270 20% 55%;
 
-  --accent: 220 30% 14%;
+  --accent: 320 70% 60%;
   --accent-foreground: 210 40% 96%;
 
   --destructive: 0 62.8% 40%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 220 30% 14%;
-  --ring: 199 89% 48%;
+  --input: 270 35% 14%;
+  --ring: 270 80% 70%;
 
-  --sidebar: 225 50% 5%;
-  --sidebar-foreground: 210 40% 96%;
-  --sidebar-border: 220 30% 14%;
-  --sidebar-primary: 199 89% 48%;
+  --sidebar: 270 60% 4%;
+  --sidebar-foreground: 270 30% 96%;
+  --sidebar-border: 270 35% 14%;
+  --sidebar-primary: 270 80% 70%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 220 30% 14%;
-  --sidebar-accent-foreground: 210 40% 96%;
-  --sidebar-ring: 199 89% 48%;
+  --sidebar-accent: 270 35% 14%;
+  --sidebar-accent-foreground: 270 30% 96%;
+  --sidebar-ring: 270 80% 70%;
 
-  --chart-1: 199 80% 55%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
+  --chart-1: 270 80% 65%;
+  --chart-2: 320 70% 60%;
+  --chart-3: 200 70% 55%;
+  --chart-4: 45 80% 60%;
+  --chart-5: 0 70% 60%;
 
   /* Neon glow tokens */
-  --neon-cyan:   #22d3ee;
-  --neon-blue:   #60a5fa;
-  --neon-purple: #a78bfa;
-  --neon-glow-sm: 0 0 10px rgba(34, 211, 238, 0.20), 0 0 2px rgba(34, 211, 238, 0.40);
-  --neon-glow-md: 0 0 20px rgba(34, 211, 238, 0.25), 0 0 4px rgba(34, 211, 238, 0.50);
-  --neon-glow-btn: 0 0 24px rgba(34, 211, 238, 0.35), 0 2px 8px rgba(0,0,0,0.6);
+  --neon-cyan:   #a78bfa;
+  --neon-blue:   #c084fc;
+  --neon-purple: #ec4899;
+  --neon-glow-sm: 0 0 10px rgba(167, 139, 250, 0.20), 0 0 2px rgba(167, 139, 250, 0.40);
+  --neon-glow-md: 0 0 20px rgba(167, 139, 250, 0.25), 0 0 4px rgba(167, 139, 250, 0.50);
+  --neon-glow-btn: 0 0 24px rgba(167, 139, 250, 0.35), 0 2px 8px rgba(0,0,0,0.6);
 }
 
 @layer base {
@@ -278,7 +284,9 @@
 /* ──────────────────────────────────────────────────────
    LAYOUT
    ────────────────────────────────────────────────────── */
-html, body { overflow-x: hidden; }
+html, body { 
+  overflow-x: clip; /* clip instead of hidden keeps sticky working! */
+}
 
 /* ──────────────────────────────────────────────────────
    THEME: Midnight — deep purple + violet neon
@@ -450,6 +458,150 @@ html, body { overflow-x: hidden; }
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.6s ease-in-out infinite;
 }
+
+/* ──────────────────────────────────────────────────────
+   THEME: Deep Dark
+   ────────────────────────────────────────────────────── */
+.deepDark {
+  --background: 240 33% 8%;     /* #0d0d1a */
+  --foreground: 0 0% 100%;      /* #ffffff */
+  --border: 240 33% 15%;        /* #1a1a2e */
+  --card: 240 31% 10%;          /* #13131f */
+  --card-foreground: 0 0% 100%;
+  --card-border: 240 33% 15%;
+  --popover: 240 31% 10%;
+  --popover-foreground: 0 0% 100%;
+  --popover-border: 240 33% 15%;
+  --primary: 24 95% 58%;        /* #f97316 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 31% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 240 33% 15%;
+  --muted-foreground: 240 5% 65%; /* #a1a1aa */
+  --accent: 275 90% 65%;        /* #a855f7 */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62% 40%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 240 33% 15%;
+  --ring: 24 95% 58%;
+  --sidebar: 240 33% 8%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-border: 240 33% 15%;
+  --sidebar-primary: 24 95% 58%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 31% 10%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 24 95% 58%;
+  --neon-cyan:   #f97316;
+  --neon-blue:   #d946ef;
+  --neon-purple: #a855f7;
+  --neon-glow-sm: 0 0 10px rgba(249,115,22,0.22), 0 0 2px rgba(249,115,22,0.45);
+  --neon-glow-md: 0 0 22px rgba(249,115,22,0.28), 0 0 5px rgba(249,115,22,0.55);
+  --neon-glow-btn: 0 0 26px rgba(249,115,22,0.38), 0 2px 8px rgba(0,0,0,0.65);
+}
+.deepDark .glass-panel { background: rgba(13,13,26,0.88); }
+.deepDark .cyber-card { border-color: rgba(249,115,22,0.13); box-shadow: 0 4px 32px rgba(0,0,0,0.55); background: rgba(249,115,22,0.04); }
+
+/* ──────────────────────────────────────────────────────
+   THEME: Colourful
+   ────────────────────────────────────────────────────── */
+.colourful {
+  --background: 353 100% 97%;   /* #fff1f2 */
+  --foreground: 343 75% 30%;    /* #881337 */
+  --border: 352 83% 90%;        /* #fecdd3 */
+  --card: 0 0% 100%;            /* #ffffff */
+  --card-foreground: 343 75% 30%;
+  --card-border: 352 83% 90%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 343 75% 30%;
+  --popover-border: 352 83% 90%;
+  --primary: 347 77% 50%;       /* #e11d48 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 353 100% 97%;
+  --secondary-foreground: 343 75% 30%;
+  --muted: 352 83% 90%;
+  --muted-foreground: 344 80% 35%; /* #9f1239 */
+  --accent: 335 77% 42%;        /* #be185d */
+  --accent-foreground: 0 0% 100%;
+  --input: 352 83% 90%;
+  --ring: 347 77% 50%;
+  --sidebar: 353 100% 97%;
+  --sidebar-foreground: 343 75% 30%;
+  --sidebar-border: 352 83% 90%;
+  --neon-cyan:   #e11d48;
+  --neon-blue:   #d81b60;
+  --neon-purple: #be185d;
+}
+.colourful .glass-panel { background: rgba(255,255,255,0.85); border-color: rgba(225,29,72,0.2) }
+.colourful .cyber-card { border-color: rgba(225,29,72,0.15); box-shadow: 0 4px 16px rgba(225,29,72,0.05); }
+
+/* ──────────────────────────────────────────────────────
+   THEME: Nakshi Light
+   ────────────────────────────────────────────────────── */
+.nakshiLight {
+  --background: 47 67% 98%;     /* #fefcf5 */
+  --foreground: 45 7% 23%;      /* #3d3b35 */
+  --border: 45 42% 74%;         /* #d4c8a5 */
+  --card: 45 100% 99%;          /* #fffefb */
+  --card-foreground: 45 7% 23%;
+  --card-border: 45 42% 74%;
+  --popover: 45 100% 99%;
+  --popover-foreground: 45 7% 23%;
+  --popover-border: 45 42% 74%;
+  --primary: 36 91% 37%;        /* #b45309 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 47 67% 98%;
+  --secondary-foreground: 45 7% 23%;
+  --muted: 45 42% 74%;
+  --muted-foreground: 45 7% 45%; /* #7c776b */
+  --accent: 25 91% 37%;         /* #92400e */
+  --accent-foreground: 0 0% 100%;
+  --input: 45 42% 74%;
+  --ring: 36 91% 37%;
+  --sidebar: 47 67% 98%;
+  --sidebar-foreground: 45 7% 23%;
+  --sidebar-border: 45 42% 74%;
+  --neon-cyan:   #b45309;
+  --neon-blue:   #d97706;
+  --neon-purple: #92400e;
+}
+.nakshiLight .glass-panel { background: rgba(254,252,245,0.85); border-color: rgba(180,83,9,0.15); }
+.nakshiLight .cyber-card { border-color: rgba(180,83,9,0.15); box-shadow: 0 4px 16px rgba(180,83,9,0.05); }
+
+/* ──────────────────────────────────────────────────────
+   THEME: Green Field
+   ────────────────────────────────────────────────────── */
+.greenField {
+  --background: 164 85% 16%;    /* #064e3b */
+  --foreground: 152 80% 96%;    /* #ecfdf5 */
+  --border: 160 85% 22%;        /* #059669 */
+  --card: 164 85% 20%;          /* #065f46 */
+  --card-foreground: 152 80% 96%;
+  --card-border: 160 85% 22%;
+  --popover: 164 85% 20%;
+  --popover-foreground: 152 80% 96%;
+  --popover-border: 160 85% 22%;
+  --primary: 152 60% 50%;       /* #34d399 */
+  --primary-foreground: 164 85% 16%;
+  --secondary: 164 85% 20%;
+  --secondary-foreground: 152 80% 96%;
+  --muted: 160 85% 22%;
+  --muted-foreground: 152 75% 80%; /* #a7f3d0 */
+  --accent: 152 50% 40%;        /* #10b981 */
+  --accent-foreground: 0 0% 100%;
+  --input: 160 85% 22%;
+  --ring: 152 60% 50%;
+  --sidebar: 164 85% 16%;
+  --sidebar-foreground: 152 80% 96%;
+  --sidebar-border: 160 85% 22%;
+  --neon-cyan:   #34d399;
+  --neon-blue:   #10b981;
+  --neon-purple: #059669;
+  --neon-glow-sm: 0 0 10px rgba(52,211,153,0.22), 0 0 2px rgba(52,211,153,0.45);
+  --neon-glow-md: 0 0 22px rgba(52,211,153,0.28), 0 0 5px rgba(52,211,153,0.55);
+}
+.greenField .glass-panel { background: rgba(6,78,59,0.85); border-color: rgba(52,211,153,0.2); }
+.greenField .cyber-card { border-color: rgba(52,211,153,0.15); box-shadow: 0 4px 16px rgba(52,211,153,0.05); }
 
 /* light theme — explicit class for parity */
 .light { color-scheme: light; }

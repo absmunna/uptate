@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatBDT } from "@/lib/format";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,7 +45,7 @@ export default function SellerProducts() {
             {products.length} listing{products.length === 1 ? "" : "s"} in your shop.
           </p>
         </div>
-        <Link href="/seller/products/new">
+        <Link to="/seller/products/new">
           <Button className="bg-primary hover:bg-primary/90 rounded-full">
             <Plus className="w-4 h-4 mr-2" /> New Product
           </Button>
@@ -67,7 +67,7 @@ export default function SellerProducts() {
           {products.length === 0 ? (
             <>
               <p className="mb-4">You haven't listed any products yet.</p>
-              <Link href="/seller/products/new">
+              <Link to="/seller/products/new">
                 <Button className="bg-primary hover:bg-primary/90 rounded-full">
                   <Plus className="w-4 h-4 mr-2" /> Create your first product
                 </Button>
@@ -109,7 +109,7 @@ export default function SellerProducts() {
                 </div>
               </div>
               <div className="flex sm:flex-col gap-2 shrink-0">
-                <Link href={`/seller/products/${p.id}/edit`}>
+                <Link to={`/seller/products/${p.id}/edit`}>
                   <Button
                     variant="outline"
                     size="sm"

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X, MapPin, Truck, ShieldCheck, Clock, ChevronRight, AlertCircle } from "lucide-react";
+import { CloseButton } from "@/components/ui/PremiumButtons";
 import { formatBDT } from "@/lib/format";
 import { toast } from "sonner";
 
@@ -90,9 +91,7 @@ export function CheckoutModal({ isOpen, onClose, cart, onSuccess }: CheckoutModa
             {step === "confirm" && "অর্ডার নিশ্চিত করুন"}
             {step === "placing" && "অর্ডার প্রক্রিয়াকরণ..."}
           </h2>
-          <button onClick={onClose} className="text-white/40 hover:text-white p-1">
-            <X className="w-5 h-5" />
-          </button>
+          <CloseButton size="md" variant="glass" className="rounded-full shadow-inner border border-white/10" onClose={onClose} />
         </div>
 
         <div className="p-6 flex flex-col gap-6">

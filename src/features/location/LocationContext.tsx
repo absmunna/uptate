@@ -30,7 +30,10 @@ function readStored(): UserLocation {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     return raw ? (JSON.parse(raw) as UserLocation) : NONE;
-  } catch { return NONE; }
+  } catch (e) { 
+    console.warn("[LocationContext] localStorage not accessible:", e);
+    return NONE; 
+  }
 }
 
 /** Reverse geocode lat/lng using OpenStreetMap Nominatim (free, no key) */
@@ -62,9 +65,14 @@ export function LocationProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
-      if (location.source === "none") window.localStorage.removeItem(STORAGE_KEY);
-      else window.localStorage.setItem(STORAGE_KEY, JSON.stringify(location));
-    } catch {}
+      if (location.source === "none") {
+        window.localStorage.removeItem(STORAGE_KEY);
+      } else {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(location));
+      }
+    } catch (e) {
+      console.warn("[LocationContext] localStorage write failed:", e);
+    }
   }, [location]);
 
   /** Auto-detect once on mount if no cached location */
@@ -76,45 +84,63 @@ export function LocationProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const detect = useCallback(async () => {
-    if (typeof navigator === "undefined" || !navigator.geolocation) return;
+    if (typeof window === "undefined" || typeof navigator === "undefined") return;
+    
+    // Safety check for geolocation API
+    if (!navigator.geolocation) {
+      console.warn("[LocationContext] Geolocation not supported by this browser.");
+      return;
+    }
+
     setIsDetecting(true);
-    await new Promise<void>((resolve) => {
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const { latitude: lat, longitude: lng } = pos.coords;
-          // First set coords immediately
-          setLocation({
-            lat, lng,
-            source: "auto",
-            updatedAt: new Date().toISOString(),
-          });
-          // Then enrich with reverse geocoding
-          const geo = await reverseGeocode(lat, lng);
-          setLocation((prev) => ({
-            ...prev,
-            ...geo,
-            lat, lng,
-            source: "auto",
-            updatedAt: new Date().toISOString(),
-          }));
-          setIsDetecting(false);
-          resolve();
-        },
-        () => {
-          // Permission denied or error — fall back to Dhaka
-          setLocation({
-            city: "Dhaka",
-            country: "Bangladesh",
-            countryCode: "BD",
-            source: "manual",
-            updatedAt: new Date().toISOString(),
-          });
-          setIsDetecting(false);
-          resolve();
-        },
-        { enableHighAccuracy: false, timeout: 8000, maximumAge: 120_000 },
-      );
-    });
+    try {
+      await new Promise<void>((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            try {
+              const { latitude: lat, longitude: lng } = pos.coords;
+              // First set coords immediately
+              setLocation({
+                lat, lng,
+                source: "auto",
+                updatedAt: new Date().toISOString(),
+              });
+              // Then enrich with reverse geocoding
+              const geo = await reverseGeocode(lat, lng);
+              setLocation((prev) => ({
+                ...prev,
+                ...geo,
+                lat, lng,
+                source: "auto",
+                updatedAt: new Date().toISOString(),
+              }));
+            } catch (e) {
+              console.error("[LocationContext] Error processing coordinates:", e);
+            } finally {
+              setIsDetecting(false);
+              resolve();
+            }
+          },
+          (err) => {
+            console.warn("[LocationContext] Geolocation failed or denied:", err.message);
+            // Permission denied or error — fall back to Dhaka
+            setLocation({
+              city: "Dhaka",
+              country: "Bangladesh",
+              countryCode: "BD",
+              source: "manual",
+              updatedAt: new Date().toISOString(),
+            });
+            setIsDetecting(false);
+            resolve();
+          },
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: 120_000 },
+        );
+      });
+    } catch (err) {
+      console.error("[LocationContext] Critical geolocation error:", err);
+      setIsDetecting(false);
+    }
   }, []);
 
   const setManual = useCallback((city: string, country?: string) => {

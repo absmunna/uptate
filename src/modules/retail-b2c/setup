@@ -1,0 +1,2 @@
+mkdir -p /src/modules/retail-b2c/pages
+mkdir -p /src/modules/retail-b2c/components

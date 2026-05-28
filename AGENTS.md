@@ -27,9 +27,21 @@ This file serves as a persistent brain and instruction set for AI agents working
 3. **Icons**: Use `lucide-react` exclusively.
 4. **Mobile First**: Design for max-width `480px` on mobile, horizontally centered on desktop with surrounding gradients/sidebars.
 5. **No Blind Full-File Overwrites**: Use targeted edits or `multi_edit_file` to keep safe boundaries. Do not break existing features.
-6. **Feature Portals**: 
-    - Completed: B2B Dashboard basics, Auth, Seller/Admin Dashboards.
-    - Pending (404/Coming Soon mapped): B2C, Wallet, PK Store (frontend done, routing hidden for now or behind construction walls), etc. Map unfinished routes to the `NotFound` (Coming Soon) page.
+6. **Portal UI Structure Rule**: For all portals (Home Feed, Retail, Wholesale, Services, Local, etc.), the layout MUST invariably start with:
+   - A `StoryBar` (topmost, taking a `context` prop to adjust its content dynamically).
+   - A `PortalIconBar` (sticky category/portal icons just beneath, taking a `context` prop).
+   - Standard, modern, minimal `lucide-react` icons. Do not remove this combo unless explicitly told. Use the global search icon for search features, avoiding inline/duplicate search bars on portal homepages.
+7. **Feature Portals**: 
+    - Completed: B2B Dashboard basics, Auth, Seller/Admin Dashboards, Retail (B2C), Portal Dynamic Layouts.
+    - Pending (404/Coming Soon mapped): Wallet, PK Store, etc. Map unfinished routes to the `NotFound` (Coming Soon) page.
+8. **Nearby Shop Portal (Local) Rules**:
+    - **Physical Presence**: All sellers in the Nearby Shop portal MUST possess a physical shop with a verifiable address.
+    - **Documentation**: Shops require a valid Trade License. Home-based businesses (e.g., Homemade cakes, Bakery) use their residential address.
+    - **Cross-Portal Flow**: Authorized Retail sellers with physical locations are permitted access to the Nearby Shop portal under standard compliance.
+    - **Categorization**: 
+        - Specialized categories: "Home made food", "Pharmacy", "Hotel/Restaurant" MUST be strictly separated.
+        - "Services" category: Dynamically filtered from the Service Portal to include only those with physical work areas/addresses.
+    - **Verification**: Profile updates MUST support uploading trade licenses and precise address pinning.
 
 ## 🚀 Deployment & Updates
 - **Frontend (Vercel)**: Push to GitHub `main` or specific branch. Keep VITE_API_BASE_URL pointing to the Railway production URL.

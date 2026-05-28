@@ -1,4 +1,4 @@
-import { useParams, Link } from "wouter";
+import { useParams, Link } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import {
   Factory, Globe, BadgeCheck, MapPin, Star, Users, Package,
@@ -86,7 +86,7 @@ export default function FactoryDetailPage() {
   if (!f) {
     return (
       <div className="py-16 text-center text-white/40">
-        Factory not found. <Link href="/export" className="text-cyan-400 hover:underline">Back to Export Marketplace</Link>
+        Factory not found. <Link to="/export" className="text-cyan-400 hover:underline">Back to Export Marketplace</Link>
       </div>
     );
   }
@@ -94,7 +94,7 @@ export default function FactoryDetailPage() {
   return (
     <div className="max-w-5xl mx-auto px-0 md:px-4 py-4 flex flex-col gap-5">
       {/* Back */}
-      <Link href="/export" className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors w-fit">
+      <Link to="/export" className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors w-fit">
         <ArrowLeft className="h-4 w-4" /> Export Marketplace
       </Link>
 
@@ -227,12 +227,12 @@ export default function FactoryDetailPage() {
               <div className="text-center py-4">
                 <Lock className="h-8 w-8 text-white/20 mx-auto mb-3" />
                 <p className="text-sm text-white/50 mb-4">Login to view contact details and send an inquiry.</p>
-                <Link href="/auth/login">
+                <Link to="/auth/login">
                   <button className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-bold neon-glow-sm hover:from-cyan-400 hover:to-blue-500 transition-all">
                     Log In to Contact
                   </button>
                 </Link>
-                <Link href="/auth/register">
+                <Link to="/auth/register">
                   <button className="w-full mt-2 py-2 rounded-xl border border-white/10 text-white/50 text-sm hover:border-white/25 hover:text-white/70 transition-all">
                     Create Free Account
                   </button>
@@ -260,7 +260,7 @@ export default function FactoryDetailPage() {
           <div className="p-4 rounded-2xl border border-cyan-500/10 bg-cyan-500/5 text-center">
             <Globe className="h-6 w-6 text-cyan-400/70 mx-auto mb-2" />
             <p className="text-xs text-white/45 mb-3">Are you a factory owner? Join our export network.</p>
-            <Link href="/auth/factory-register">
+            <Link to="/auth/factory-register">
               <button className="w-full py-2 rounded-xl border border-cyan-500/25 text-cyan-300 text-xs font-semibold hover:bg-cyan-500/8 transition-all">
                 Register as Exporter →
               </button>

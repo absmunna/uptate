@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { safeStorage } from "@/utils/storage";
 
 export interface CartLine {
   id: string;
@@ -27,9 +28,8 @@ const STORAGE_KEY = "pm.cart.v1";
 const CartContext = createContext<CartCtx | null>(null);
 
 function readStored(): CartLine[] {
-  if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = safeStorage.getItem(STORAGE_KEY);
     return raw ? (JSON.parse(raw) as CartLine[]) : [];
   } catch {
     return [];
@@ -40,8 +40,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartLine[]>(() => readStored());
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch {}
+    safeStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
   const add = useCallback<CartCtx["add"]>((line) => {

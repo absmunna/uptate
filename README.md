@@ -55,6 +55,21 @@ PaikarMart is a modern, high-performance social commerce and premium e-commerce 
 - Check `IN_BUILD_FEATURES.md` for the roadmap of features currently under development (e.g., Live Wallet, Live Chat, Real Payment Gateways).
 - Check `AGENTS.md` for AI Assistant guidelines and security notes regarding the stack.
 
+## 🏗️ Proposed Modular Architecture
+
+The application is currently transitioning to a more modular architecture for enhanced scalability:
+
+```text
+src/
+├── components/                      # 🏛️ Core Global UI (Buttons, Inputs, GlassCard)
+├── modules/                         # 🚀 Core Portal System
+│   ├── commerce-core/               # 🔄 Shared Marketplace Base (B2C & B2B Shared)
+│   ├── retail-b2c/                  # 🛍️ Retail Portal (B2C Specific)
+│   ├── wholesale-b2b/               # 📦 Wholesale Portal (B2B Specific)
+│   ├── digital-ott/                 # 🎬 OTT & Subscription Portal
+│   └── logistics-ride/              # 🚗 Ride Sharing & Delivery Portal
+```
+
 ### Building for Production
 
 ```bash

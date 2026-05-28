@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,7 +38,7 @@ function validatePassword(v: string) {
 }
 
 export default function SellerRegisterPage() {
-  const [, navigate] = useLocation();
+  const navigate = useNavigate();
   const auth = useAuth();
   const { isBn } = useLanguage();
   const [step, setStep] = useState(1);
@@ -331,8 +331,8 @@ export default function SellerRegisterPage() {
                 />
                 <label htmlFor="seller-terms" className="text-[11px] text-muted-foreground leading-snug cursor-pointer">
                   {isBn
-                    ? <>আমি PaikarMart-এর <Link href="/terms" className="text-primary">বিক্রেতা শর্তাবলী</Link>, <Link href="/refund-policy" className="text-primary">রিফান্ড নীতি</Link> ও <Link href="/privacy" className="text-primary">গোপনীয়তা নীতি</Link> পড়েছি ও সম্মত আছি। e-CAB ডিজিটাল কমার্স নির্দেশিকা মেনে চলার অঙ্গীকার করছি।</>
-                    : <>I have read and agree to PaikarMart's <Link href="/terms" className="text-primary">Seller Terms</Link>, <Link href="/refund-policy" className="text-primary">Refund Policy</Link> & <Link href="/privacy" className="text-primary">Privacy Policy</Link>. I commit to comply with e-CAB Digital Commerce Guidelines.</>
+                    ? <>আমি PaikarMart-এর <Link to="/terms" className="text-primary">বিক্রেতা শর্তাবলী</Link>, <Link to="/refund-policy" className="text-primary">রিফান্ড নীতি</Link> ও <Link to="/privacy" className="text-primary">গোপনীয়তা নীতি</Link> পড়েছি ও সম্মত আছি। e-CAB ডিজিটাল কমার্স নির্দেশিকা মেনে চলার অঙ্গীকার করছি।</>
+                    : <>I have read and agree to PaikarMart's <Link to="/terms" className="text-primary">Seller Terms</Link>, <Link to="/refund-policy" className="text-primary">Refund Policy</Link> & <Link to="/privacy" className="text-primary">Privacy Policy</Link>. I commit to comply with e-CAB Digital Commerce Guidelines.</>
                   }
                 </label>
               </div>
@@ -365,11 +365,11 @@ export default function SellerRegisterPage() {
 
       <p className="mt-5 text-center text-sm text-muted-foreground">
         {isBn ? "ক্রেতা হিসেবে যোগ দিতে? " : "Just want to buy? "}
-        <Link href="/auth/register" className="text-primary hover:text-primary/80 font-semibold transition-colors">
+        <Link to="/auth/register" className="text-primary hover:text-primary/80 font-semibold transition-colors">
           {isBn ? "বায়ার অ্যাকাউন্ট" : "Buyer account"}
         </Link>
         {" · "}
-        <Link href="/auth/login" className="text-primary hover:text-primary/80 font-semibold transition-colors">
+        <Link to="/auth/login" className="text-primary hover:text-primary/80 font-semibold transition-colors">
           {isBn ? "লগইন করুন" : "Sign in"}
         </Link>
       </p>

@@ -1,6 +1,7 @@
 import { apiClient } from '../../../api/client';
 import { ENDPOINTS } from '../../../api/endpoints';
 import { LoginCredentials, RegisterData, AuthResponse } from '../types/auth';
+import { safeStorage } from "@/utils/storage";
 
 export const authService = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
@@ -15,8 +16,12 @@ export const authService = {
     const { data } = await apiClient.post(`${ENDPOINTS.AUTH.LOGIN.replace('/login', '/forgot-password')}`, { email });
     return data;
   },
+  getMe: async (): Promise<{ user: any }> => {
+    const { data } = await apiClient.get('/auth/me');
+    return data;
+  },
   logout: () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    safeStorage.removeItem('accessToken');
+    safeStorage.removeItem('refreshToken');
   }
 };

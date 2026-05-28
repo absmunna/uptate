@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { getProfitShare } from "@/config/profitShare.config";
+import { safeStorage } from "@/utils/storage";
 
 export interface PKCoinTx {
   id: string;
@@ -29,9 +30,8 @@ const PKCoinContext = createContext<PKCoinCtx | null>(null);
 const EMPTY: WalletState = { balance: 0, lifetimeEarned: 0, lifetimeSpent: 0, history: [] };
 
 function readStored(): WalletState {
-  if (typeof window === "undefined") return EMPTY;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = safeStorage.getItem(STORAGE_KEY);
     return raw ? (JSON.parse(raw) as WalletState) : EMPTY;
   } catch {
     return EMPTY;
@@ -49,8 +49,7 @@ export function PKCoinProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<WalletState>(() => readStored());
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+    safeStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
   const earnFromOrder = useCallback((orderTotal: number, isPlatformOwned: boolean) => {

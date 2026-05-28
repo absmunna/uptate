@@ -1,7 +1,8 @@
 import { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { safeStorage } from "@/utils/storage";
 
 export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('accessToken');
+  const token = safeStorage.getItem('accessToken');
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }

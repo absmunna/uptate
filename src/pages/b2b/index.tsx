@@ -1,11 +1,25 @@
-import { Link } from "wouter";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import {
   Factory, Store, MapPin, Users, ArrowDown, ArrowRight,
   Globe, Truck, Wallet, BarChart3, ShieldCheck, Package,
-  CheckCircle2, Zap, ChevronRight, BadgePercent,
+  CheckCircle2, Zap, ChevronRight, BadgePercent, Info, BellRing, Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { StoryBar } from "@/components/feed/StoryBar";
+import { PortalIconBar } from "@/components/home/PortalIconBar";
+
+// Import modular B2B sub-components (new add)
+import { B2BHomeView } from "@/portals/b2b/components/B2BHomeView";
+import { B2BProductsView } from "@/portals/b2b/components/B2BProductsView";
+import { B2BProductDetailView } from "@/portals/b2b/components/B2BProductDetailView";
+import { FactoryDirectoryView } from "@/portals/b2b/components/FactoryDirectoryView";
+import { FactoryProfileView } from "@/portals/b2b/components/FactoryProfileView";
+import { SupplierDirectoryView } from "@/portals/b2b/components/SupplierDirectoryView";
+import { RFQMarketplaceView } from "@/portals/b2b/components/RFQMarketplaceView";
+import { RFQDetailView } from "@/portals/b2b/components/RFQDetailView";
+import { B2BTradeFeedView } from "@/portals/b2b/components/B2BTradeFeedView";
 
 const CHAIN_STEPS = [
   {
@@ -71,7 +85,7 @@ const FOUR_MODELS = [
     Icon: Zap, title: "ফিল্টারিং ও রাইডার ম্যাচিং",
     color: "text-amber-400", bg: "bg-amber-500/8", border: "border-amber-500/20",
     points: [
-      "রাইডার নিজের গন্তব্য অনুযায়ী পিকআপ খুঁজে",
+      "রাইড নিজের গন্তব্য অনুযায়ী পিকআপ খুঁজে",
       "লোকেশন রেডিয়াস ফিল্টার",
       "ডেলিভারি রিকোয়েস্ট ম্যাচিং বোর্ড",
       "রিয়েল-টাইম স্ট্যাটাস আপডেট",
@@ -97,210 +111,357 @@ const COMMISSION_FLOW = [
 ];
 
 export default function B2BHub() {
-  return (
-    <div className="flex flex-col gap-6 pb-10">
-      {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] p-6 md:p-10 bg-gradient-to-br from-[#040c1e] via-[#060f20] to-[#04080f]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(34,211,238,0.06)_0%,transparent_65%)]" />
-        <div className="relative z-10 max-w-2xl">
-          <div className="flex items-center gap-2 mb-3">
-            <BarChart3 className="h-5 w-5 text-cyan-400" />
-            <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">PaikarMart B2B</span>
-          </div>
-          <h1 className="text-2xl md:text-4xl font-extrabold text-white leading-tight mb-3">
-            বাংলাদেশের সম্পূর্ণ<br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-emerald-400 to-amber-400">
-              ডিজিটাল সাপ্লাই চেইন
-            </span>
-          </h1>
-          <p className="text-sm text-white/55 leading-relaxed mb-6">
-            কারখানা থেকে গ্র��মীণ দোকান পর্যন্ত — প্রতিটি স্তর ডিজিটালি সংযুক্ত। স্বচ্ছ মূল্য, অটো লজিস্টিক, এবং রিয়েল-টাইম ট্র্যাকিং।
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/auth/wholesale-register">
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-sm font-semibold hover:from-emerald-400 transition-all shadow-[0_0_16px_rgba(16,185,129,0.3)]">
-                <Store className="h-4 w-4" /> পাইকারি রেজিস্ট্রেশন
-              </button>
-            </Link>
-            <Link href="/logistics">
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-cyan-500/25 text-cyan-300 text-sm font-semibold hover:bg-cyan-500/8 transition-all">
-                <Truck className="h-4 w-4" /> লজিস্টিক বোর্ড
-              </button>
-            </Link>
-            <Link href="/export">
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 text-white/55 text-sm font-semibold hover:border-white/25 transition-all">
-                <Globe className="h-4 w-4" /> Export Marketplace
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Custom router state inside B2B Portal
+  const [view, setViewState] = useState<{ type: string; id?: string }>({
+    type: searchParams.get('v') || 'home',
+    id: searchParams.get('id') || undefined
+  });
 
-      {/* Supply chain flow */}
-      <div>
-        <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-          <ArrowDown className="h-4 w-4 text-cyan-400" /> সাপ্লাই চেইন ফ্লো
-        </h2>
-        <div className="flex flex-col gap-2">
-          {CHAIN_STEPS.map((s, i) => {
-            const Icon = s.icon;
+  // State to pass advanced search entries from home form directly into filters
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchCategory, setSearchCategory] = useState('');
+  const [searchMoq, setSearchMoq] = useState<number>(0);
+
+  // Custom Toast State
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'warning' | 'error' } | null>(null);
+
+  // Sync state with SearchParams
+  useEffect(() => {
+    const v = searchParams.get('v') || 'home';
+    const id = searchParams.get('id') || undefined;
+    setViewState({ type: v, id });
+  }, [searchParams]);
+
+  const handleNavigate = (newType: string, id?: string) => {
+    setViewState({ type: newType, id });
+    const params: any = { v: newType };
+    if (id) params.id = id;
+    setSearchParams(params);
+    // Scroll to top of the screen comfortably
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSearchTransfer = (query: string, cat: string, moq: number) => {
+    setSearchQuery(query);
+    setSearchCategory(cat);
+    setSearchMoq(moq);
+    handleNavigate('products');
+  };
+
+  const triggerNotify = (msg: string, type: 'success' | 'warning' | 'error') => {
+    setToast({ message: msg, type });
+    setTimeout(() => {
+      setToast(null);
+    }, 4500);
+  };
+
+  // Nav Bar categories list
+  const navTabs = [
+    { id: 'home', label: 'B2B Home', bn: 'পাইকারি হোম' },
+    { id: 'products', label: 'Showrooms', bn: 'শো-রুম' },
+    { id: 'factories', label: 'Factories', bn: 'ফ্যাক্টরি' },
+    { id: 'directory', label: 'Traders', bn: 'আমদানিকারক' },
+    { id: 'rfq', label: 'RFQ Engine', bn: 'অনুরোধ' },
+    { id: 'feed', label: 'Trade Feed', bn: 'ইন্ডাস্ট্রি ফিড' },
+    { id: 'rules', label: 'Info Desk', bn: 'নিয়মাবলী' },
+  ];
+
+  return (
+    <div className="w-full max-w-[480px] md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 pb-28 text-[var(--pm-text)] flex flex-col gap-0 pt-16 min-h-screen bg-[var(--pm-bg)] transition-all duration-300">
+      
+      {/* ━━━ HERO ZONE: Stories ━━━ */}
+      <section className="pt-3">
+        <StoryBar context="wholesale" />
+      </section>
+
+      {/* ━━━ STICKY NAV HUB (SUB ROUTER TABS + PORTAL BAR) ━━━ */}
+      <div className="sticky top-16 z-40 bg-[var(--pm-bg)]/95 backdrop-blur-md border-b border-white/[0.08] mt-2 -mx-4 px-4 pb-2 pt-1.5 flex flex-col gap-2">
+        {/* Sub Router Selection Tabs (Top) */}
+        <div className="flex overflow-x-auto hide-scrollbar gap-2 border-b border-white/[0.06] pb-2">
+          {navTabs.map(tab => {
+            const isActive = view.type === tab.id;
             return (
-              <div key={s.id}>
-                <GlassCard className={cn("p-4 border transition-all hover:scale-[1.01]", s.border, s.glow)} hoverEffect>
-                  <div className="flex items-start gap-4">
-                    <div className={cn("h-11 w-11 rounded-xl bg-gradient-to-br flex items-center justify-center shrink-0", s.color)}>
-                      <Icon className={cn("h-5 w-5", s.textColor)} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 flex-wrap">
-                        <div>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className={cn("text-xs font-bold uppercase tracking-wider", s.textColor)}>স্তর {s.id}</span>
-                            <h3 className="font-bold text-white">{s.label}</h3>
-                          </div>
-                          <p className="text-[11px] text-white/40 mt-0.5">{s.sublabel}</p>
-                        </div>
-                        <Link href={s.href}>
-                          <button className={cn(
-                            "text-xs px-3 py-1.5 rounded-lg border transition-all shrink-0",
-                            s.border, s.textColor, "bg-white/[0.03] hover:bg-white/[0.06]"
-                          )}>
-                            {s.cta} →
-                          </button>
-                        </Link>
-                      </div>
-                      <p className="text-xs text-white/55 mt-2 leading-relaxed">{s.desc}</p>
-                      <div className="flex flex-wrap gap-1.5 mt-2">
-                        {s.features.map(f => (
-                          <span key={f} className="flex items-center gap-1 text-[10px] text-white/40">
-                            <CheckCircle2 className="h-2.5 w-2.5 text-white/25" />{f}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </GlassCard>
-                {i < CHAIN_STEPS.length - 1 && (
-                  <div className="flex items-center justify-center py-1">
-                    <div className="flex flex-col items-center gap-0.5">
-                      <div className="h-3 w-px bg-white/15" />
-                      <ArrowDown className="h-3.5 w-3.5 text-white/20" />
-                      <div className="h-1 w-px bg-white/10" />
-                    </div>
-                  </div>
+              <button
+                key={tab.id}
+                onClick={() => handleNavigate(tab.id)}
+                className={cn(
+                  "px-3.5 py-1 rounded-full text-[10px] font-black tracking-wide whitespace-nowrap transition-all uppercase",
+                  isActive 
+                    ? "bg-[var(--pm-accent)] text-white shadow-md scale-[1.02]" 
+                    : "bg-white/5 text-[var(--pm-text-secondary)] border border-white/5 hover:text-white hover:bg-white/10"
                 )}
-              </div>
+              >
+                {tab.bn}
+              </button>
             );
           })}
         </div>
+
+        {/* Top Category Portals (Bottom) */}
+        <PortalIconBar context="wholesale" />
       </div>
 
-      {/* 4 Core Models */}
-      <div>
-        <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-          <Zap className="h-4 w-4 text-cyan-400" /> চারটি মূল মডেল
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {FOUR_MODELS.map(({ Icon, title, color, bg, border, points }) => (
-            <div key={title} className={cn("rounded-2xl border p-5", bg, border)}>
-              <div className="flex items-center gap-3 mb-3">
-                <Icon className={cn("h-5 w-5", color)} />
-                <h3 className={cn("font-semibold text-sm", color)}>{title}</h3>
+      {/* ━━━ PORTAL BROADCAST FLOATING NOTICE BOARD ━━━ */}
+      <div className="my-3 p-3 bg-linear-to-r from-teal-950/20 to-blue-950/10 border border-teal-500/10 rounded-2xl flex items-center justify-between gap-3 shadow-inner">
+        <div className="flex items-center gap-2 min-w-0">
+          <BellRing className="w-4 h-4 text-teal-400 shrink-0 animate-pulse" />
+          <p className="text-[10px] text-white/70 truncate">
+            <span className="font-extrabold text-[var(--pm-accent)]">[লাইভ]</span> নারায়ণগঞ্জ নিটওয়্যারে জ্যাকার্ড উইভিং রোল স্টক Clearance!
+          </p>
+        </div>
+        <span 
+          onClick={() => handleNavigate('products')} 
+          className="text-[9px] text-teal-400 underline font-extrabold cursor-pointer shrink-0 uppercase"
+        >
+          Check
+        </span>
+      </div>
+
+      {/* ━━━ VIEW ENGINE CONDITIONAL PORTS ━━━ */}
+      <div className="flex flex-col gap-6 pt-2">
+        {/* VIEW 1: B2B Home */}
+        {view.type === 'home' && (
+          <B2BHomeView 
+            onNavigate={handleNavigate} 
+            onSearch={handleSearchTransfer} 
+          />
+        )}
+
+        {/* VIEW 2: B2B Showroom Listing */}
+        {view.type === 'products' && (
+          <B2BProductsView 
+            initialCategory={searchCategory}
+            initialMoq={searchMoq}
+            initialSearch={searchQuery}
+            onNavigate={handleNavigate}
+            onBack={() => handleNavigate('home')}
+          />
+        )}
+
+        {/* VIEW 3: Granular bulk detail view */}
+        {view.type === 'product-detail' && view.id && (
+          <B2BProductDetailView 
+            productId={view.id}
+            onNavigate={handleNavigate}
+            onBack={() => handleNavigate('products')}
+            onNotify={triggerNotify}
+          />
+        )}
+
+        {/* VIEW 4: Millers Directory */}
+        {view.type === 'factories' && (
+          <FactoryDirectoryView 
+            onNavigate={handleNavigate}
+            onBack={() => handleNavigate('home')}
+          />
+        )}
+
+        {/* VIEW 5: Deep industrial corporate profiling */}
+        {view.type === 'factory-profile' && view.id && (
+          <FactoryProfileView 
+            factoryId={view.id}
+            onNavigate={handleNavigate}
+            onBack={() => handleNavigate('factories')}
+            onNotify={triggerNotify}
+          />
+        )}
+
+        {/* VIEW 6: Combined importer supplier boards */}
+        {view.type === 'directory' && (
+          <SupplierDirectoryView 
+            onNavigate={handleNavigate}
+            onBack={() => handleNavigate('home')}
+          />
+        )}
+
+        {/* VIEW 7: RFQ Marketplace boards */}
+        {view.type === 'rfq' && (
+          <RFQMarketplaceView 
+            onNavigate={handleNavigate}
+            onBack={() => handleNavigate('home')}
+            onNotify={triggerNotify}
+          />
+        )}
+
+        {/* VIEW 8: Detail of RFQ bids */}
+        {view.type === 'rfq-detail' && view.id && (
+          <RFQDetailView 
+            rfqId={view.id}
+            onNavigate={handleNavigate}
+            onBack={() => handleNavigate('rfq')}
+            onNotify={triggerNotify}
+          />
+        )}
+
+        {/* VIEW 9: Social trading announcements */}
+        {view.type === 'feed' && (
+          <B2BTradeFeedView 
+            onNavigate={handleNavigate}
+            onBack={() => handleNavigate('home')}
+            onNotify={triggerNotify}
+          />
+        )}
+
+        {/* VIEW 10: Original Guide Page / Info Desk */}
+        {view.type === 'rules' && (
+          <div className="space-y-6">
+            {/* Hero */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] p-6 bg-gradient-to-br from-[var(--pm-bg)] via-[var(--pm-surface)] to-[var(--pm-bg)]">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(34,211,238,0.06)_0%,transparent_65%)]" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-3">
+                  <BarChart3 className="h-5 w-5 text-cyan-400" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">PaikarMart B2B Guide</span>
+                </div>
+                <h1 className="text-xl font-extrabold text-white leading-tight mb-2">
+                  বাংলাদেশের সম্পূর্ণ ডিজিটাল সাপ্লাই চেইন
+                </h1>
+                <p className="text-xs text-white/55 leading-relaxed">
+                  কারখানা থেকে গ্রামীণ দোকান পর্যন্ত — প্রতিটি স্তর ডিজিটালি সংযুক্ত। স্বচ্ছ মূল্য, অটো লজিস্টিক, এবং রিয়েল-টাইম ট্র্যাকিং।
+                </p>
               </div>
-              <ul className="space-y-1.5">
-                {points.map(p => (
-                  <li key={p} className="flex items-start gap-2 text-xs text-white/60">
-                    <span className="text-white/25 mt-0.5 shrink-0">•</span>{p}
-                  </li>
+            </div>
+
+            {/* Supply chain flow */}
+            <div className="space-y-3">
+              <h2 className="text-xs font-black uppercase tracking-widest text-white flex items-center gap-1.5">
+                <ArrowDown className="h-4 w-4 text-cyan-400" /> সাপ্লাই চেইন ফ্লো
+              </h2>
+              <div className="flex flex-col gap-2.5">
+                {CHAIN_STEPS.map((s, i) => {
+                  const Icon = s.icon;
+                  return (
+                    <div key={s.id} className="space-y-1">
+                      <GlassCard className={cn("p-4 border transition-all hover:scale-[1.01] bg-white/5", s.border, s.glow)} hoverEffect>
+                        <div className="flex items-start gap-4">
+                          <div className={cn("h-11 w-11 rounded-xl bg-gradient-to-br flex items-center justify-center shrink-0", s.color)}>
+                            <Icon className={cn("h-5 w-5", s.textColor)} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2 flex-wrap">
+                              <div>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className={cn("text-xs font-bold uppercase tracking-wider", s.textColor)}>স্তর {s.id}</span>
+                                  <h3 className="font-bold text-white text-xs">{s.label}</h3>
+                                </div>
+                                <p className="text-[10px] text-white/40 mt-0.5">{s.sublabel}</p>
+                              </div>
+                            </div>
+                            <p className="text-[11px] text-white/55 mt-2 leading-relaxed">{s.desc}</p>
+                            <div className="flex flex-wrap gap-1.5 mt-2">
+                              {s.features.map(f => (
+                                <span key={f} className="flex items-center gap-1 text-[9px] text-white/40">
+                                  <CheckCircle2 className="h-2.5 w-2.5 text-emerald-400 shrink-0" />{f}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </GlassCard>
+                      {i < CHAIN_STEPS.length - 1 && (
+                        <div className="flex items-center justify-center py-1">
+                          <div className="flex flex-col items-center gap-0.5">
+                            <div className="h-3 w-px bg-white/15" />
+                            <ArrowDown className="h-3.5 w-3.5 text-white/20" />
+                            <div className="h-1 w-px bg-white/10" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 4 Core Models */}
+            <div className="space-y-3">
+              <h2 className="text-xs font-black uppercase tracking-widest text-[#c5c6c7] flex items-center gap-1.5">
+                <Zap className="h-4 w-4 text-cyan-400" /> চারটি মূল মডেল
+              </h2>
+              <div className="grid grid-cols-1 gap-3.5">
+                {FOUR_MODELS.map(({ Icon, title, color, bg, border, points }) => (
+                  <div key={title} className={cn("rounded-2xl border p-4.5", bg, border)}>
+                    <div className="flex items-center gap-3 mb-3">
+                      <Icon className={cn("h-4 w-4", color)} />
+                      <h3 className={cn("font-semibold text-xs", color)}>{title}</h3>
+                    </div>
+                    <ul className="space-y-1.5">
+                      {points.map(p => (
+                        <li key={p} className="flex items-start gap-2 text-[11px] text-white/60">
+                          <span className="text-white/25 mt-0.5 shrink-0">•</span>{p}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Commission model */}
-      <GlassCard className="p-5 border border-white/[0.07]">
-        <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-          <BadgePercent className="h-4 w-4 text-purple-400" /> কমিশন ও ফি কাঠামো
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {COMMISSION_FLOW.map(({ from, to, rate, color, bg, border }) => (
-            <div key={from + to} className={cn("rounded-xl border p-3 text-center", bg, border)}>
-              <div className={cn("text-2xl font-black mb-1", color)}>{rate}</div>
-              <div className="text-[10px] text-white/35 uppercase tracking-wider">প্ল্যাটফর্ম ফি</div>
-              <div className="flex items-center justify-center gap-1 mt-2 text-xs text-white/55">
-                <span>{from}</span>
-                <ArrowRight className="h-3 w-3 text-white/25" />
-                <span>{to}</span>
               </div>
             </div>
-          ))}
-        </div>
-        <p className="text-xs text-white/35 mt-3">
-          প্রতিটি লেনদেনে প্ল্যাটফর্ম কমিশন স্বয়ংক্রিয়ভাবে কেটে নেওয়া হয়। বিক্রেতারা ��াদের নেট পেমেন্ট ড্যাশবোর্ডে দেখতে পাবেন।
-        </p>
-      </GlassCard>
 
-      {/* Quick links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[
-          { label: "কারখানা রেজিস্ট্রেশন", href: "/auth/factory-register", Icon: Factory, color: "text-cyan-400 border-cyan-500/20" },
-          { label: "পাইকারি রেজিস্ট্রেশন", href: "/auth/wholesale-register", Icon: Store, color: "text-emerald-400 border-emerald-500/20" },
-          { label: "গ্রামীণ দোকান", href: "/auth/rural-register", Icon: MapPin, color: "text-amber-400 border-amber-500/20" },
-          { label: "ডেলিভারি বোর্ড", href: "/logistics", Icon: Truck, color: "text-blue-400 border-blue-500/20" },
-        ].map(({ label, href, Icon, color }) => (
-          <Link key={href} href={href}>
-            <div className={cn(
-              "rounded-xl border p-4 text-center cursor-pointer hover:bg-white/5 transition-all",
-              color.split(" ")[1]
-            )}>
-              <Icon className={cn("h-5 w-5 mx-auto mb-2", color.split(" ")[0])} />
-              <div className="text-xs text-white/70 font-medium leading-tight">{label}</div>
-              <ChevronRight className="h-3 w-3 mx-auto mt-1.5 text-white/25" />
-            </div>
-          </Link>
-        ))}
-      </div>
+            {/* Commission model */}
+            <GlassCard className="p-4 border border-white/[0.07] bg-white/5 space-y-3">
+              <h2 className="text-xs font-black uppercase tracking-widest text-[#c5c6c7] flex items-center gap-1.5">
+                <BadgePercent className="h-4 w-4 text-purple-400" /> কমিশন ও ফি কাঠামো
+              </h2>
+              <div className="grid grid-cols-2 gap-2.5">
+                {COMMISSION_FLOW.map(({ from, to, rate, color, bg, border }) => (
+                  <div key={from + to} className={cn("rounded-xl border p-3 text-center bg-black/20", bg, border)}>
+                    <div className={cn("text-xl font-black mb-1", color)}>{rate}</div>
+                    <div className="text-[9px] text-white/35 uppercase tracking-wider">ট্যারিফ রেট</div>
+                    <div className="flex items-center justify-center gap-1 mt-2 text-[10px] text-white/55">
+                      <span>{from}</span>
+                      <ArrowRight className="h-3 w-3 text-white/25" />
+                      <span>{to}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-white/35 leading-relaxed pt-1">
+                প্রতিটি লেনদেনে প্ল্যাটফর্ম কমিশন স্বয়ংক্রিয়ভাবে কেটে নেওয়া হয়। বিক্রেতারা তাদের নেট পেমেন্ট ড্যাশবোর্ডে দেখতে পাবেন।
+              </p>
+            </GlassCard>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[
-          { label: "নিবন্ধিত সেলার",  value: "১,২০০+", Icon: Store,       color: "text-emerald-400" },
-          { label: "কারখানা পার্টনার", value: "১২০+",  Icon: Factory,     color: "text-cyan-400" },
-          { label: "গ্রামীণ দোকান",    value: "৩,৪০০+", Icon: MapPin,     color: "text-amber-400" },
-          { label: "মোট ট্রানজেকশন",  value: "৳২ কোটি+", Icon: Wallet,   color: "text-purple-400" },
-        ].map(({ label, value, Icon, color }) => (
-          <GlassCard key={label} className="p-4 border border-white/[0.06]">
-            <Icon className={cn("h-4 w-4 mb-2", color)} />
-            <div className={cn("text-xl font-black", color)}>{value}</div>
-            <div className="text-[10px] text-white/35 uppercase tracking-wider mt-0.5">{label}</div>
-          </GlassCard>
-        ))}
-      </div>
-
-      {/* Verification */}
-      <div className="p-5 rounded-2xl border border-cyan-500/10 bg-gradient-to-br from-cyan-500/5 to-blue-600/5">
-        <div className="flex items-center gap-2 mb-3">
-          <ShieldCheck className="h-5 w-5 text-cyan-400" />
-          <h3 className="font-semibold text-white">যাচাইকরণ প্রক্রিয়া</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {[
-            { step: "১", title: "আবেদন করুন", desc: "রেজিস্ট্রেশন ফর্ম পূরণ করুন — ট্রেড লাইসেন্স ও NID দিয়ে" },
-            { step: "২", title: "যাচাই ২৪ঘণ্টা", desc: "এডমিন টিম তথ্য যাচাই করবে। প্রয়োজনে ডকুমেন্ট চাওয়া হবে" },
-            { step: "৩", title: "সক্রিয় অ্যাকাউন্ট", desc: "অনুমোদনের পর ড্যাশবোর্ড সক্রিয় হবে, পণ্য আপলোড করতে পারবেন" },
-          ].map(({ step, title, desc }) => (
-            <div key={step} className="flex gap-3">
-              <div className="h-7 w-7 rounded-full bg-cyan-500/15 border border-cyan-500/25 flex items-center justify-center text-xs font-bold text-cyan-400 shrink-0">{step}</div>
-              <div>
-                <div className="text-sm font-semibold text-white">{title}</div>
-                <div className="text-xs text-white/45 leading-relaxed mt-0.5">{desc}</div>
+            {/* Verification */}
+            <div className="p-4.5 rounded-2xl border border-cyan-500/10 bg-gradient-to-br from-cyan-500/5 to-blue-600/5">
+              <div className="flex items-center gap-2 mb-3">
+                <ShieldCheck className="h-5 w-5 text-cyan-400" />
+                <h3 className="font-semibold text-white text-xs">যাচাইকরণ প্রক্রিয়া</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { step: "১", title: "আবেদন করুন", desc: "রেজিস্ট্রেশন ফর্ম পূরণ করুন — ট্রেড লাইসেন্স ও NID দিয়ে" },
+                  { step: "২", title: "যাচাই ২৪ঘণ্টা", desc: "এডমিন টিম তথ্য যাচাই করবে। প্রয়োজনে ডকুমেন্ট চাওয়া হবে" },
+                  { step: "৩", title: "সক্রিয় অ্যাকাউন্ট", desc: "অনুমোদনের পর ড্যাশবোর্ড সক্রিয় হবে, পণ্য আপলোড করতে পারবেন" },
+                ].map(({ step, title, desc }) => (
+                  <div key={step} className="flex gap-3">
+                    <div className="h-6 w-6 rounded-full bg-cyan-500/15 border border-cyan-500/25 flex items-center justify-center text-[10px] font-bold text-cyan-400 shrink-0">{step}</div>
+                    <div>
+                      <div className="text-xs font-semibold text-white">{title}</div>
+                      <div className="text-[10px] text-white/45 leading-relaxed mt-0.5">{desc}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
+
+      {/* ━━━ GLOBAL TOAST RENDER DESK ━━━ */}
+      {toast && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[400px]">
+          <div className={cn(
+            "p-3.5 rounded-2xl border shadow-lg backdrop-blur-md flex items-center gap-2.5 transition-all animate-in fade-in-50 slide-in-from-bottom-5",
+            toast.type === 'success' ? "bg-emerald-950/90 text-emerald-300 border-emerald-500/30" : 
+            toast.type === 'warning' ? "bg-amber-950/90 text-amber-300 border-amber-500/30" : 
+                                      "bg-rose-950/90 text-rose-300 border-rose-500/30"
+          )}>
+            <Info className="w-4 h-4 shrink-0" />
+            <p className="text-xs font-extrabold leading-normal">{toast.message}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Link, useLocation, useRoute } from "wouter";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,11 +41,11 @@ interface FormState {
 }
 
 export default function SellerProductForm() {
-  const [, setLocation] = useLocation();
-  const [, params] = useRoute<{ id: string }>("/seller/products/:id/edit");
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const { products, profile, createProduct, updateProduct } = useSeller();
 
-  const editing = params?.id ? products.find((p) => p.id === params.id) : null;
+  const editing = id ? products.find((p) => p.id === id) : null;
   const isEdit = !!editing;
 
   const [form, setForm] = useState<FormState>(() =>
@@ -125,13 +125,13 @@ export default function SellerProductForm() {
       createProduct(payload);
       toast.success("Product created");
     }
-    setLocation("/seller/products");
+    navigate("/seller/products");
   };
 
   return (
     <div className="flex flex-col gap-6 max-w-3xl">
       <Link
-        href="/seller/products"
+        to="/seller/products"
         className="inline-flex items-center gap-2 text-white/70 hover:text-white w-fit"
       >
         <ArrowLeft className="w-4 h-4" /> Back to products
@@ -298,7 +298,7 @@ export default function SellerProductForm() {
         </GlassCard>
 
         <div className="flex justify-end gap-3">
-          <Link href="/seller/products">
+          <Link to="/seller/products">
             <Button type="button" variant="ghost" className="text-white hover:bg-white/10">
               Cancel
             </Button>

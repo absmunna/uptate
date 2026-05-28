@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -157,7 +157,7 @@ function Field({ label, children, span2 }: { label: string; children: React.Reac
 }
 
 export default function FactoryRegisterPage() {
-  const [, navigate] = useLocation();
+  const navigate = useNavigate();
   const auth = useAuth();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(INIT);
@@ -474,9 +474,9 @@ export default function FactoryRegisterPage() {
         </form>
 
         <p className="mt-6 text-xs text-white/40 text-center">
-          Already registered? <Link href="/auth/login" className="text-cyan-400 hover:text-cyan-300">Sign in</Link>
+          Already registered? <Link to="/auth/login" className="text-cyan-400 hover:text-cyan-300">Sign in</Link>
           &nbsp;·&nbsp;
-          Regular seller? <Link href="/auth/seller-register" className="text-cyan-400 hover:text-cyan-300">Seller register</Link>
+          Regular seller? <Link to="/auth/seller-register" className="text-cyan-400 hover:text-cyan-300">Seller register</Link>
         </p>
       </GlassCard>
     </div>

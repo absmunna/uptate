@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, Share2, MoreHorizontal, Store } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 export default function Reels() {
   const { data: posts } = useListPosts({ type: "video" }, { query: { queryKey: getListPostsQueryKey({ type: "video" }) } });
@@ -81,7 +81,7 @@ function Reel({ post }: { post: any }) {
 
       {/* Right Actions Bar */}
       <div className="absolute right-4 bottom-24 md:bottom-12 flex flex-col gap-6 items-center z-10">
-        <Link href={`/vendors/${post.author.id}`} className="relative mb-2">
+        <Link to={`/vendors/${post.author.id}`} className="relative mb-2">
           <Avatar className="h-12 w-12 border-2 border-white">
             <AvatarImage src={post.author.avatarUrl} />
             <AvatarFallback>{post.author.name[0]}</AvatarFallback>
@@ -119,14 +119,14 @@ function Reel({ post }: { post: any }) {
 
       {/* Bottom Info */}
       <div className="absolute bottom-24 md:bottom-8 left-4 right-20 z-10 flex flex-col gap-3">
-        <Link href={`/vendors/${post.author.id}`} className="flex items-center gap-2 w-fit">
+        <Link to={`/vendors/${post.author.id}`} className="flex items-center gap-2 w-fit">
           <h3 className="font-bold text-white text-lg drop-shadow-md">{post.author.name}</h3>
           {post.author.verified && <span className="text-primary text-sm">✓</span>}
         </Link>
         <p className="text-white/90 text-sm line-clamp-3 drop-shadow-md">{post.content}</p>
         
         {post.product && (
-          <Link href={`/marketplace/product/${post.product.id}`} className="mt-2 flex items-center gap-3 p-2 pr-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 w-fit hover:bg-white/20 transition-colors">
+          <Link to={`/marketplace/product/${post.product.id}`} className="mt-2 flex items-center gap-3 p-2 pr-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 w-fit hover:bg-white/20 transition-colors">
             <img src={post.product.images[0]} alt={post.product.title} className="h-12 w-12 rounded-lg object-cover" />
             <div className="flex flex-col">
               <span className="text-xs font-medium text-white">{post.product.title}</span>

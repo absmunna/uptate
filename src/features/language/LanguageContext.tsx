@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { safeStorage } from "@/utils/storage";
 
 export type Lang = "en" | "bn";
 
@@ -55,8 +56,10 @@ const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   "portal.digital":     { en: "Digital",        bn: "ডিজিটাল" },
   "portal.logistics":   { en: "Logistics",      bn: "লজিস্টিক" },
   // Theme names
-  "theme.title":      { en: "Theme",       bn: "থিম" },
-  "lang.title":       { en: "Language",    bn: "ভাষা" },
+  "theme.title":      { en: "Theme Mode",       bn: "থিম মোড" },
+  "theme.desc":       { en: "Change background color and brand aesthetic", bn: "ব্যাকগ্রাউন্ড কালার এবং ডিজাইন সেটিং পরিবর্তন করুন" },
+  "lang.title":       { en: "Language Options",    bn: "ভাষা পরিবর্তন" },
+  "lang.desc":        { en: "Select your preferred layout language", bn: "ডায়নামিক লেআউট এবং কন্টেন্ট ভাষা বাছাই করুন" },
 };
 
 /* ── Context ──────────────────────────────────────────── */
@@ -71,13 +74,12 @@ const LangContext = createContext<LangCtx | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(() => {
-    if (typeof window === "undefined") return "en";
-    return (window.localStorage.getItem(LANG_KEY) as Lang) || "en";
+    return (safeStorage.getItem(LANG_KEY) as Lang) || "en";
   });
 
   const setLang = (l: Lang) => {
     setLangState(l);
-    try { window.localStorage.setItem(LANG_KEY, l); } catch {}
+    safeStorage.setItem(LANG_KEY, l);
     // Apply Bangla font if needed
     if (typeof document !== "undefined") {
       document.documentElement.lang = l === "bn" ? "bn" : "en";

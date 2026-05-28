@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { safeStorage } from "@/utils/storage";
 
 export interface UnlockEntry {
   videoId?: string;
@@ -18,9 +19,8 @@ const STORAGE_KEY = "pm.unlocks.v1";
 const VideoUnlockContext = createContext<VideoUnlockCtx | null>(null);
 
 function readStored(): UnlockEntry[] {
-  if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = safeStorage.getItem(STORAGE_KEY);
     return raw ? (JSON.parse(raw) as UnlockEntry[]) : [];
   } catch {
     return [];
@@ -31,8 +31,7 @@ export function VideoUnlockProvider({ children }: { children: ReactNode }) {
   const [unlocks, setUnlocks] = useState<UnlockEntry[]>(() => readStored());
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(unlocks)); } catch {}
+    safeStorage.setItem(STORAGE_KEY, JSON.stringify(unlocks));
   }, [unlocks]);
 
   const hasVideoUnlocked = useCallback((id: string) => unlocks.some((u) => u.videoId === id), [unlocks]);

@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { TrendingUp, Star, Zap, ArrowRight, MapPin, Store, Package } from "lucide-react";
 import { useLanguage } from "@/features/language/LanguageContext";
 import { ThemeSwitcher } from "@/components/theme/ThemeSwitcher";
@@ -44,7 +44,7 @@ export function DesktopRightPanel() {
           {TRENDING.map((item) => (
             <Link
               key={item.rank}
-              href={item.href}
+              to={item.href}
               className="flex items-center gap-3 py-1.5 px-2 rounded-lg hover:bg-muted transition-colors group"
             >
               <span className="w-5 text-[11px] font-bold text-muted-foreground text-right">{item.rank}</span>
@@ -55,7 +55,7 @@ export function DesktopRightPanel() {
             </Link>
           ))}
         </div>
-        <Link href="/marketplace" className="flex items-center gap-1 mt-3 text-[12px] text-primary hover:text-primary/80 font-medium transition-colors">
+        <Link to="/marketplace" className="flex items-center gap-1 mt-3 text-[12px] text-primary hover:text-primary/80 font-medium transition-colors">
           {t("common.viewAll")} <ArrowRight className="h-3 w-3" />
         </Link>
       </div>
@@ -83,7 +83,7 @@ export function DesktopRightPanel() {
             </div>
           ))}
         </div>
-        <Link href="/vendors" className="flex items-center gap-1 mt-3 text-[12px] text-primary hover:text-primary/80 font-medium transition-colors">
+        <Link to="/vendors" className="flex items-center gap-1 mt-3 text-[12px] text-primary hover:text-primary/80 font-medium transition-colors">
           সব বিক্রেতা <ArrowRight className="h-3 w-3" />
         </Link>
       </div>
@@ -98,7 +98,7 @@ export function DesktopRightPanel() {
           {QUICK_CATS.map((c) => (
             <Link
               key={c.label}
-              href={c.href}
+              to={c.href}
               className={cn(
                 "flex flex-col items-center justify-center py-2.5 px-1 rounded-xl text-center border border-border hover:border-primary/30 transition-all group bg-gradient-to-br",
                 c.color,
@@ -120,7 +120,7 @@ export function DesktopRightPanel() {
         </div>
         <p className="text-[11px] text-muted-foreground mb-3">আপনার কাছের ১৮৪টি দোকান অনলাইনে আছে</p>
         <Link
-          href="/local"
+          to="/local"
           className="block w-full text-center text-[12px] font-bold py-2 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/25 transition-all"
         >
           কাছের দোকান দেখুন

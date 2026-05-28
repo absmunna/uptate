@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/features/auth/AuthContext";
 import {
   ShieldCheck, Users, Store, ShoppingBag, TrendingUp,
@@ -88,7 +88,7 @@ export function AdminHomeView() {
             <span className="text-orange-300 text-xs font-semibold flex-1">
               {pendingSellers.length} seller{pendingSellers.length > 1 ? "s" : ""} pending verification
             </span>
-            <Link href="/admin/dashboard">
+            <Link to="/admin/dashboard">
               <span className="text-orange-400 text-xs font-bold cursor-pointer hover:underline">Review →</span>
             </Link>
           </div>
@@ -111,7 +111,7 @@ export function AdminHomeView() {
           { href: "/admin/settings",   icon: Settings,  label: "System Settings",    color: "text-white/50" },
           { href: "/admin/registry",   icon: FileText,  label: "Component Registry", color: "text-purple-400" },
         ].map(({ href, icon: Icon, label, color }) => (
-          <Link key={href} href={href}>
+          <Link key={href} to={href}>
             <GlassCard className="p-4 flex items-center gap-3 cursor-pointer hover:border-indigo-500/30 transition-colors">
               <Icon className={`w-5 h-5 shrink-0 ${color}`} />
               <span className="text-white/70 text-xs font-semibold leading-tight">{label}</span>
@@ -131,7 +131,7 @@ export function AdminHomeView() {
               </span>
             )}
           </h2>
-          <Link href="/admin/dashboard">
+          <Link to="/admin/dashboard">
             <span className="text-xs text-indigo-400 hover:underline cursor-pointer">View all →</span>
           </Link>
         </div>
@@ -183,7 +183,7 @@ export function AdminHomeView() {
 
       {/* ── Super admin full panel CTA ── */}
       {isSuperAdmin && (
-        <Link href="/admin/dashboard">
+        <Link to="/admin/dashboard">
           <div className="flex items-center justify-between rounded-2xl bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 transition-colors px-5 py-4 cursor-pointer">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/features/auth/AuthContext";
 import type { ReactNode } from "react";
 import type { AppRole } from "@/permissions/roles";
@@ -8,7 +8,6 @@ import type { Permission } from "@/permissions/permissions";
 import { hasPermission } from "@/permissions/permissions";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { ShieldOff } from "lucide-react";
-import { Link } from "wouter";
 
 interface RoleGuardProps {
   children: ReactNode;
@@ -23,7 +22,8 @@ interface RoleGuardProps {
 }
 
 export function RoleGuard({ children, minRole, roles, permission, inline }: RoleGuardProps) {
-  const [location, setLocation] = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { role, isAuthenticated } = useAuth();
 
   const appRole = (role ?? "guest") as AppRole;
@@ -36,11 +36,11 @@ export function RoleGuard({ children, minRole, roles, permission, inline }: Role
 
   useEffect(() => {
     if (!isAuthenticated) {
-      setLocation(`/auth/login?from=${encodeURIComponent(location)}`);
+      navigate(`/auth/login?from=${encodeURIComponent(location.pathname)}`);
     } else if (!allowed && !inline) {
-      setLocation("/");
+      navigate("/");
     }
-  }, [isAuthenticated, allowed, inline]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, allowed, inline, location.pathname, navigate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isAuthenticated || (!allowed && !inline)) return null;
 
@@ -52,7 +52,7 @@ export function RoleGuard({ children, minRole, roles, permission, inline }: Role
         <p className="text-sm text-white/45 max-w-xs mb-4">
           তোমার বর্তমান role ({role}) এই পেজটি দেখার অনুমতি নেই।
         </p>
-        <Link href="/">
+        <Link to="/">
           <button className="px-5 py-2 rounded-xl border border-white/15 text-white/60 text-sm hover:border-white/30 transition-all">
             হোমে ফিরে যাও
           </button>

@@ -2,7 +2,7 @@ import { useGetSuggestedVendors, getGetSuggestedVendorsQueryKey } from "@workspa
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 export function SuggestedVendors() {
   const { data: vendors } = useGetSuggestedVendors({ query: { queryKey: getGetSuggestedVendorsQueryKey() } });
@@ -15,7 +15,7 @@ export function SuggestedVendors() {
       <div className="flex flex-col gap-4">
         {vendors.map((vendor) => (
           <div key={vendor.id} className="flex items-center justify-between">
-            <Link href={`/vendors/${vendor.id}`} className="flex items-center gap-3 overflow-hidden">
+            <Link to={`/vendors/${vendor.id}`} className="flex items-center gap-3 overflow-hidden">
               <Avatar className="h-10 w-10 border border-white/10 shrink-0">
                 <AvatarImage src={vendor.avatarUrl} />
                 <AvatarFallback>{vendor.name[0]}</AvatarFallback>

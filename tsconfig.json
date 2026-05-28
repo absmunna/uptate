@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    "baseUrl": ".",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "module": "ESNext",
@@ -21,13 +22,16 @@
         "./src/*"
       ],
       "@workspace/api-client-react": [
-        "./lib/api-client-react/src/index.ts"
+        "./src/api/client/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "paikarmart",
+    "paikarmart/**/*",
+    "paikarmart/**"
   ]
 }

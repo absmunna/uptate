@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { formatBDT } from "@/lib/format";
 import { useAuth } from "@/features/auth/AuthContext";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 // Bangladesh major cities with approx coords for distance calc
 const BD_CITIES: Record<string, { lat: number; lng: number; label: string }> = {
@@ -295,7 +295,7 @@ export default function LogisticsPage() {
                 রাইডার প্রোফাইল তৈরি করুন
               </Button>
             ) : (
-              <Link href="/auth/register">
+              <Link to="/auth/register">
                 <Button size="sm" className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 border-0 text-xs">
                   রেজিস্ট্রেশন করুন
                 </Button>
@@ -395,7 +395,7 @@ export default function LogisticsPage() {
                             <Zap className="h-3.5 w-3.5 mr-1.5" /> পিকআপ গ্রহণ করুন
                           </Button>
                         ) : (
-                          <Link href="/auth/login" className="flex-1">
+                          <Link to="/auth/login" className="flex-1">
                             <Button size="sm" className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 border-0 text-xs">
                               লগইন করে গ্রহণ করুন
                             </Button>

@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { formatBDT } from "@/lib/format";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Play, Lock } from "lucide-react";
@@ -23,7 +23,7 @@ export default function VideoLibraryPage() {
           {DIGITAL_PACKAGES.map((pkg) => {
             const unlocked = hasPackageUnlocked(pkg.id);
             return (
-              <Link key={pkg.id} href={`/video/package/${pkg.id}`}>
+              <Link key={pkg.id} to={`/video/package/${pkg.id}`}>
                 <GlassCard className="overflow-hidden cursor-pointer group" hoverEffect>
                   <div className="aspect-video bg-black/40 relative">
                     <img src={pkg.thumbnail} className="w-full h-full object-cover opacity-80" alt={pkg.title} />
@@ -56,7 +56,7 @@ export default function VideoLibraryPage() {
           {DIGITAL_VIDEOS.map((v) => {
             const unlocked = hasVideoUnlocked(v.id);
             return (
-              <Link key={v.id} href={`/video/${v.id}`}>
+              <Link key={v.id} to={`/video/${v.id}`}>
                 <GlassCard className="overflow-hidden cursor-pointer group" hoverEffect>
                   <div className="aspect-video bg-black/40 relative">
                     <img src={v.thumbnail} className="w-full h-full object-cover" alt={v.title} />

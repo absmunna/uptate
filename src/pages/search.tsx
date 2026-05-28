@@ -1,8 +1,10 @@
 import * as React from "react";
-import { useLocation, Link } from "wouter";
+import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/features/language/LanguageContext";
+import { safeStorage } from "@/utils/storage";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { BackButton, CloseButton } from "@/components/ui/PremiumButtons";
 import {
   Search, X, ArrowLeft, Clock, TrendingUp, SlidersHorizontal,
   Star, MapPin, Store, Tag, ChevronRight, Mic, Barcode,
@@ -11,16 +13,16 @@ import {
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-/* ── localStorage history ── */
+/* ── safeStorage history ── */
 const HIST_KEY = "pm.search.history.v1";
 function getHistory(): string[] {
-  try { return JSON.parse(localStorage.getItem(HIST_KEY) || "[]"); } catch { return []; }
+  try { return JSON.parse(safeStorage.getItem(HIST_KEY) || "[]"); } catch { return []; }
 }
 function pushHistory(q: string) {
   const h = [q, ...getHistory().filter((x) => x !== q)].slice(0, 10);
-  localStorage.setItem(HIST_KEY, JSON.stringify(h));
+  safeStorage.setItem(HIST_KEY, JSON.stringify(h));
 }
-function clearHistory() { localStorage.setItem(HIST_KEY, "[]"); }
+function clearHistory() { safeStorage.setItem(HIST_KEY, "[]"); }
 
 /* ── debounce ── */
 function useDebounce<T>(v: T, ms: number): T {
@@ -54,7 +56,7 @@ const TABS: { v: ResultTab; en: string; bn: string }[] = [
 ];
 
 export default function SearchPage() {
-  const [, navigate] = useLocation();
+  const navigate = useNavigate();
   const { isBn } = useLanguage();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [query, setQuery] = React.useState(() => {
@@ -127,10 +129,8 @@ export default function SearchPage() {
     <div className="flex flex-col min-h-screen bg-background">
 
       {/* ── Sticky search header ── */}
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-xl border-b border-border px-3 py-2.5 flex items-center gap-2">
-        <button onClick={() => navigate("/")} className="flex-shrink-0 h-9 w-9 flex items-center justify-center rounded-xl hover:bg-foreground/8 text-foreground/60 hover:text-foreground transition-all">
-          <ArrowLeft className="h-5 w-5" />
-        </button>
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-xl border-b border-[var(--pm-border)] px-3 py-2.5 flex items-center gap-2">
+        <BackButton size="md" className="flex-shrink-0 border-[var(--pm-border)]" onBack={() => navigate("/")} />
 
         <div className="flex-1 relative">
           <Search className={cn("absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none transition-colors", hasQuery ? "text-primary" : "text-foreground/35")} />
@@ -145,9 +145,7 @@ export default function SearchPage() {
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
             {hasQuery && (
-              <button onClick={() => setQuery("")} className="h-6 w-6 flex items-center justify-center rounded-full bg-foreground/10 hover:bg-foreground/20 text-foreground/50 transition-all">
-                <X className="h-3.5 w-3.5" />
-              </button>
+              <CloseButton size="sm" variant="ghost" className="h-6 w-6 rounded-full hover:bg-foreground/10" onClose={() => setQuery("")} />
             )}
             <button
               onClick={startVoice}
@@ -344,7 +342,7 @@ export default function SearchPage() {
             <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-2">{isBn ? "ক্যাটাগরি" : "Categories"}</p>
             <div className="flex flex-wrap gap-2">
               {cats.map((c) => (
-                <Link key={c.id} href={`/marketplace?categoryId=${c.id}`}>
+                <Link key={c.id} to={`/marketplace?categoryId=${c.id}`}>
                   <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted border border-border hover:border-primary/40 text-sm text-foreground/80 hover:text-foreground transition-all cursor-pointer">
                     <span>{c.name}</span>
                     <span className="text-[10px] text-muted-foreground">({c.productCount})</span>
@@ -361,7 +359,7 @@ export default function SearchPage() {
             <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-2">{isBn ? "দোকান" : "Shops"}</p>
             <div className="space-y-2">
               {vendors.slice(0, tab === "all" ? 3 : 20).map((v) => (
-                <Link key={v.id} href={`/vendors/${v.slug ?? v.id}`}>
+                <Link key={v.id} to={`/vendors/${v.slug ?? v.id}`}>
                   <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:border-primary/30 hover:bg-primary/[0.03] transition-all cursor-pointer">
                     <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/20 to-blue-600/20 flex items-center justify-center border border-border shrink-0 overflow-hidden">
                       {v.avatarUrl
@@ -397,7 +395,7 @@ export default function SearchPage() {
             <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-2">{isBn ? "পণ্য" : "Products"}</p>
             <div className="grid grid-cols-2 gap-3">
               {products.map((p) => (
-                <Link key={p.id} href={`/marketplace/product/${p.id}`}>
+                <Link key={p.id} to={`/marketplace/product/${p.id}`}>
                   <div className="rounded-xl border border-border bg-card overflow-hidden hover:border-primary/30 hover:shadow-lg transition-all cursor-pointer group">
                     <div className="h-32 bg-muted overflow-hidden relative">
                       {p.images?.[0]
@@ -432,7 +430,7 @@ export default function SearchPage() {
             <p className="text-sm text-muted-foreground mb-4">
               {isBn ? "অন্য কীওয়ার্ড দিয়ে চেষ্টা করুন" : "Try different keywords or browse categories"}
             </p>
-            <Link href="/categories">
+            <Link to="/categories">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/25 text-primary text-sm font-medium hover:bg-primary/20 transition-all cursor-pointer">
                 <Filter className="h-3.5 w-3.5" />
                 {isBn ? "সব ক্যাটাগরি দেখুন" : "Browse all categories"}

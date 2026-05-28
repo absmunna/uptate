@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useListCategories, getListCategoriesQueryKey } from "@workspace/api-client-react";
 import { Layers } from "lucide-react";
 
@@ -30,7 +30,7 @@ export function CategoryQuickGrid() {
   return (
     <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
       {cats.map((c, i) => (
-        <Link key={c.id} href={`/categories/${c.slug ?? c.id}`}>
+        <Link key={c.id} to={`/categories/${c.slug ?? c.id}`}>
           <div
             className={`aspect-square rounded-xl bg-gradient-to-br ${COLORS[i % COLORS.length]} border border-white/10 flex flex-col items-center justify-center gap-1.5 p-2 hover:-translate-y-0.5 transition-transform cursor-pointer`}
           >

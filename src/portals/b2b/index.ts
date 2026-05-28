@@ -1,14 +1,10 @@
-/**
- * B2B Portal — Wholesale, Factory, Bulk Orders
- * Portal access: wholesale | factory | admin | super_admin
- *
- * Pages live at: /b2b/*
- * Portal guard:  PortalGuard portal="b2b"
- */
+export * from './B2BHub';
+
 export const B2B_PORTAL = {
   id: "b2b",
-  label: "B2B Marketplace",
-  labelBn: "বি-টু-বি মার্কেটপ্লেস",
+  label: "B2B Portal",
+  labelBn: "বি-টু-বি পোর্টাল",
   basePath: "/b2b",
   allowedRoles: ["wholesale", "factory", "admin", "super_admin"],
 } as const;
+

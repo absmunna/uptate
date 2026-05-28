@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
 import { formatBDT } from "@/lib/format";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import {
   ShoppingBag, Clock, Truck, CheckCircle2, XCircle,
-  Package, ChevronDown, ChevronUp, RefreshCw,
+  Package, ChevronDown, ChevronUp, RefreshCw, ChevronRight,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -78,7 +78,7 @@ export default function BuyerOrdersPage() {
           <h2 className="text-2xl font-bold text-white mb-2">কোনো অর্ডার নেই</h2>
           <p className="text-white/50">মার্কেটপ্লেসে যান এবং আপনার প্রথম অর্ডার দিন।</p>
         </div>
-        <Link href="/marketplace">
+        <Link to="/marketplace">
           <Button className="bg-primary hover:bg-primary/90 text-white rounded-full px-8">
             কেনাকাটা শুরু করুন
           </Button>
@@ -128,7 +128,15 @@ export default function BuyerOrdersPage() {
                 <p className="text-white/40 text-xs mt-0.5">
                   {format(new Date(order.createdAt), "d MMM yyyy, h:mm a")}
                 </p>
-                <p className="text-primary font-bold text-sm mt-1">{formatBDT(order.total)}</p>
+                <div className="flex items-center gap-3 mt-1 flex-wrap">
+                  <p className="text-primary font-bold text-sm">{formatBDT(order.total)}</p>
+                  <Link 
+                    to="/order-tracking" 
+                    className="text-[11px] text-cyan-400 font-bold flex items-center gap-0.5 border border-cyan-500/20 px-2.5 py-0.5 bg-cyan-500/5 hover:bg-cyan-500/15 rounded-lg transition-all"
+                  >
+                    ট্র্যাক অর্ডার <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
               <button onClick={() => toggle(order.id)} className="text-white/30 hover:text-white p-1">
                 {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}

@@ -10,6 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── ROLES & PERMISSIONS (Constitution Rule 2/4) ──────────────────────────
+
+model Role {
+  id          String             @id @default(uuid())
+  name        String             @unique
+  permissions Permission[]
+  userRoles   UserRoleRelation[]
+  createdAt   DateTime           @default(now())
+}
+
+model Permission {
+  id    String @id @default(uuid())
+  name  String @unique
+  roles Role[]
+}
+
+model UserRoleRelation {
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+}
+
 // ─── ENUMS ──────────────────────────────────────────────────────────────────
 
 enum UserRole {
@@ -91,16 +116,214 @@ model User {
   orders           Order[]   @relation("BuyerOrders")
   sellerOrders     Order[]   @relation("SellerOrders")
   posts            Post[]
+  contentItems     ContentItem[]
   cartItems        CartItem[]
   notifications    Notification[]
   demands          Demand[]
   reviews          Review[]
+  complaints       Complaint[]
+  wallets          Wallet[]
+  followers        FollowRelationship[] @relation("Follower")
+  contentComments  ContentComment[]
+  contentReactions ContentReaction[]
+  contentBookmarks ContentBookmark[]
+  contentShares    ContentShare[]
 
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  sellerProfile    SellerProfile?
+  userRoles        UserRoleRelation[]
+  fileAssets       FileAsset[]
 
   @@index([role])
   @@index([phone])
+}
+
+// ─── SELLER PROFILE ──────────────────────────────────────────────────────────
+
+model SellerProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  storeName      String
+  sellerType     String   @default("retail")
+  nidNumber      String?
+  tradeLicenseNo String?
+  businessPhone  String?
+  division       String?
+  district       String?
+  upazila        String?
+  addressDetails String?
+  verificationStatus String @default("pending")
+  verificationBadge  String @default("bronze")
+  moderatorNote      String?
+  commissionRate     Float    @default(10.0)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+}
+
+model PlatformEventLog {
+  id        String   @id @default(uuid())
+  eventId   String   @unique
+  type      String
+  payload   Json
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+}
+
+model PlatformMetric {
+  id        String   @id @default(uuid())
+  key       String   // e.g., "event_throughput", "engagement_rate"
+  value     Float
+  timestamp DateTime @default(now())
+
+  @@index([key, timestamp])
+}
+
+model GovernancePolicy {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  threshold Float
+  isActive  Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+model FlaggedContent {
+  id              String      @id @default(uuid())
+  contentItemId   String
+  reason          String
+  reporterId      String
+  status          String      @default("pending") // pending, reviewed, resolved
+  moderatorNote   String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model ViolationLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  severity  String
+  createdAt DateTime @default(now())
+}
+
+model FollowRelationship {
+  id           String    @id @default(uuid())
+  followerId   String
+  follower     User      @relation("Follower", fields: [followerId], references: [id])
+  targetId     String    // Polymorphic ID
+  targetType   String    // "USER" | "BUSINESS" | "CATEGORY"
+  createdAt    DateTime  @default(now())
+  deletedAt    DateTime?
+
+  @@unique([followerId, targetId, targetType])
+  @@index([targetId, targetType])
+}
+
+model Wallet {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  balance   Decimal  @default(0) @db.Decimal(12, 2)
+  currency  String   @default("BDT")
+  type      String   @default("main") // main, cashback, etc.
+  
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  walletId  String
+  wallet    Wallet   @relation(fields: [walletId], references: [id])
+  amount    Decimal  @db.Decimal(12, 2)
+  type      String   // credit, debit
+  status    String   @default("completed")
+  reference String?
+  description String?
+
+  createdAt DateTime @default(now())
+}
+
+// ─── SOCIAL EXTENSIONS ──────────────────────────────────────────────────────
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  postId    String
+  authorId  String
+  
+  createdAt DateTime @default(now())
+}
+
+model Story {
+  id        String   @id @default(uuid())
+  authorId  String
+  mediaUrl  String
+  mediaType String   @default("image") // image, video
+  expiresAt DateTime
+  
+  createdAt DateTime @default(now())
+}
+
+// ─── COMPLIANCE ─────────────────────────────────────────────────────────────
+
+model ProductCategoryConfig {
+  id                 String  @id @default(uuid())
+  categoryId         String? @unique
+  isActive           Boolean @default(true)
+  defaultCommission  Float   @default(0)
+  paymentReleaseRule String?
+  returnWindowDays   Int?
+  requiresKyc        Boolean @default(true)
+  
+  createdAt   DateTime @default(now())
+}
+
+model Escrow {
+  id             String   @id @default(uuid())
+  orderId        String   @unique
+  order          Order    @relation(fields: [orderId], references: [id])
+  amount         Decimal  @db.Decimal(12, 2)
+  status         String   @default("held") // held, released, refunded
+  releaseAt      DateTime?
+  createdAt      DateTime @default(now())
+}
+
+model FileAsset {
+  id          String   @id @default(uuid())
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  url         String   // S3 URL
+  key         String   // S3 Key for deletion/management
+  mimeType    String
+  size        Int
+  purpose     String   // product_image, doc_nid, doc_trade_license
+  createdAt   DateTime @default(now())
+}
+
+model Complaint {
+  id             String   @id @default(uuid())
+  orderIdString  String?  // Using orderIdString to avoid conflict with relation if any
+  orderId        String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  targetSellerId String?
+  subject        String
+  description    String   @db.Text
+  status         String   @default("open")
+  priority       String   @default("low")
+  
+  createdAt      DateTime @default(now())
+  deletedAt      DateTime?
 }
 
 // ─── PRODUCT ─────────────────────────────────────────────────────────────────
@@ -147,6 +370,7 @@ model Product {
 
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
 
   @@index([sellerId])
   @@index([categoryId])
@@ -166,6 +390,7 @@ model Category {
   products     Product[]
 
   createdAt    DateTime  @default(now())
+  deletedAt    DateTime?
 }
 
 // ─── ORDER ───────────────────────────────────────────────────────────────────
@@ -202,10 +427,15 @@ model Order {
 
   paymentMethod    String?     // bkash, nagad, cod, etc.
   paymentRef       String?
+  paymentStatus    String?     // pending, paid, holding_escrow
+  disputeStatus    String?     // none, raised, resolved
 
   notes            String?     @db.Text
+  escrow           Escrow?
+
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
+  deletedAt        DateTime?
 
   @@index([buyerId])
   @@index([sellerId])
@@ -261,6 +491,7 @@ model Post {
 
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  deletedAt    DateTime?
 
   @@index([authorId])
   @@index([isPromoted])
@@ -295,6 +526,7 @@ model Demand {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 
   @@index([authorId])
   @@index([status])
@@ -331,3 +563,106 @@ model Notification {
   @@index([userId])
   @@index([isRead])
 }
+
+model ContentItem {
+  id           String            @id @default(uuid())
+  authorId     String
+  author       User              @relation(fields: [authorId], references: [id])
+  contentType  String            // "PRODUCT" | "BUSINESS" | "SERVICE" | "ANNOUNCEMENT" | "OFFER"
+  title        String
+  content      String            @db.Text
+  mediaUrl     String?
+  isPromoted   Boolean           @default(false)
+  visibility   String            @default("PUBLIC") // "PUBLIC" | "FOLLOWERS_ONLY" | "PRIVATE"
+  metadata     Json              @default("{}") // Store type-specific attributes
+  likeCount    Int               @default(0)
+  commentCount Int               @default(0)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  deletedAt    DateTime?
+
+  comments     ContentComment[]
+  reactions    ContentReaction[]
+  bookmarks    ContentBookmark[]
+  shares       ContentShare[]
+  analytics    ContentAnalytics?
+
+  @@index([authorId])
+  @@index([contentType])
+  @@index([createdAt])
+  @@index([visibility])
+}
+
+model ContentReaction {
+  id            String          @id @default(uuid())
+  contentItemId String
+  contentItem   ContentItem     @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String          // "LIKE" | "LOVE" | "WOW"
+  createdAt     DateTime        @default(now())
+  deletedAt     DateTime?
+
+  @@unique([contentItemId, userId])
+  @@index([contentItemId])
+  @@index([userId])
+}
+
+model ContentComment {
+  id              String           @id @default(uuid())
+  contentItemId   String
+  contentItem     ContentItem      @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentCommentId String?
+  parentComment   ContentComment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  replies         ContentComment[] @relation("CommentReplies")
+  content         String           @db.Text
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deletedAt       DateTime?
+
+  @@index([contentItemId])
+  @@index([userId])
+  @@index([parentCommentId])
+}
+
+model ContentBookmark {
+  id            String          @id @default(uuid())
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentItemId String
+  contentItem   ContentItem     @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  collectionName String         @default("Favorites") // e.g. "Wholesale deals", "PK store list"
+  createdAt     DateTime        @default(now())
+  deletedAt     DateTime?
+
+  @@unique([userId, contentItemId])
+  @@index([userId])
+  @@index([contentItemId])
+}
+
+model ContentShare {
+  id            String          @id @default(uuid())
+  contentItemId String
+  contentItem   ContentItem     @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  userId        String?
+  user          User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform      String          @default("INTERNAL") // "INTERNAL" | "FACEBOOK" | "WHATSAPP" | "COPY_LINK"
+  createdAt     DateTime        @default(now())
+
+  @@index([contentItemId])
+}
+
+model ContentAnalytics {
+  id              String      @id @default(uuid())
+  contentItemId   String      @unique
+  contentItem     ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  viewCount       Int         @default(0)   // Mapped to reach
+  engagementRate  Float       @default(0.0) // engagement count / viewCount
+  viralityIndex   Float       @default(0.0) // computed velocity index
+  lastComputedAt  DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+

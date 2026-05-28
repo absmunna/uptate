@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,7 +75,7 @@ function StepBar({ step }: { step: number }) {
 }
 
 export default function RuralRegisterPage() {
-  const [, navigate] = useLocation();
+  const navigate = useNavigate();
   const { registerSeller } = useAuth();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<Form>(INIT);
@@ -259,8 +259,8 @@ export default function RuralRegisterPage() {
           </div>
         </form>
         <p className="mt-5 text-xs text-white/35 text-center">
-          পাইকারি বিক্রেতা? <Link href="/auth/wholesale-register" className="text-amber-400 hover:underline">Wholesale Register</Link>
-          &nbsp;·&nbsp; কারখানা? <Link href="/auth/factory-register" className="text-amber-400 hover:underline">Factory Register</Link>
+          পাইকারি বিক্রেতা? <Link to="/auth/wholesale-register" className="text-amber-400 hover:underline">Wholesale Register</Link>
+          &nbsp;·&nbsp; কারখানা? <Link to="/auth/factory-register" className="text-amber-400 hover:underline">Factory Register</Link>
         </p>
       </GlassCard>
     </div>

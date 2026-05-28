@@ -4,7 +4,7 @@ import { meetsRoleRequirement } from "@/permissions/accessControl";
 import type { AppRole } from "@/permissions/roles";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { ShieldCheck } from "lucide-react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 export function AdminGuard({ children }: { children: ReactNode }) {
   const { role, isAuthenticated } = useAuth();
@@ -19,7 +19,7 @@ export function AdminGuard({ children }: { children: ReactNode }) {
         <p className="text-sm text-white/45 mb-5">
           এই পেজটি শুধুমাত্র Admin-দের জন্য। Admin অ্যাকাউন্ট দিয়ে লগইন করুন।
         </p>
-        <Link href="/auth/login">
+        <Link to="/auth/login">
           <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 text-white text-sm font-semibold hover:from-purple-400 transition-all">
             লগইন করুন
           </button>

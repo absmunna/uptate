@@ -1,7 +1,7 @@
 import { useGetTrendingProducts, getGetTrendingProductsQueryKey } from "@workspace/api-client-react";
 import { formatBDT } from "@/lib/format";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 export function TrendingRail() {
   const { data: products, isLoading } = useGetTrendingProducts({ query: { queryKey: getGetTrendingProductsQueryKey() } });
@@ -30,7 +30,7 @@ export function TrendingRail() {
           return (
             <Link
               key={product.id}
-              href={`/marketplace/product/${product.id}`}
+              to={`/marketplace/product/${product.id}`}
               className="group relative rounded-lg overflow-hidden border border-white/10"
             >
               <div className="aspect-square bg-white/5">

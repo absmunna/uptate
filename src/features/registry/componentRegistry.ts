@@ -4,6 +4,7 @@
  * or backend logic. Pages render via <Slot id="post.card" {...props} />.
  */
 import { lazy, type ComponentType } from "react";
+import { safeStorage } from "@/utils/storage";
 
 export type SlotId =
   | "post.card"
@@ -46,9 +47,8 @@ const REGISTRY: Record<SlotId, RegistryEntry> = {
 const STORAGE_KEY = "pm.uiRegistry.v1";
 
 export function getActiveVariant(slot: SlotId): string {
-  if (typeof window === "undefined") return REGISTRY[slot].defaultVariant;
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = safeStorage.getItem(STORAGE_KEY);
     const m = raw ? (JSON.parse(raw) as Record<string, string>) : {};
     return m[slot] ?? REGISTRY[slot].defaultVariant;
   } catch {
@@ -57,12 +57,11 @@ export function getActiveVariant(slot: SlotId): string {
 }
 
 export function setActiveVariant(slot: SlotId, variant: string) {
-  if (typeof window === "undefined") return;
   if (!REGISTRY[slot].variants[variant]) return;
-  const raw = window.localStorage.getItem(STORAGE_KEY);
+  const raw = safeStorage.getItem(STORAGE_KEY);
   const m = raw ? JSON.parse(raw) : {};
   m[slot] = variant;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(m));
+  safeStorage.setItem(STORAGE_KEY, JSON.stringify(m));
   window.dispatchEvent(new CustomEvent("pm:registry:changed"));
 }
 

@@ -1,24 +1,72 @@
 import { useListProducts, getListProductsQueryKey } from "@workspace/api-client-react";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { MapPin } from "lucide-react";
+import { StoryBar } from "@/components/feed/StoryBar";
+import { PortalIconBar } from "@/components/home/PortalIconBar";
+import { useSearchParams } from "react-router-dom";
 
 export default function Local() {
+  const [searchParams] = useSearchParams();
+  const selectedCat = searchParams.get("cat") || "all";
+
   const { data: products } = useListProducts(
     { nearMe: true }, 
     { query: { queryKey: getListProductsQueryKey({ nearMe: true }) } }
   );
 
+  // Filter based on category
+  const filteredProducts = products?.filter(p => {
+    if (selectedCat === "all") return true;
+    
+    const cat = p.category?.toLowerCase() || "";
+    const name = p.name?.toLowerCase() || "";
+    const portal = (p as any).portal;
+
+    if (selectedCat === "homemade") {
+      return cat === "homemade" || cat === "home made" || cat === "home made food";
+    }
+    if (selectedCat === "pharmacy") {
+      return cat === "pharmacy" || name.includes("pharmacy") || name.includes("ঔষধ");
+    }
+    if (selectedCat === "food") {
+      // Restaurant/Food category
+      return cat === "restaurant" || cat === "food" || cat === "hotel" || name.includes("restaurant");
+    }
+    if (selectedCat === "hotel") {
+      return cat === "hotel" || cat === "resort";
+    }
+    if (selectedCat === "services") {
+      // Physical services from service portal OR nearby service providers
+      return cat === "services" || cat === "service" || portal === "service";
+    }
+    return true;
+  }) || [];
+
   return (
-    <div className="flex flex-col gap-6 p-4">
-      <div className="flex items-center gap-3 bg-primary/10 border border-primary/20 text-primary p-4 rounded-xl">
-        <MapPin className="h-6 w-6" />
-        <div>
-          <h1 className="font-semibold">Local Discoveries</h1>
-          <p className="text-sm opacity-80">Showing products and services near your location</p>
-        </div>
+    <div className="w-full px-4 pb-24 text-[var(--pm-text)] flex flex-col pt-16">
+      {/* ━━━ HERO ZONE: Stories + Banner ━━━ */}
+      <section className="pt-2 md:pt-4">
+        <StoryBar context="local" />
+      </section>
+
+      {/* ━━━ STICKY PORTAL ICON BAR ━━━ */}
+      <div className="sticky top-16 z-40 bg-[var(--pm-bg)]/90 backdrop-blur-lg border-b border-border/50 -mx-4 px-4 mt-2">
+        <PortalIconBar context="local" />
       </div>
 
-      <ProductGrid products={products} emptyMessage="No local products found." />
+      <div className="flex flex-col gap-5 pt-2">
+        <div className="flex items-center gap-3 bg-[var(--pm-surface)] border border-[var(--pm-border)] p-4 rounded-xl shadow-sm">
+          <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex flex-col items-center justify-center">
+            <MapPin className="h-5 w-5 text-emerald-500" />
+          </div>
+          <div>
+            <h1 className="font-semibold text-lg">Nearby Shop Portal</h1>
+            <p className="text-xs text-[var(--pm-text-muted)]">Verified local shops and home-made delicacies near you</p>
+          </div>
+        </div>
+
+        <ProductGrid products={filteredProducts} emptyMessage={`No shops found for "${selectedCat}" category.`} />
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useListProducts, getListProductsQueryKey } from "@workspace/api-client-react";
 
 export function ProductRail({ sort = "trending" as const }: { sort?: "trending" | "newest" }) {
@@ -6,7 +6,7 @@ export function ProductRail({ sort = "trending" as const }: { sort?: "trending" 
     { sort } as any,
     { query: { queryKey: getListProductsQueryKey({ sort } as any) } },
   );
-  const items = (data ?? []).slice(0, 12);
+  const items = Array.isArray(data) ? data.slice(0, 12) : [];
 
   if (items.length === 0) {
     return (
@@ -25,7 +25,7 @@ export function ProductRail({ sort = "trending" as const }: { sort?: "trending" 
   return (
     <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 -mx-1 px-1">
       {items.map((p) => (
-        <Link key={p.id} href={`/marketplace/product/${p.id}`}>
+        <Link key={p.id} to={`/marketplace/product/${p.id}`}>
           <div className="shrink-0 w-40 sm:w-44 group cursor-pointer">
             <div className="relative w-full aspect-square rounded-xl overflow-hidden border border-white/10 bg-white/5">
               {p.images?.[0] ? (

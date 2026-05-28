@@ -3,10 +3,19 @@ import type { AppRole as UserRole } from '../../../permissions/roles';
 export interface User {
   id: string;
   email: string;
-  name: string;
+  fullName: string;
+  name?: string; // Legacy/Alias for compatibility
   role: UserRole;
-  avatar?: string;
+  avatarUrl?: string;
+  avatar?: string; // Legacy/Alias for compatibility
+  phone?: string;
   portals?: string[];
+  isVerified?: boolean;
+  verified?: boolean; // Legacy/Alias
+  handle?: string;
+  location?: string;
+  bio?: string;
+  trustScore?: number;
 }
 
 export interface AuthState {

@@ -1,5 +1,5 @@
 import { useListCategories, getListCategoriesQueryKey } from "@workspace/api-client-react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import * as Icons from "lucide-react";
 
 export function CategoryChips({ activeId }: { activeId?: string }) {
@@ -10,7 +10,7 @@ export function CategoryChips({ activeId }: { activeId?: string }) {
   return (
     <div className="flex overflow-x-auto gap-2 pb-2 no-scrollbar">
       <Link 
-        href="/marketplace" 
+        to="/marketplace" 
         className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border text-sm transition-colors ${
           !activeId 
             ? "bg-primary border-primary text-white" 
@@ -27,7 +27,7 @@ export function CategoryChips({ activeId }: { activeId?: string }) {
         return (
           <Link 
             key={category.id}
-            href={`/marketplace?categoryId=${category.id}`} 
+            to={`/marketplace?categoryId=${category.id}`} 
             className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border text-sm transition-colors ${
               isActive 
                 ? "bg-primary border-primary text-white" 

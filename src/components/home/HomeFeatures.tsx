@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, Laptop, Shirt, Sofa, Sparkles, ShoppingBag, Star, Users, TrendingUp, Loader2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'wouter';
+import { Link } from "react-router-dom";
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   Electronics: Laptop,
@@ -43,7 +43,7 @@ export const HeroBanner = () => (
           <span className="text-indigo-400">মিড-রেঞ্জ সেল</span>
         </h2>
         <p className="text-[10px] text-indigo-200/70 mt-2 max-w-[180px]">২২% পর্যন্ত ছাড় • প্রথম অর্ডারে ফ্রি পিকে কয়েন ক্যাশব্যাক</p>
-        <Link href="/products">
+        <Link to="/products">
           <button className="mt-4 bg-white text-indigo-900 px-5 py-2 rounded-xl font-bold text-[10px] w-fit active:scale-95 transition-transform shadow-lg hover:bg-indigo-50">
             কিনুন
           </button>
@@ -87,7 +87,7 @@ export const CategorySection = () => {
     <div className="flex flex-col gap-3 py-2">
       <div className="flex items-center justify-between px-6">
         <h3 className="text-xs font-black text-[var(--pm-text)] uppercase tracking-wider">ক্যাটাগরি দেখুন</h3>
-        <Link href="/products" className="text-[var(--pm-accent)] text-[10px] font-bold flex items-center gap-1 hover:underline">
+        <Link to="/products" className="text-[var(--pm-accent)] text-[10px] font-bold flex items-center gap-1 hover:underline">
           সব দেখুন <ChevronRight className="w-3 h-3" />
         </Link>
       </div>
@@ -99,7 +99,7 @@ export const CategorySection = () => {
             const Icon = CATEGORY_ICONS[cat.name] ?? ShoppingBag;
             const colorClass = ICON_COLORS[cat.name] ?? 'from-slate-500/20 to-slate-600/20';
             return (
-              <Link key={i} href={`/products?categoryId=${cat.id}`}>
+              <Link key={i} to={`/products?categoryId=${cat.id}`}>
                 <div className="flex flex-col items-center gap-2 shrink-0 cursor-pointer group">
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${colorClass} border border-[var(--pm-border)]/30 flex items-center justify-center transition-all group-hover:scale-110`}>
                     <Icon className="w-6 h-6 text-[var(--pm-text)] opacity-80 group-hover:text-[var(--pm-accent)]" />

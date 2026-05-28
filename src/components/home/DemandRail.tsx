@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useListDemands, getListDemandsQueryKey } from "@workspace/api-client-react";
 import { Clock } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
@@ -20,7 +20,7 @@ export function DemandRail() {
   return (
     <div className="grid sm:grid-cols-2 gap-3">
       {items.slice(0, 4).map((d) => (
-        <Link key={d.id} href={`/demand/${d.id}`}>
+        <Link key={d.id} to={`/demand/${d.id}`}>
           <GlassCard className="p-4 hover:-translate-y-0.5 transition-transform cursor-pointer h-full">
             <div className="flex items-start justify-between gap-2 mb-1">
               <h4 className="font-medium text-white text-sm line-clamp-1">{d.title}</h4>

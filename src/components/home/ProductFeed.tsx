@@ -1,11 +1,11 @@
 import React from 'react';
 import { useListProducts } from '@workspace/api-client-react';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 import { ShoppingCart, Star, Loader2 } from 'lucide-react';
 
 function ProductCard({ product }: { product: any }) {
   return (
-    <Link href={`/products/${product.id}`}>
+    <Link to={`/products/${product.id}`}>
       <div className="w-[160px] shrink-0 rounded-2xl border border-[var(--pm-border)] bg-[var(--pm-surface)] overflow-hidden cursor-pointer hover:border-[var(--pm-accent)]/40 transition-all group">
         <div className="relative aspect-square bg-[var(--pm-surface-hover)] overflow-hidden">
           {product.images?.[0] ? (
@@ -69,7 +69,7 @@ export const ProductFeed = () => {
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-[var(--pm-text)]">ফিচার্ড পণ্য</h2>
-          <Link href="/products" className="text-[var(--pm-accent)] text-sm font-medium">সব দেখুন →</Link>
+          <Link to="/products" className="text-[var(--pm-accent)] text-sm font-medium">সব দেখুন →</Link>
         </div>
         {featured.length > 0 ? (
           <div className="flex flex-row gap-3 overflow-x-auto hide-scrollbar pb-2">
@@ -83,7 +83,7 @@ export const ProductFeed = () => {
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-[var(--pm-text)]">আপনার জন্য</h2>
-          <Link href="/products" className="text-[var(--pm-accent)] text-sm font-medium">সব দেখুন →</Link>
+          <Link to="/products" className="text-[var(--pm-accent)] text-sm font-medium">সব দেখুন →</Link>
         </div>
         {forYou.length > 0 ? (
           <div className="grid grid-cols-2 gap-3">

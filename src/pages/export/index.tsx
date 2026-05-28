@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { GlassCard } from "@/components/ui/GlassCard";
 import {
   Globe, Factory, BadgeCheck, Search, Filter, ChevronRight,
@@ -87,7 +87,7 @@ export default function ExportMarketplace() {
             Source authentic products with full compliance documentation.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/auth/factory-register">
+            <Link to="/auth/factory-register">
               <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold neon-glow-sm hover:from-cyan-400 hover:to-blue-500 transition-all">
                 <Factory className="h-4 w-4" /> Register as Exporter
               </button>
@@ -157,7 +157,7 @@ export default function ExportMarketplace() {
           </div>
         )}
         {filtered.map((f) => (
-          <Link key={f.id} href={`/export/factory/${f.id}`}>
+          <Link key={f.id} to={`/export/factory/${f.id}`}>
             <GlassCard className="h-full p-5 cursor-pointer border border-white/[0.07] hover:border-cyan-400/25 transition-all group" hoverEffect>
               {/* Header */}
               <div className="flex items-start justify-between gap-3 mb-3">
@@ -249,12 +249,12 @@ export default function ExportMarketplace() {
           <h3 className="text-lg font-bold text-white mb-2">Are you an international buyer?</h3>
           <p className="text-sm text-white/50 mb-4">Create a free account to contact factories, request quotes, and access verified export documentation.</p>
           <div className="flex justify-center gap-3 flex-wrap">
-            <Link href="/auth/register">
+            <Link to="/auth/register">
               <button className="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold neon-glow-sm hover:from-cyan-400 hover:to-blue-500 transition-all">
                 Sign Up as Buyer
               </button>
             </Link>
-            <Link href="/auth/factory-register">
+            <Link to="/auth/factory-register">
               <button className="px-5 py-2 rounded-xl border border-cyan-500/25 text-cyan-300 text-sm font-semibold hover:bg-cyan-500/8 transition-all">
                 Register Factory
               </button>

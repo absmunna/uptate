@@ -5,7 +5,9 @@ export type SellerType =
   | "grocery"
   | "service"
   | "hotel"
-  | "real_estate";
+  | "real_estate"
+  | "nearby"
+  | "homemade";
 
 export const SELLER_TYPE_LABELS: Record<SellerType, string> = {
   retail: "Retail",
@@ -15,6 +17,8 @@ export const SELLER_TYPE_LABELS: Record<SellerType, string> = {
   service: "Services",
   hotel: "Hotel / Tour",
   real_estate: "Real Estate",
+  nearby: "Nearby Shop",
+  homemade: "Home Made",
 };
 
 export type VerificationStatus = "unsubmitted" | "pending" | "approved" | "rejected";
@@ -32,6 +36,8 @@ export interface SellerProfile {
   verified: boolean;
   verificationStatus: VerificationStatus;
   documents: { id: string; name: string; kind: "nid" | "passport" | "business" }[];
+  tradeLicense?: string;
+  physicalAddress?: string;
 }
 
 export type SellerOrderStatus =

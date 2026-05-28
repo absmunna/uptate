@@ -1,10 +1,10 @@
+import React, { memo } from "react";
 import {
   useListPosts, getListPostsQueryKey,
   useGetPlatformStats, getGetPlatformStatsQueryKey,
 } from "@workspace/api-client-react";
 import { StoryBar } from "@/components/feed/StoryBar";
 import { PostCard } from "@/components/feed/PostCard";
-import { CreatePostComposer } from "@/components/feed/CreatePostComposer";
 import { SuggestedVendors } from "@/components/feed/SuggestedVendors";
 import { TrendingRail } from "@/components/feed/TrendingRail";
 import { HeroSpotlight } from "@/components/home/HeroSpotlight";
@@ -31,10 +31,13 @@ const MERCHANT_ROLES = new Set([
 const ADMIN_ROLES = new Set(["admin", "super_admin", "moderator"]);
 
 export default function Home() {
-  const { role } = useAuth();
+  const { role, user } = useAuth();
+
+  // Check if current user is a retail seller
+  const isRetailSeller = role === "seller" && user?.seller?.type === "retail";
 
   /* ── Seller / Factory / Merchant → Merchant Dashboard ── */
-  if (MERCHANT_ROLES.has(role)) {
+  if (MERCHANT_ROLES.has(role) && !isRetailSeller) {
     return <MerchantHomeView />;
   }
 
@@ -43,30 +46,27 @@ export default function Home() {
     return <AdminHomeView />;
   }
 
-  /* ── Guest / Buyer / User → Standard B2B Feed ── */
-  return <BuyerHomeView />;
+  /* ── Guest / Buyer / User / Retail Seller → Standard B2B Feed ── */
+  return <BuyerHomeView isRetailSeller={isRetailSeller} />;
 }
 
 /* ─────────────────────────────────────────────
    Buyer / Guest View — the original B2B feed
 ───────────────────────────────────────────── */
-function BuyerHomeView() {
+function BuyerHomeView({ isRetailSeller }: { isRetailSeller?: boolean }) {
   const { data: posts } = useListPosts({}, { query: { queryKey: getListPostsQueryKey() } });
   const { data: stats } = useGetPlatformStats({ query: { queryKey: getGetPlatformStatsQueryKey() } });
 
   return (
-    <div className="flex flex-col gap-0 pb-10">
+    <div className="flex flex-col gap-0 pb-10 pt-16">
 
       {/* ━━━ HERO ZONE: Stories + Banner ━━━ */}
-      <section className="pt-3">
+      <section className="pt-3 md:pt-4">
         <StoryBar />
-        <div className="mt-3 px-3 md:px-0">
-          <HeroSpotlight />
-        </div>
       </section>
 
       {/* ━━━ STICKY PORTAL ICON BAR ━━━ */}
-      <div className="sticky top-[92px] z-40 bg-background/90 backdrop-blur-lg border-b border-border/50 mt-3 -mx-3 px-0 md:mx-0">
+      <div className="sticky top-16 z-40 bg-background/90 backdrop-blur-lg border-b border-border/50 mt-2 -mx-3 px-0 md:mx-0">
         <PortalIconBar />
       </div>
 
@@ -134,13 +134,10 @@ function BuyerHomeView() {
         />
         <div className="flex flex-col lg:flex-row gap-5 mt-3">
           <div className="flex-1 min-w-0 max-w-2xl w-full flex flex-col gap-3">
-            <div className="px-3 md:px-0">
-              <CreatePostComposer />
-            </div>
             <div className="flex flex-col gap-3">
               {posts === undefined
                 ? Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="mx-3 md:mx-0 cyber-card rounded-2xl p-4 flex flex-col gap-4 animate-pulse">
+                    <div key={`skeleton-${i}`} className="mx-3 md:mx-0 cyber-card rounded-2xl p-4 flex flex-col gap-4 animate-pulse">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full skeleton-shimmer" />
                         <div className="flex-1 flex flex-col gap-2">
@@ -152,8 +149,8 @@ function BuyerHomeView() {
                       <div className="h-3 w-2/3 rounded-full skeleton-shimmer" />
                     </div>
                   ))
-                : (posts ?? []).slice(0, 8).map((post) => (
-                    <div key={post.id} className="mx-3 md:mx-0">
+                : (posts ?? []).slice(0, 8).map((post, index) => (
+                    <div key={`${post.id}-${index}`} className="mx-3 md:mx-0">
                       <PostCard post={post} />
                     </div>
                   ))}
@@ -170,7 +167,7 @@ function BuyerHomeView() {
   );
 }
 
-function StatCard({
+const StatCard = memo(({
   Icon, color, glow, label, value, prefix = "",
 }: {
   Icon: React.ComponentType<{ className?: string }>;
@@ -179,7 +176,7 @@ function StatCard({
   label: string;
   value: number;
   prefix?: string;
-}) {
+}) => {
   return (
     <GlassCard className="p-3.5 flex items-center gap-3">
       <div
@@ -196,4 +193,4 @@ function StatCard({
       </div>
     </GlassCard>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "wouter";
+import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Package,
@@ -22,7 +22,7 @@ const NAV = [
 ];
 
 export function SellerLayout({ children }: { children: React.ReactNode }) {
-  const [location] = useLocation();
+  const { pathname } = useLocation();
   const { profile, verificationStatus } = useSeller();
 
   return (
@@ -43,7 +43,7 @@ export function SellerLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          <Link href="/seller/products/new">
+          <Link to="/seller/products/new">
             <Button className="w-full bg-primary hover:bg-primary/90 rounded-full">
               <Plus className="w-4 h-4 mr-2" />
               Add Product
@@ -56,13 +56,13 @@ export function SellerLayout({ children }: { children: React.ReactNode }) {
           >
             {NAV.map((item) => {
               const active = item.exact
-                ? location === item.href
-                : location.startsWith(item.href);
+                ? pathname === item.href
+                : pathname.startsWith(item.href);
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  to={item.href}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors shrink-0",
                     active

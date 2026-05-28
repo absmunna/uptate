@@ -9,7 +9,13 @@ router.get("/products", (req, res) => {
     string
   >;
   let items = [...db.products];
-  if (categoryId) items = items.filter((p) => p.categoryId === categoryId);
+  if (categoryId) {
+    const cleanId = categoryId.replace(/^c/, "");
+    items = items.filter((p) => {
+      const pCleanId = p.categoryId?.replace(/^c/, "");
+      return pCleanId === cleanId || p.categoryId === categoryId;
+    });
+  }
   if (vendorId) items = items.filter((p) => p.vendorId === vendorId);
   if (type) items = items.filter((p) => p.type === type);
   if (q) {

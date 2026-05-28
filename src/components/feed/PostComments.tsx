@@ -10,6 +10,7 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
+import { safeStorage } from "@/utils/storage";
 import { cn } from "@/lib/utils";
 
 type Tab = "comments" | "reviews";
@@ -36,8 +37,7 @@ const REVIEW_KEY = (postId: string) => `pm.reviews.${postId}.v1`;
 
 function readJSON<T>(key: string, fallback: T): T {
   try {
-    if (typeof window === "undefined") return fallback;
-    const raw = window.localStorage.getItem(key);
+    const raw = safeStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
   } catch {
     return fallback;
@@ -45,8 +45,7 @@ function readJSON<T>(key: string, fallback: T): T {
 }
 function writeJSON<T>(key: string, val: T) {
   try {
-    if (typeof window !== "undefined")
-      window.localStorage.setItem(key, JSON.stringify(val));
+    safeStorage.setItem(key, JSON.stringify(val));
   } catch {
     /* noop */
   }

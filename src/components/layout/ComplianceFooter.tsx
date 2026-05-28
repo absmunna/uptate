@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 export function ComplianceFooter() {
   return (
@@ -12,25 +12,25 @@ export function ComplianceFooter() {
 
         <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
           <Link
-            href="/legal/terms"
+            to="/legal/terms"
             className="hover:text-white transition-colors underline-offset-2 hover:underline"
           >
             Terms of Service
           </Link>
           <Link
-            href="/legal/refund"
+            to="/legal/refund"
             className="hover:text-white transition-colors underline-offset-2 hover:underline"
           >
             Refund &amp; Return Policy
           </Link>
           <Link
-            href="/legal/privacy"
+            to="/legal/privacy"
             className="hover:text-white transition-colors underline-offset-2 hover:underline"
           >
             Privacy Policy
           </Link>
           <Link
-            href="/legal/shipping"
+            to="/legal/shipping"
             className="hover:text-white transition-colors underline-offset-2 hover:underline"
           >
             Shipping Policy

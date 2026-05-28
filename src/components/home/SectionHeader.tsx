@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 export function SectionHeader({
@@ -35,7 +35,7 @@ export function SectionHeader({
         </div>
       </div>
       {href && (
-        <Link href={href}>
+        <Link to={href}>
           <button className="text-xs sm:text-sm text-white/70 hover:text-white inline-flex items-center gap-1 shrink-0 px-2 py-1 rounded-md hover:bg-white/5">
             {cta} <ArrowRight className="w-3.5 h-3.5" />
           </button>

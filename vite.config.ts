@@ -9,19 +9,24 @@ export default defineConfig(({mode}) => {
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+      'process.env.GOOGLE_MAPS_PLATFORM_KEY': JSON.stringify(env.GOOGLE_MAPS_PLATFORM_KEY || ''),
     },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
         'shared': path.resolve(__dirname, './shared'),
-        '@workspace/api-client-react': path.resolve(__dirname, './lib/api-client-react/src/index.ts'),
+        '@workspace/api-client-react': path.resolve(__dirname, './src/api/client/index.ts'),
       },
     },
     server: {
-      host: '0.0.0.0',
-      port: 5000,
-      allowedHosts: true,
+      headers: {
+        'X-Frame-Options': 'ALLOWALL',
+        'Access-Control-Allow-Origin': '*',
+      },
+      // HMR is disabled in AI Studio via DISABLE_HMR env var.
+      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
+      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
   };

@@ -1,7 +1,8 @@
 import { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { safeStorage } from "@/utils/storage";
 
 export const onRequest = (config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('pm_token');
+  const token = safeStorage.getItem('pm_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

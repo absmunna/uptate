@@ -1,4 +1,4 @@
-import { useParams, Link } from "wouter";
+import { useParams, Link } from "react-router-dom";
 import { formatBDT } from "@/lib/format";
 import { useGetDemand, getGetDemandQueryKey } from "@workspace/api-client-react";
 import { GlassCard } from "@/components/ui/GlassCard";
@@ -16,7 +16,7 @@ export default function DemandDetail() {
 
   return (
     <div className="flex flex-col gap-6 p-4 max-w-4xl mx-auto">
-      <Link href="/demand" className="inline-flex items-center gap-2 text-white/70 hover:text-white w-fit">
+      <Link to="/demand" className="inline-flex items-center gap-2 text-white/70 hover:text-white w-fit">
         <ArrowLeft className="w-4 h-4" />
         Back to Demands
       </Link>

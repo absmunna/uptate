@@ -3,19 +3,19 @@ import { Bell, Search, Menu, ShoppingBag, Palette } from 'lucide-react';
 import { SearchBar } from './SearchBar';
 import { useCartStore } from '../../modules/cart/cartStore';
 import { useCartDrawerStore } from '../../modules/cart/cartDrawerStore';
-import { useTheme } from '../../providers/ThemeProvider';
+import { useTheme } from '@/features/theme/ThemeContext';
 
 export const Navbar = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   const [showSearch, setShowSearch] = useState(false);
   const totalItems = useCartStore((state) => state.getTotalItems());
   const openCart = useCartDrawerStore((state) => state.open);
-  const { theme, setTheme } = useTheme();
+  const { mode: theme, setMode: setTheme, presets: themePresets } = useTheme();
 
   const toggleTheme = () => {
-    const themes = ['deepDark', 'colourful', 'nakshiLight', 'greenField'];
-    const currentIndex = themes.indexOf(theme);
-    const nextTheme = themes[(currentIndex + 1) % themes.length];
-    setTheme(nextTheme as any);
+    const ids = themePresets.map(p => p.id);
+    const currentIndex = ids.indexOf(theme);
+    const nextTheme = ids[(currentIndex + 1) % ids.length];
+    setTheme(nextTheme);
   };
 
   return (

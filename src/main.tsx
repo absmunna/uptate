@@ -7,10 +7,11 @@ import "./index.css";
 if (typeof document !== "undefined") {
   try {
     const stored = window.localStorage.getItem("pm.theme.v1");
-    const cls = stored && ["dark", "light", "eye-comfort", "colorful"].includes(stored) ? stored : "dark";
+    const allowed = ["dark", "light", "midnight", "forest", "sunset", "deepDark", "colourful", "nakshiLight", "greenField"];
+    const cls = stored && allowed.includes(stored) ? stored : "midnight";
     document.documentElement.classList.add(cls);
   } catch {
-    document.documentElement.classList.add("dark");
+    document.documentElement.classList.add("midnight");
   }
 }
 

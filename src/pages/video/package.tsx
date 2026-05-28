@@ -1,4 +1,4 @@
-import { useRoute, Link } from "wouter";
+import { useParams, Link } from "react-router-dom";
 import { formatBDT } from "@/lib/format";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,7 @@ import { useVideoUnlock } from "@/features/digital-content/VideoUnlockContext";
 import { usePKCoin } from "@/features/wallet/PKCoinContext";
 
 export default function VideoPackagePage() {
-  const [, params] = useRoute<{ id: string }>("/video/package/:id");
-  const id = params?.id ?? null;
+  const { id } = useParams<{ id: string }>();
   const pkg = id ? getPackageById(id) : undefined;
   const { hasPackageUnlocked, unlockPackage, unlockVideo } = useVideoUnlock();
   const wallet = usePKCoin();
@@ -20,7 +19,7 @@ export default function VideoPackagePage() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-10 text-center">
         <h1 className="text-xl font-bold mb-2">Package not found</h1>
-        <Link href="/video"><Button variant="outline">Back to library</Button></Link>
+        <Link to="/video"><Button variant="outline">Back to library</Button></Link>
       </div>
     );
   }
@@ -35,7 +34,7 @@ export default function VideoPackagePage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
-      <Link href="/video" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+      <Link to="/video" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Back to library
       </Link>
 
@@ -70,7 +69,7 @@ export default function VideoPackagePage() {
           const v = getVideoById(vid);
           if (!v) return null;
           return (
-            <Link key={vid} href={`/video/${vid}`} className="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5">
+            <Link key={vid} to={`/video/${vid}`} className="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:bg-white/5">
               <img src={v.thumbnail} alt={v.title} className="h-14 w-24 rounded object-cover" />
               <div className="flex-1">
                 <div className="text-sm font-medium">{v.title}</div>
