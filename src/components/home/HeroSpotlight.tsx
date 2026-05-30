@@ -129,7 +129,7 @@ const DIGITAL_SLIDES: Slide[] = [
   { id: "ds-2", eyebrow: "Graphic Design", title: "Professional Logos", subtitle: "Brand identity design", cta: "Order", href: "/digital-services", image: "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=500&q=80", gradient: "from-purple-700/80 via-purple-500/40 to-transparent", Icon: Palette },
 ];
 
-export function MiniSpotlight({ context = 'feed' }: { context?: 'feed' | 'retail' | 'wholesale' | 'local' | 'services' | 'transport' | 'digital-services' }) {
+export function MiniSpotlight({ context = 'feed' }: { context?: string }) {
   const [active, setActive] = React.useState(0);
  
   const slides = context === 'retail' ? RETAIL_SLIDES 

@@ -8,13 +8,13 @@ export function CategoryChips({ activeId }: { activeId?: string }) {
   if (!categories?.length) return null;
 
   return (
-    <div className="flex overflow-x-auto gap-2 pb-2 no-scrollbar">
+    <div className="flex overflow-x-auto gap-2 pb-1 no-scrollbar items-center">
       <Link 
         to="/marketplace" 
-        className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border text-sm transition-colors ${
+        className={`shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl border text-[11px] font-black transition-all ${
           !activeId 
-            ? "bg-primary border-primary text-white" 
-            : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
+            ? "bg-[var(--pm-accent)]/15 border-[var(--pm-accent)]/20 text-[var(--pm-accent)]" 
+            : "bg-white/[0.02] border-white/[0.05] text-zinc-500 hover:text-zinc-300 hover:border-white/[0.12]"
         }`}
       >
         All
@@ -28,14 +28,14 @@ export function CategoryChips({ activeId }: { activeId?: string }) {
           <Link 
             key={category.id}
             to={`/marketplace?categoryId=${category.id}`} 
-            className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border text-sm transition-colors ${
+            className={`shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl border text-[11px] font-black transition-all ${
               isActive 
-                ? "bg-primary border-primary text-white" 
-                : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
+                ? "bg-[var(--pm-accent)]/15 border-[var(--pm-accent)]/20 text-[var(--pm-accent)]" 
+                : "bg-white/[0.02] border-white/[0.05] text-zinc-500 hover:text-zinc-300 hover:border-white/[0.12]"
             }`}
           >
-            <IconComponent className="w-4 h-4" />
-            {category.name}
+            <IconComponent className="w-3.5 h-3.5" />
+            <span>{category.name}</span>
           </Link>
         );
       })}

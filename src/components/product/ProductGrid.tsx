@@ -1,4 +1,4 @@
-import { ProductCard } from "./ProductCard";
+import { ProductCard } from "@/components/product/ProductCard";
 import { Product } from "@workspace/api-client-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 
@@ -17,11 +17,11 @@ export function ProductGrid({
 }: ProductGridProps) {
   if (isLoading || products === undefined) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {Array.from({ length: skeletonCount }).map((_, i) => (
-          <GlassCard key={i} className="h-full overflow-hidden">
-            <div className="aspect-square skeleton-shimmer" />
-            <div className="p-3 flex flex-col gap-2">
+          <GlassCard key={i} className="h-full overflow-hidden bg-[var(--pm-surface)]">
+            <div className="aspect-[4/3] skeleton-shimmer" />
+            <div className="p-4 flex flex-col gap-2">
               <div className="h-3 w-1/2 rounded skeleton-shimmer" />
               <div className="h-4 w-full rounded skeleton-shimmer" />
               <div className="h-4 w-1/3 rounded skeleton-shimmer mt-1" />
@@ -34,14 +34,14 @@ export function ProductGrid({
 
   if (products.length === 0) {
     return (
-      <div className="py-12 text-center text-white/50 border border-white/10 border-dashed rounded-xl bg-white/5">
+      <div className="py-16 text-center text-[var(--pm-text-secondary)] border border-[var(--pm-border)] border-dashed rounded-3xl bg-[var(--pm-surface)]/50">
         <p>{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
       {products.map((product, i) => (
         <div
           key={product.id}

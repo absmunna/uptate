@@ -121,8 +121,9 @@ function Calendar({
           defaultClassNames.disabled
         ),
         hidden: cn("invisible", defaultClassNames.hidden),
-        ...classNames,
-      } as any}
+        ...(classNames as any),
+      }}
+
       components={{
         Root: ({ className, rootRef, ...props }) => {
           return (

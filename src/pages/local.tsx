@@ -5,8 +5,17 @@ import { StoryBar } from "@/components/feed/StoryBar";
 import { PortalIconBar } from "@/components/home/PortalIconBar";
 import { useSearchParams } from "react-router-dom";
 
+const LOCAL_CATEGORIES = [
+  { id: "all",       label: "সবগুলা",            emoji: "📍" },
+  { id: "homemade",  label: "হোমমেড খাবার",      emoji: "🏡" },
+  { id: "pharmacy",  label: "ফার্মেসি",            emoji: "💊" },
+  { id: "food",      label: "হোটেল/রেস্টুরেন্ট",     emoji: "🍲" },
+  { id: "hotel",     label: "হোটেল/রিসোর্ট",       emoji: "🏨" },
+  { id: "services",  label: "সেবাসমূহ",          emoji: "🔧" },
+];
+
 export default function Local() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const selectedCat = searchParams.get("cat") || "all";
 
   const { data: products } = useListProducts(
@@ -63,6 +72,27 @@ export default function Local() {
             <h1 className="font-semibold text-lg">Nearby Shop Portal</h1>
             <p className="text-xs text-[var(--pm-text-muted)]">Verified local shops and home-made delicacies near you</p>
           </div>
+        </div>
+
+        {/* Local Specialized Category Chips */}
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 items-center">
+          {LOCAL_CATEGORIES.map(({ id, label, emoji }) => {
+            const active = selectedCat === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setSearchParams({ cat: id })}
+                className={`shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl border text-[11px] font-black transition-all ${
+                  active
+                    ? "bg-[var(--pm-accent)]/15 border-[var(--pm-accent)]/20 text-[var(--pm-accent)] animate-pulse"
+                    : "bg-white/[0.02] border-white/[0.05] text-zinc-500 hover:text-zinc-300 hover:border-white/[0.12]"
+                }`}
+              >
+                <span>{emoji}</span>
+                <span>{label}</span>
+              </button>
+            );
+          })}
         </div>
 
         <ProductGrid products={filteredProducts} emptyMessage={`No shops found for "${selectedCat}" category.`} />

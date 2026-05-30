@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MarketplaceHeader } from '../components/MarketplaceHeader';
 import { MarketplaceProductCard } from '../components/MarketplaceProductCard';
 import { ArrowLeft, SlidersHorizontal, ChevronRight, Grid, List as ListIcon } from 'lucide-react';
 import { motion } from 'motion/react';
+import { StoryBar } from '@/components/feed/StoryBar';
 
 export const MarketplaceCategoryPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--pm-bg)] text-white pb-20">
-      <MarketplaceHeader />
+    <div className="min-h-screen bg-[var(--pm-bg)] text-white pb-20 pt-16">
+      <div className="sticky top-16 z-[110]">
+        <MarketplaceHeader />
+      </div>
+      
+      {/* ━━━ HERO ZONE: Stories ━━━ */}
+      <section className="pt-3 md:pt-4 overflow-hidden bg-[var(--pm-bg)] border-b border-[var(--pm-border)] pb-2">
+        <StoryBar context="retail" />
+      </section>
 
       {/* Category Header / Banner */}
       <div className="relative h-[200px] md:h-[280px] w-full overflow-hidden">

@@ -38,6 +38,24 @@ const ChatList = lazy(() => import('../../modules/chat/pages/ChatList').then(m =
 const ChatDetail = lazy(() => import('../../modules/chat/pages/ChatDetail').then(m => ({ default: m.ChatDetail })));
 const B2C = lazy(() => import('../../modules/retail-b2c/pages/B2CHome').then(m => ({ default: m.B2CHome })));
 const B2B = lazy(() => import('../../pages/b2b/index'));
+const Grocery = lazy(() => import('../../portals/grocery/pages/GroceryHome').then(m => ({ default: m.GroceryHome })));
+const Pharmacy = lazy(() => import('../../portals/pharmacy/pages/PharmacyHome').then(m => ({ default: m.PharmacyHome })));
+const Food = lazy(() => import('../../portals/food/pages/FoodHome').then(m => ({ default: m.FoodHome })));
+const Wholesale = lazy(() => import('../../portals/wholesale/pages/WholesaleHome').then(m => ({ default: m.WholesaleHome })));
+const Export = lazy(() => import('../../portals/export/pages/ExportHome').then(m => ({ default: m.ExportHome })));
+const Ride = lazy(() => import('../../portals/ride/pages/RideHome').then(m => ({ default: m.RideHome })));
+const HotelPortal = lazy(() => import('../../pages/hotel'));
+const JobsPortal = lazy(() => import('../../pages/jobs'));
+const AgriculturePortal = lazy(() => import('../../pages/agriculture'));
+const RealEstatePortal = lazy(() => import('../../pages/real-estate'));
+const HealthcarePortal = lazy(() => import('../../pages/healthcare'));
+const EducationPortal = lazy(() => import('../../pages/education'));
+const FinancePortal = lazy(() => import('../../pages/finance'));
+const EventsPortal = lazy(() => import('../../pages/events'));
+const AutoPortal = lazy(() => import('../../pages/auto'));
+const ElectronicsPortal = lazy(() => import('../../pages/electronics'));
+const FashionPortal = lazy(() => import('../../pages/fashion'));
+const TelecomPortal = lazy(() => import('../../pages/telecom'));
 
 // Auth
 const Login = lazy(() => import('../../pages/auth/login'));
@@ -51,6 +69,20 @@ const Checkout = lazy(() => import('../../pages/checkout').then(m => ({ default:
 const Orders = lazy(() => import('../pages/OrderTracking/OrderTrackingPage'));
 const Wallet = lazy(() => import('../../portals/wallet/pages/WalletDashboard').then(m => ({ default: m.WalletDashboard })));
 const Notifications = lazy(() => import('../../pages/notifications'));
+
+// Logistics
+const Logistics = lazy(() => import('../../pages/logistics/index'));
+
+// Demand Details
+const DemandDetail = lazy(() => import('../../pages/demand-detail'));
+
+// Static policy & help pages
+const FAQPage = lazy(() => import('../../pages/FAQPage'));
+const TermsPage = lazy(() => import('../../pages/TermsPage'));
+const ContactPage = lazy(() => import('../../pages/ContactPage'));
+const BecomeSellerPage = lazy(() => import('../../pages/BecomeSellerPage'));
+const SellerRulesPage = lazy(() => import('../../pages/SellerRulesPage'));
+const QNAPage = lazy(() => import('../../pages/QNAPage'));
 
 // Seller
 const SellerDashboard = lazy(() => import('../../pages/seller/dashboard'));
@@ -80,6 +112,24 @@ export const ROUTES: RouteItem[] = [
   { path: '/retail', component: B2C, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
   { path: '/b2c', component: B2C, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
   { path: '/b2b', component: B2B, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/grocery', component: Grocery, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/pharmacy', component: Pharmacy, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/food', component: Food, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/wholesale', component: Wholesale, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/export', component: Export, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/ride', component: Ride, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/hotel', component: HotelPortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/jobs', component: JobsPortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/agriculture', component: AgriculturePortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/real-estate', component: RealEstatePortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/healthcare', component: HealthcarePortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/education', component: EducationPortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/finance', component: FinancePortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/events', component: EventsPortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/auto', component: AutoPortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/electronics', component: ElectronicsPortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/fashion', component: FashionPortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/telecom', component: TelecomPortal, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
   { path: '/services', component: Services, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
   { path: '/transport', component: Transport, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
   { path: '/digital-services', component: DigitalServices, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
@@ -97,6 +147,20 @@ export const ROUTES: RouteItem[] = [
   { path: '/orders/track/:orderId', component: Tracking, roles: ['buyer', 'user', 'seller', 'business', 'admin', 'service_provider'] },
   { path: '/wallet', component: Wallet, roles: ['buyer', 'user', 'seller', 'business', 'admin', 'service_provider'] },
   { path: '/notifications', component: Notifications, roles: ['buyer', 'user', 'seller', 'business', 'admin', 'service_provider'] },
+  
+  // Logistics
+  { path: '/logistics', component: Logistics, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  
+  // Demands
+  { path: '/demand/:id', component: DemandDetail, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  
+  // Static utility pages
+  { path: '/faq', component: FAQPage, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/terms', component: TermsPage, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/contact', component: ContactPage, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/become-seller', component: BecomeSellerPage, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/seller-rules', component: SellerRulesPage, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
+  { path: '/qna', component: QNAPage, roles: ['buyer', 'guest', 'user', 'seller', 'business', 'admin', 'service_provider'], isPublic: true },
   
   { path: '/seller/*', component: SellerDashboard, roles: ['seller', 'business', 'admin'] },
   { path: '/admin/*', component: AdminGovernance, roles: ['admin'] },

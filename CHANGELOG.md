@@ -8,6 +8,7 @@ This document serves as the global single-source-of-truth version tracking file 
 
 | Version | Release Date | Component / Portal Affected | Description & Key Updates | Status |
 | :--- | :--- | :--- | :--- | :--- |
+| **v1.6.0** | May 28, 2026 | **Global Marketplace Expansion** | Implemented high-density Marketplace Portal (/marketplace) featuring Home, Search, Category, and Store pages. Integrated portal-aware navigation and a centralized cart count header. Switched to `motion/react`. | **Active** |
 | **v1.5.0** | May 19, 2026 | **Portal Expansion Integration** | Integrated 4 new portal templates (Nearby Shops, Services, Ride Share, and Digital Store) from PKM-APP, linking them dynamically via AppRoutes. Added browser geolocation and Nominatim reverse-geocoding. | **Active** |
 | **v1.4.0** | May 19, 2026 | **Merchant Directory (`/vendors`)** | Activated Verified Merchant & Shop Directory portal with tabs for wholesalers, retail shops, and service providers, direct tel/WhatsApp integrations, and search indexing. | **Active** |
 | **v1.3.0** | May 19, 2026 | **Super Wallet (`/wallet`)** | Full-Stack Super Wallet Integration (Prisma Wallet & Transaction DB Models, backend controllers/routes, and Axios apiClient frontend binding with offline mock fallbacks). | **Active** |
@@ -28,6 +29,12 @@ For micro-level updates, please refer to the dedicated `.md` files in each porta
 ---
 
 ## 🧠 Version Highlight Details
+
+### 🛒 v1.6.0 - Global Marketplace Expansion
+*   **Architecture**: Built a multi-dimensional Marketplace portal at `/marketplace` serving as a centralized aggregator for all specialized portals (Retail, Wholesale, Nearby, Services, etc.).
+*   **Discovery Engines**: Developed `MarketplaceHome`, `MarketplaceSearch`, `MarketplaceCategory`, and `MarketplaceStore` pages with high-performance filtering and search capabilities.
+*   **UI/UX**: Implemented `MarketplacePortalBar` for cross-portal navigation and enhanced `MarketplaceHeader` with real-time cart item tracking via Zustand.
+*   **Performance**: Migrated from `framer-motion` to `motion/react` for optimized bundle size and standard compliance.
 
 ### 📱 v1.5.0 - Portal Expansion Integration
 *   **Portals Added**: Integrated `/portal/nearby` (Nearby Shops), `/portal/services` (Services Marketplace), `/portal/ride` (Ride Sharing), and `/portal/digital` (Digital Store).

@@ -32,7 +32,7 @@ This file serves as a persistent brain and instruction set for AI agents working
    - A `PortalIconBar` (sticky category/portal icons just beneath, taking a `context` prop).
    - Standard, modern, minimal `lucide-react` icons. Do not remove this combo unless explicitly told. Use the global search icon for search features, avoiding inline/duplicate search bars on portal homepages.
 7. **Feature Portals**: 
-    - Completed: B2B Dashboard basics, Auth, Seller/Admin Dashboards, Retail (B2C), Portal Dynamic Layouts.
+    - Completed: B2B Dashboard basics, Auth, Seller/Admin Dashboards, Retail (B2C), Portal Dynamic Layouts, Global Marketplace (Home, Search, Categories, Stores).
     - Pending (404/Coming Soon mapped): Wallet, PK Store, etc. Map unfinished routes to the `NotFound` (Coming Soon) page.
 8. **Nearby Shop Portal (Local) Rules**:
     - **Physical Presence**: All sellers in the Nearby Shop portal MUST possess a physical shop with a verifiable address.

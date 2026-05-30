@@ -24,9 +24,9 @@ export const MarketplaceSearchPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--pm-bg)] text-white pb-20">
+    <div className="min-h-screen bg-[var(--pm-bg)] text-white pb-20 pt-16">
       {/* Sticky Search Header */}
-      <div className="sticky top-0 z-[120] bg-[var(--pm-nav-bg)]/80 backdrop-blur-xl border-b border-[var(--pm-border)]">
+      <div className="sticky top-16 z-[120] bg-[var(--pm-nav-bg)]/80 backdrop-blur-xl border-b border-[var(--pm-border)]">
         <div className="max-w-[1440px] mx-auto px-4 py-4 flex items-center gap-4">
           <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white">
             <ArrowLeft className="w-6 h-6" />

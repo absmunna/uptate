@@ -6,7 +6,6 @@ import dotenv from "dotenv";
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from "vite";
 import morgan from 'morgan';
-import { helmetMiddleware } from './middleware/helmet';
 import { rateLimitMiddleware } from './middleware/rateLimit';
 import { corsMiddleware } from './middleware/cors';
 import { auditMiddleware } from './middleware/audit';

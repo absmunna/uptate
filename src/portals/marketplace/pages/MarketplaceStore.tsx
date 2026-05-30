@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MarketplaceHeader } from '../components/MarketplaceHeader';
 import { MarketplaceProductCard } from '../components/MarketplaceProductCard';
@@ -7,6 +7,7 @@ import {
   Info, LayoutGrid, Newspaper, Heart, Share2, MoreHorizontal 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { StoryBar } from '@/components/feed/StoryBar';
 
 type StoreTab = 'products' | 'posts' | 'reviews' | 'about';
 
@@ -15,10 +16,23 @@ export const MarketplaceStorePage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<StoreTab>('products');
   const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, [id]);
 
   return (
-    <div className="min-h-screen bg-[var(--pm-bg)] text-white pb-20">
-      <MarketplaceHeader />
+    <div className="min-h-screen bg-[var(--pm-bg)] text-white pb-20 pt-16">
+      <div className="sticky top-16 z-[110]">
+        <MarketplaceHeader />
+      </div>
+
+      {/* ━━━ HERO ZONE: Stories ━━━ */}
+      <section className="pt-3 md:pt-4 overflow-hidden bg-[var(--pm-bg)] border-b border-[var(--pm-border)] pb-2">
+        <StoryBar context="retail" />
+      </section>
 
       {/* Store Hero Section */}
       <div className="relative">

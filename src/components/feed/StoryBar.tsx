@@ -139,7 +139,7 @@ const DIGITAL_STORIES: Story[] = [
   { id: "ds2", user: "Creative Mind", label: "UI Trends", image: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=220&q=80", ring: "from-pink-400 to-indigo-500" },
 ];
 
-export function StoryBar({ context = 'feed' }: { context?: 'feed' | 'retail' | 'wholesale' | 'local' | 'services' | 'transport' | 'digital-services' | 'wallet' }) {
+export function StoryBar({ context = 'feed' }: { context?: string }) {
   const { isAuthenticated } = useAuth();
   
   const stories = context === 'retail' ? RETAIL_STORIES 

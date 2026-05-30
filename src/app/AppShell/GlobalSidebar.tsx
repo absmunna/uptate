@@ -23,19 +23,19 @@ export const GlobalSidebar: React.FC = () => {
   );
 
   return (
-    <aside className="hidden lg:flex flex-col w-[260px] h-screen sticky top-0 bg-sidebar border-r border-border p-6 select-none overflow-y-auto">
+     <aside className="hidden lg:flex flex-col w-[280px] h-screen sticky top-0 bg-[var(--pm-bg)] border-r border-[var(--pm-border)] p-8 select-none overflow-y-auto">
        <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-3 mb-6 px-2 cursor-pointer"
+        className="flex items-center gap-4 mb-10 px-2 cursor-pointer"
         onClick={toggleLauncher}
        >
-          <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-             <Zap className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-3xl bg-[var(--pm-accent)] flex items-center justify-center text-[var(--pm-text)] shadow-lg">
+             <Zap className="w-7 h-7" />
           </div>
           <div>
-            <h1 className="text-xl font-black tracking-tighter text-foreground uppercase italic leading-none">PaikarMart</h1>
-            <p className="text-[8px] text-primary font-bold uppercase tracking-widest mt-1">Super App v3.0</p>
+            <h1 className="text-2xl font-black tracking-tighter text-[var(--pm-text)] uppercase italic leading-none">PaikarMart</h1>
+            <p className="text-[10px] text-[var(--pm-accent)] font-bold uppercase tracking-widest mt-1">Super App v3.0</p>
           </div>
        </motion.div>
 
@@ -43,22 +43,22 @@ export const GlobalSidebar: React.FC = () => {
        <motion.div 
          initial={{ opacity: 0, scale: 0.95 }}
          animate={{ opacity: 1, scale: 1 }}
-         className="mb-8 p-3 rounded-xl bg-card border border-border flex items-center gap-3"
+         className="mb-10 p-5 rounded-3xl bg-[var(--pm-surface)] border border-[var(--pm-border)] flex items-center gap-4"
        >
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white font-bold shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[var(--pm-accent)] to-[var(--pm-text-secondary)] flex items-center justify-center text-[var(--pm-text)] font-bold shadow-md">
              {role === 'guest' ? 'G' : 'U'}
           </div>
           <div className="flex-1 overflow-hidden">
-             <p className="text-sm font-bold text-foreground truncate">
+             <p className="text-sm font-bold text-[var(--pm-text)] truncate">
                 {role === 'guest' ? t('nav.guest') || 'Guest User' : 'Authenticated User'}
              </p>
-             <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider truncate">
+             <p className="text-[10px] text-[var(--pm-text-secondary)] font-medium uppercase tracking-wider truncate">
                 Role: {role}
              </p>
           </div>
        </motion.div>
 
-       <nav className="flex-1 flex flex-col gap-1.5">
+       <nav className="flex-1 flex flex-col gap-3">
           {/* App Launcher Quick Access for Desktop */}
           <motion.div
             initial={{ opacity: 0, x: -10 }}

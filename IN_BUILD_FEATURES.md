@@ -3,6 +3,7 @@
 The following packages are currently pending development or integration to achieve full production readiness:
 
 ## Package 6: Portal Expansion
+- [x] Global Marketplace Aggregator (Home, Search, Stores, Categories)
 - [ ] B2C Retail Portal (Full backend integration and frontend components)
 - [ ] Wallet Dashboard (Real balance tracking, transaction history)
 - [ ] PK Store (Link with real product data with PK Coin cashbacks)

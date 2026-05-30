@@ -47,8 +47,13 @@ export const MarketplaceStoreCard = ({ store }: StoreCardProps) => {
         </div>
 
         <div className="flex items-center gap-2">
-           <span className="text-[9px] font-black uppercase text-zinc-600 tracking-tighter">Powered by</span>
-           <span className="text-[9px] font-black uppercase text-cyan-400 tracking-tighter italic">{store.portal}</span>
+           <button 
+             onClick={(e) => { e.stopPropagation(); /* follow logic */ }}
+             className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest hover:bg-cyan-400 hover:text-black transition-all"
+           >
+             Follow
+           </button>
+           <span className="text-[9px] font-black uppercase text-cyan-400 tracking-tighter italic ml-auto">{store.portal}</span>
         </div>
       </div>
 
